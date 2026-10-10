@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Weather Map – live radar, wind & forecast</title>
+  <meta name="description" content="Interactive live weather map: satellite, rain radar, wind, temperature, storms and wildfires.">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div id="map" aria-label="Weather map"></div>
+
+  <!-- Search -->
+  <div class="panel search-panel">
+    <div class="brand">🌍 <span>Weather Map</span></div>
+    <div class="search-box">
+      <input id="search-input" type="search" placeholder="Search places…" autocomplete="off"
+             aria-label="Search places">
+      <button id="locate-btn" class="icon-btn" title="My location" aria-label="My location">◎</button>
+    </div>
+    <ul id="search-results" class="search-results" hidden></ul>
+  </div>
+
+  <!-- Layer switcher -->
+  <nav class="panel layer-panel" aria-label="Map layers">
+    <button class="layer-btn active" data-layer="satellite"><span>🛰️</span>Satellite</button>
+    <button class="layer-btn" data-layer="radar"><span>🌧️</span>Radar</button>
+    <button class="layer-btn" data-layer="precipitation"><span>☔</span>Precip</button>
+    <button class="layer-btn" data-layer="wind"><span>💨</span>Wind</button>
+    <button class="layer-btn" data-layer="temperature"><span>🌡️</span>Temp</button>
+    <button class="layer-btn" data-layer="humidity"><span>💧</span>Humidity</button>
+    <button class="layer-btn" data-layer="clouds"><span>☁️</span>Clouds</button>
+    <button class="layer-btn" data-layer="pressure"><span>🧭</span>Pressure</button>
+    <hr>
+    <button class="toggle-btn active" id="events-toggle" title="Storms, wildfires & volcanoes">
+      <span>🌀</span>Events</button>
+    <button class="toggle-btn" id="units-toggle" title="Switch units"><span>°</span><b id="units-label">°C</b></button>
+  </nav>
+
+  <!-- Satellite imagery source -->
+  <div class="panel sat-panel" id="sat-panel">
+    <label for="sat-source">Imagery</label>
+    <select id="sat-source">
+      <option value="esri">High‑res imagery</option>
+      <option value="viirs">NASA VIIRS (daily)</option>
+      <option value="modis">NASA MODIS (daily)</option>
+      <option value="dark">Dark map</option>
+    </select>
+    <input id="sat-date" type="date" aria-label="Imagery date" hidden>
+  </div>
+
+  <!-- Legend -->
+  <div class="panel legend" id="legend" hidden>
+    <div class="legend-title" id="legend-title"></div>
+    <div class="legend-bar" id="legend-bar"></div>
+    <div class="legend-labels" id="legend-labels"></div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="panel timeline" id="timeline" hidden>
+    <button id="play-btn" class="icon-btn play" aria-label="Play">▶</button>
+    <div class="timeline-body">
+      <div class="timeline-label"><span id="time-label">–</span><span id="time-badge" class="badge"></span></div>
+      <input id="time-slider" type="range" min="0" max="0" value="0" step="1" aria-label="Time">
+    </div>
+  </div>
+
+  <!-- Location details -->
+  <aside class="panel info-panel" id="info-panel" hidden aria-live="polite">
+    <button class="close-btn" id="info-close" aria-label="Close">✕</button>
+    <div id="info-content"></div>
+  </aside>
+
+  <div id="loading" class="loading" hidden><div class="spinner"></div></div>
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
