@@ -258,6 +258,16 @@ button { font: inherit; color: inherit; cursor: pointer; }
 @keyframes spin { to { transform: rotate(-360deg); } }
 .event-popup a { color: var(--accent); }
 
+/* ---------- 3D globe ---------- */
+#globe { position: fixed; inset: 0; z-index: 900; background: radial-gradient(circle at 50% 50%, #0b1630 0%, #02040a 70%); }
+.globe-exit { display: none; top: 12px; left: 50%; transform: translateX(-50%); padding: 8px 14px; border: 1px solid var(--border); }
+body.globe-mode .globe-exit { display: block; }
+body.globe-mode .legend, body.globe-mode .timeline, body.globe-mode .info-panel,
+body.globe-mode .enso-panel, body.globe-mode .leaflet-control-container { display: none !important; }
+.toggle-btn.globe-btn.active { background: var(--accent); color: #fff; }
+.maplibregl-ctrl-attrib { background: rgba(0, 0, 0, .45) !important; color: #bbb; font-size: 10px; }
+.maplibregl-ctrl-attrib a { color: #ddd !important; }
+
 /* ---------- Misc ---------- */
 .wind-canvas { position: absolute; inset: 0; pointer-events: none; z-index: 450; }
 

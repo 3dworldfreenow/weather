@@ -11,6 +11,8 @@
 </head>
 <body>
   <div id="map" aria-label="Weather map"></div>
+  <div id="globe" aria-label="3D globe" hidden></div>
+  <button id="globe-exit" class="panel globe-exit" type="button">🗺️ Back to map</button>
 
   <!-- Search -->
   <div class="panel search-panel">
@@ -25,6 +27,8 @@
 
   <!-- Layer switcher -->
   <nav class="panel layer-panel" aria-label="Map layers">
+    <button class="toggle-btn globe-btn" id="globe-toggle" title="3D globe"><span>🌐</span>Globe</button>
+    <hr>
     <button class="layer-btn active" data-layer="satellite"><span>🛰️</span>Satellite</button>
     <button class="layer-btn" data-layer="radar"><span>🌧️</span>Radar</button>
     <button class="layer-btn" data-layer="precipitation"><span>☔</span>Precip</button>
@@ -101,6 +105,8 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script>window.APP_CONFIG = {{ app_config | tojson }};</script>
+  {% if app_config.static %}<script src="{{ url_for('static', filename='js/static-api.js') }}"></script>{% endif %}
   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>

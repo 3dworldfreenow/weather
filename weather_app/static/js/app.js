@@ -30,7 +30,14 @@
     toastTimer = setTimeout(() => { el.hidden = true; }, 4000);
   }
 
+  const STATIC_SITE = Boolean(window.APP_CONFIG && window.APP_CONFIG.static);
+
   async function api(path, params = {}, { signal } = {}) {
+    if (STATIC_SITE) {
+      // GitHub Pages demo: no server, the browser fetches the data itself.
+      setLoading(true);
+      try { return await window.StaticApi.handle(path, params, signal); } finally { setLoading(false); }
+    }
     const url = new URL(path, window.location.origin);
     Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
     setLoading(true);
@@ -164,6 +171,7 @@
     if (!m) return null;
     return { lat: +m[1], lon: +m[2], zoom: +m[3], layer: m[4] };
   }
+  const linkedView = Boolean(parseHash()); // read before the map rewrites the hash
   const initial = parseHash() || { lat: 22, lon: 78, zoom: 4 };
 
   const map = L.map("map", {
@@ -328,6 +336,7 @@
       $("clouds-time").textContent = `${t.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })} (${mins} min ago) · ${data.layers.length} satellites`;
       $("clouds-time").title = data.layers.map((l) => `${l.name} (${l.agency})`).join(", ");
       if (!$("sources-panel").hidden) renderSources();
+      if (typeof updateGlobeSatellites === "function") updateGlobeSatellites();
     } catch (err) {
       toast(`Live satellites: ${err.message}`);
     }
@@ -391,8 +400,9 @@
     night.on = e.target.checked;
     try { localStorage.setItem("night", night.on ? "on" : "off"); } catch (err) { /* ignore */ }
     updateNight();
+    updateGlobeNight();
   });
-  setInterval(updateNight, 5 * 60 * 1000);
+  setInterval(() => { updateNight(); updateGlobeNight(); }, 5 * 60 * 1000);
 
   // ------------------------------------------------------------------
   // Sources panel: every data source with links and image times
@@ -873,6 +883,7 @@
       enso.group.addTo(map);
       renderEnso(d);
       renderEnsoLegend();
+      $("info-close").click(); // the forecast and El Niño panels share a spot
       $("enso-panel").hidden = false;
       map.flyToBounds(PACIFIC, { duration: 1.5 });
     } catch (err) {
@@ -905,7 +916,7 @@
   }
 
   document.querySelectorAll(".layer-btn").forEach((btn) => {
-    btn.addEventListener("click", () => setLayer(btn.dataset.layer));
+    btn.addEventListener("click", () => { hideGlobe(); setLayer(btn.dataset.layer); });
   });
 
   const reloadGrid = debounce(() => {
@@ -1073,6 +1084,7 @@
   }
 
   function choose(r) {
+    hideGlobe();
     results = [];
     renderResults();
     input.value = placeLabel(r);
@@ -1119,6 +1131,7 @@
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const { latitude, longitude } = pos.coords;
+        hideGlobe();
         map.flyTo([latitude, longitude], 8, { duration: 1.2 });
         openForecast(latitude, longitude, "My location");
       },
@@ -1152,6 +1165,190 @@
   });
 
   // ------------------------------------------------------------------
+  // 3D globe (MapLibre GL, loaded on first use)
+  // ------------------------------------------------------------------
+  const MAPLIBRE = {
+    js: "https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js",
+    jsSri: "sha384-5+cfbwT0iiub6VsQAdn6yz16nr6sDiQoHx6tm4O8OVYXHYOxcffFmCJBL0dgdvGp",
+    css: "https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css",
+    cssSri: "sha384-uTttxo/aOKbdE5RlD/SPzSDoDmNvGlUYPjONi2MN/b7c9HPSvW07OIuyP7uL6jxK",
+  };
+
+  const globe = { map: null, active: false, spinning: true, satIds: [], loading: null };
+
+  function loadMapLibre() {
+    if (window.maplibregl) return Promise.resolve();
+    if (globe.loading) return globe.loading;
+    globe.loading = new Promise((resolve, reject) => {
+      const css = document.createElement("link");
+      Object.assign(css, { rel: "stylesheet", href: MAPLIBRE.css, integrity: MAPLIBRE.cssSri, crossOrigin: "" });
+      document.head.appendChild(css);
+      const js = document.createElement("script");
+      Object.assign(js, { src: MAPLIBRE.js, integrity: MAPLIBRE.jsSri, crossOrigin: "" });
+      js.onload = resolve;
+      js.onerror = () => { globe.loading = null; reject(new Error("Could not load the 3D globe library.")); };
+      document.head.appendChild(js);
+    });
+    return globe.loading;
+  }
+
+  // Night side as a GeoJSON polygon (lon/lat order, within -180..180).
+  function nightGeoJSON(date) {
+    const rad = Math.PI / 180;
+    const sun = sunPosition(date);
+    let dec = sun.lat * rad;
+    if (Math.abs(dec) < 0.001) dec = 0.001;
+    const ring = [];
+    for (let lon = -180; lon <= 180; lon += 2) {
+      ring.push([lon, Math.atan(-Math.cos((lon - sun.lon) * rad) / Math.tan(dec)) / rad]);
+    }
+    const pole = dec > 0 ? -89.9 : 89.9;
+    ring.push([180, pole], [-180, pole], ring[0]);
+    return { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [ring] } };
+  }
+
+  // MapLibre bounds must stay within -180..180, so split bands that cross it.
+  function splitBand([w, e]) {
+    if (e > 180) return [[w, 180], [-180, e - 360]];
+    if (w < -180) return [[w + 360, 180], [-180, e]];
+    return [[w, e]];
+  }
+
+  function globeSatelliteTiles(sat) {
+    if (sat.type === "wms") {
+      const q = new URLSearchParams({
+        service: "WMS", request: "GetMap", layers: sat.layer, styles: "", format: "image/png",
+        transparent: "true", version: "1.3.0", width: "256", height: "256", crs: "EPSG:3857",
+      });
+      return [`${sat.url}?${q}&bbox={bbox-epsg-3857}`];
+    }
+    return [sat.url];
+  }
+
+  function updateGlobeSatellites() {
+    const gm = globe.map;
+    if (!gm || !gm.isStyleLoaded()) return;
+    globe.satIds.forEach((id) => { if (gm.getLayer(id)) gm.removeLayer(id); if (gm.getSource(id)) gm.removeSource(id); });
+    globe.satIds = [];
+    const data = clouds.data;
+    if (!data) return;
+    data.layers.forEach((sat) => {
+      splitBand(sat.band).forEach(([w, e], i) => {
+        const id = `sat-${sat.id}-${i}`;
+        gm.addSource(id, {
+          type: "raster", tiles: globeSatelliteTiles(sat), tileSize: 256,
+          maxzoom: sat.max_native_zoom, bounds: [w, -SAT_LAT_LIMIT, e, SAT_LAT_LIMIT],
+          attribution: sat.attribution,
+        });
+        gm.addLayer({
+          id, type: "raster", source: id,
+          paint: { "raster-opacity": sat.style === "infrared" ? 0.65 : 1, "raster-fade-duration": 0 },
+        }, "night");
+        globe.satIds.push(id);
+      });
+    });
+  }
+
+  function updateGlobeNight() {
+    const gm = globe.map;
+    if (!gm || !gm.getSource("night")) return;
+    gm.getSource("night").setData(night.on ? nightGeoJSON(new Date())
+      : { type: "FeatureCollection", features: [] });
+  }
+
+  function spinGlobe() {
+    const gm = globe.map;
+    if (!gm || !globe.active || !globe.spinning || gm.getZoom() > 4) return;
+    const c = gm.getCenter();
+    c.lng -= 3; // degrees per step; one step every 400 ms
+    gm.easeTo({ center: c, duration: 400, easing: (t) => t });
+  }
+
+  async function createGlobe() {
+    await loadMapLibre();
+    const c = map.getCenter();
+    const gm = new maplibregl.Map({
+      container: "globe",
+      center: [((c.lng + 540) % 360) - 180, clamp(c.lat, -60, 60)],
+      zoom: 2,
+      maxZoom: 12,
+      attributionControl: { compact: true },
+      style: {
+        version: 8,
+        projection: { type: "globe" },
+        sky: { "atmosphere-blend": ["interpolate", ["linear"], ["zoom"], 0, 1, 5, 1, 7, 0] },
+        sources: {
+          imagery: {
+            type: "raster", tileSize: 256, maxzoom: 19,
+            tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],
+            attribution: "Imagery &copy; Esri, Maxar, Earthstar Geographics",
+          },
+          labels: {
+            type: "raster", tileSize: 256, maxzoom: 16,
+            tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"],
+          },
+          night: { type: "geojson", data: nightGeoJSON(new Date()) },
+        },
+        layers: [
+          { id: "space", type: "background", paint: { "background-color": "#02040a" } },
+          { id: "imagery", type: "raster", source: "imagery" },
+          { id: "night", type: "fill", source: "night", paint: { "fill-color": "#000814", "fill-opacity": 0.4 } },
+          { id: "labels", type: "raster", source: "labels" },
+        ],
+      },
+    });
+    gm.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "bottom-left");
+    const stopSpin = () => { globe.spinning = false; };
+    gm.on("mousedown", stopSpin);
+    gm.on("touchstart", stopSpin);
+    gm.on("wheel", stopSpin);
+    gm.on("moveend", spinGlobe);
+    gm.on("load", () => { updateGlobeSatellites(); updateGlobeNight(); spinGlobe(); });
+    // Click a place to open it on the detailed map with its forecast.
+    gm.on("click", (e) => {
+      hideGlobe();
+      map.setView([e.lngLat.lat, e.lngLat.lng], Math.max(5, Math.round(gm.getZoom()) + 2));
+      openForecast(e.lngLat.lat, e.lngLat.lng);
+    });
+    globe.map = gm;
+  }
+
+  async function showGlobe() {
+    globe.active = true;
+    globe.spinning = true;
+    document.body.classList.add("globe-mode");
+    $("globe").hidden = false;
+    $("globe-toggle").classList.add("active");
+    stopPlayback();
+    try {
+      if (!globe.map) await createGlobe();
+      else {
+        const c = map.getCenter();
+        globe.map.resize();
+        globe.map.jumpTo({ center: [((c.lng + 540) % 360) - 180, clamp(c.lat, -60, 60)], zoom: 2 });
+        updateGlobeSatellites();
+        updateGlobeNight();
+        spinGlobe();
+      }
+    } catch (err) {
+      toast(err.message);
+      hideGlobe();
+    }
+  }
+
+  function hideGlobe() {
+    if (!globe.active) return;
+    globe.active = false;
+    document.body.classList.remove("globe-mode");
+    $("globe").hidden = true;
+    $("globe-toggle").classList.remove("active");
+    map.invalidateSize();
+  }
+
+  $("globe-toggle").addEventListener("click", () => (globe.active ? hideGlobe() : showGlobe()));
+  $("globe-exit").addEventListener("click", hideGlobe);
+
+  // ------------------------------------------------------------------
   // Start
   // ------------------------------------------------------------------
   renderUnits();
@@ -1161,4 +1358,6 @@
   const startLayer = initial.layer && (["radar", "satellite", "enso"].includes(initial.layer) || SCALES[initial.layer])
     ? initial.layer : "satellite";
   setLayer(startLayer);
+  // Open on the globe unless the link points at a specific map view.
+  if (!linkedView) showGlobe();
 })();

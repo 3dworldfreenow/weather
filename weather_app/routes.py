@@ -40,7 +40,9 @@ def upstream_failed(exc: services.UpstreamError):
 
 @bp.get("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", app_config={
+        "static": bool(current_app.config.get("STATIC_SITE")),
+    })
 
 
 @bp.get("/api/weather")
