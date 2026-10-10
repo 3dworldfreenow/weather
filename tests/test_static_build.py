@@ -18,14 +18,15 @@ def offline(monkeypatch):
     services.cache.clear()
     monkeypatch.setattr(satellites, "_catalogue", lambda source: None)
     monkeypatch.setattr(services, "_get_text", lambda url: WEEKLY if url == enso.WEEKLY_URL else ONI)
-    monkeypatch.setattr(news, "get_news", lambda: {"articles": [{"title": "El Niño"}], "videos": [], "sources": []})
+    monkeypatch.setattr(news, "get_news", lambda: {"articles": [{"title": "El Niño", "url": "https://n.example/1", "source": "n.example"}],
+                                               "videos": [], "sources": []})
     yield
     services.cache.clear()
 
 
 def test_build_static_site(tmp_path):
     out = tmp_path / "site"
-    build_static.build(out)
+    build_static.build(out, "https://demo.example/weather")
 
     html = (out / "index.html").read_text()
     assert 'window.APP_CONFIG = {"static": true}' in html
@@ -45,6 +46,16 @@ def test_build_static_site(tmp_path):
     assert not (out / "data" / "events.json").exists()
     assert json.loads((out / "data" / "news.json").read_text())["articles"][0]["title"] == "El Niño"
     assert json.loads((out / "data" / "build.json").read_text())["failed"] == []
+
+    # SEO: canonical URL, pre-rendered El Niño status and headline, search files
+    assert '<link rel="canonical" href="https://demo.example/weather/">' in html
+    assert "strengthening" in html  # El Niño headline pre-rendered
+    assert ">El Niño</div>" in html  # news headline pre-rendered
+    assert 'content="noindex"' in (out / "404.html").read_text()
+    assert "Sitemap: https://demo.example/weather/sitemap.xml" in (out / "robots.txt").read_text()
+    assert "<loc>https://demo.example/weather/</loc>" in (out / "sitemap.xml").read_text()
+    assert json.loads((out / "manifest.webmanifest").read_text())["name"] == "El Niño Tracker"
+    assert 'href="static/img/apple-touch-icon.png"' in html
 
 
 def test_build_survives_missing_optional_data(tmp_path, monkeypatch):

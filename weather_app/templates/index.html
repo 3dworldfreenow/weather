@@ -3,8 +3,43 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>El Niño Tracker – live Pacific sea temperatures</title>
-  <meta name="description" content="Live El Niño tracker: Pacific sea surface temperature anomalies, the Niño regions and NOAA's ENSO status on a live satellite globe.">
+  <title>{{ meta.title }}</title>
+  <meta name="description" content="{{ meta.description }}">
+  <meta name="keywords" content="{{ meta.keywords }}">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="{{ meta.url }}">
+  <meta name="theme-color" content="{{ meta.theme_color }}">
+  {% if meta.google_verification %}<meta name="google-site-verification" content="{{ meta.google_verification }}">{% endif %}
+  {% if meta.bing_verification %}<meta name="msvalidate.01" content="{{ meta.bing_verification }}">{% endif %}
+
+  <!-- Sharing previews (Facebook, WhatsApp, LinkedIn, X) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ meta.site_name }}">
+  <meta property="og:title" content="{{ meta.title }}">
+  <meta property="og:description" content="{{ meta.description }}">
+  <meta property="og:url" content="{{ meta.url }}">
+  <meta property="og:image" content="{{ meta.image }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="El Niño Tracker: a globe with a warm band along the equatorial Pacific">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ meta.title }}">
+  <meta name="twitter:description" content="{{ meta.description }}">
+  <meta name="twitter:image" content="{{ meta.image }}">
+
+  <!-- Icons and installable app -->
+  <link rel="icon" type="image/png" sizes="48x48" href="{{ url_for('static', filename='img/favicon-48.png') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/apple-touch-icon.png') }}">
+  <link rel="manifest" href="manifest.webmanifest">
+
+  <!-- Connect early to the map and data servers -->
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <link rel="preconnect" href="https://server.arcgisonline.com">
+  <link rel="preconnect" href="https://gibs.earthdata.nasa.gov">
+
+  <script type="application/ld+json">{{ json_ld | safe }}</script>
+
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -14,15 +49,37 @@
   <div id="globe" aria-label="3D globe" hidden></div>
 
   <!-- Title -->
-  <div class="panel brand-panel">
-    <div class="brand">🌊 <span>El Niño Tracker</span></div>
-    <div class="brand-sub">Pacific sea temperatures vs normal, live</div>
-  </div>
+  <header class="panel brand-panel">
+    <h1 class="brand">🌊 <span>El Niño Tracker</span></h1>
+    <p class="brand-sub">Live El Niño status, sea temperatures &amp; news</p>
+  </header>
+
+  <noscript>
+    <div class="panel noscript">This live map needs JavaScript. The current El Niño status, the latest
+      headlines and answers to common questions are still shown on this page.</div>
+  </noscript>
 
   <!-- El Niño status -->
-  <aside class="panel enso-panel" id="enso-panel" aria-live="polite">
-    <div id="enso-content"><div class="enso-headline">Loading El Niño data…</div></div>
-  </aside>
+  <main class="panel enso-panel" id="enso-panel" aria-live="polite">
+    <div id="enso-content">
+      {% if enso %}
+      {# Pre-rendered for search engines and first paint; app.js replaces it with the live version. #}
+      <span class="enso-phase {{ enso.phase }}">{{ {"el_nino": "El Niño", "la_nina": "La Niña"}.get(enso.phase, "Neutral") }}</span>
+      <h2 class="enso-headline">{{ enso.headline }}</h2>
+      <p><span class="enso-big {{ 'warm' if enso.nino34_anomaly >= 0 else 'cool' }}">{{ enso.nino34_anomaly | signed }} °C</span>
+        Niño 3.4 sea temperature anomaly, week of {{ enso.week }}<br>
+        <small>{{ enso.trend_4w | signed }} °C in the last 4 weeks</small></p>
+      <p class="enso-focus">{{ enso.focus.text }}</p>
+      <h3 class="section-title">Niño regions: latest weekly anomaly</h3>
+      <ul class="enso-static-list">
+        {% for r in enso.regions %}<li>{{ r.name }}: {{ r.anomaly | signed }} °C ({{ r.change_4w | signed }} in 4 weeks)</li>{% endfor %}
+      </ul>
+      {% else %}
+      <h2 class="enso-headline">Loading the latest El Niño status…</h2>
+      <p class="muted">Weekly Niño region sea temperatures from NOAA's Climate Prediction Center.</p>
+      {% endif %}
+    </div>
+  </main>
 
   <!-- View switcher -->
   <nav class="panel layer-panel" aria-label="View">
@@ -32,7 +89,24 @@
     <button class="toggle-btn active" id="sst-toggle" title="Sea surface temperature anomaly map"><span>🌡️</span>Sea temp</button>
     <hr>
     <button class="toggle-btn view-btn" id="news-toggle" title="El Niño news and videos"><span>📰</span>News</button>
+    <button class="toggle-btn view-btn" id="learn-toggle" title="What is El Niño? Questions and answers"><span>📘</span>Learn</button>
   </nav>
+
+  <!-- Learn: plain-language answers (also published as FAQ structured data) -->
+  <aside class="panel learn-panel" id="learn-panel" hidden aria-labelledby="learn-title">
+    <button class="close-btn" id="learn-close" aria-label="Close">✕</button>
+    <h2 id="learn-title">El Niño explained</h2>
+    {% for item in faq %}
+    <details{% if loop.first %} open{% endif %}>
+      <summary><h3>{{ item.q }}</h3></summary>
+      <p>{{ item.a }}</p>
+    </details>
+    {% endfor %}
+    <p class="muted">Official sources: <a href="https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml" target="_blank" rel="noopener">NOAA ENSO discussion</a>,
+      <a href="https://wmo.int/topics/el-nino-la-nina" target="_blank" rel="noopener">WMO El Niño/La Niña</a>,
+      <a href="https://mausam.imd.gov.in/" target="_blank" rel="noopener">India Meteorological Department</a>,
+      <a href="http://www.bom.gov.au/climate/enso/" target="_blank" rel="noopener">Australian Bureau of Meteorology</a>.</p>
+  </aside>
 
   <!-- News and videos -->
   <aside class="panel news-panel" id="news-panel" hidden aria-label="El Niño news and videos">
@@ -47,7 +121,18 @@
       <select id="news-country" aria-label="Country"><option value="">All countries</option></select>
       <select id="news-language" aria-label="Language"><option value="">All languages</option></select>
     </div>
-    <div class="news-body" id="news-body"><p class="muted">Loading El Niño news…</p></div>
+    <div class="news-body" id="news-body">
+      {% if headlines %}
+      {# Latest headlines pre-rendered for search engines; app.js replaces them with the full feed. #}
+      <h2 class="section-title">Latest El Niño news</h2>
+      {% for a in headlines %}
+      <a class="news-item" href="{{ a.url }}" target="_blank" rel="noopener noreferrer">
+        <div><div class="news-title">{{ a.title }}</div>
+          <div class="news-meta">{% if a.country %}<span class="flag">{{ a.country }}</span>{% endif %}{{ a.source }}{% if a.language %} · {{ a.language }}{% endif %}</div></div>
+      </a>
+      {% endfor %}
+      {% else %}<p class="muted">Loading El Niño news…</p>{% endif %}
+    </div>
     <div class="news-foot" id="news-foot"></div>
   </aside>
 

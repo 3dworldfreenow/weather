@@ -29,6 +29,11 @@ jobs:
       - run: pip install -r requirements.txt
       - run: pytest -q
       - run: python scripts/build_static.py dist
+        env:
+          # Optional: set these under Settings → Secrets and variables → Actions → Variables
+          # to verify the site in Google Search Console and Bing Webmaster Tools.
+          GOOGLE_SITE_VERIFICATION: ${{ vars.GOOGLE_SITE_VERIFICATION }}
+          BING_SITE_VERIFICATION: ${{ vars.BING_SITE_VERIFICATION }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

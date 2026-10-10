@@ -774,13 +774,18 @@
     $("video-modal").hidden = true;
   }
 
-  $("news-toggle").addEventListener("click", () => {
-    const open = $("news-panel").hidden;
-    $("news-panel").hidden = !open;
-    $("news-toggle").classList.toggle("active", open);
-    if (open && Date.now() - newsState.loadedAt > 30 * 60 * 1000) loadNews();
-  });
-  $("news-close").addEventListener("click", () => $("news-toggle").click());
+  // News and Learn open in the same spot, so only one is shown at a time.
+  function setSidePanel(name) {
+    ["news", "learn"].forEach((p) => {
+      $(`${p}-panel`).hidden = p !== name;
+      $(`${p}-toggle`).classList.toggle("active", p === name);
+    });
+    if (name === "news" && Date.now() - newsState.loadedAt > 30 * 60 * 1000) loadNews();
+  }
+  $("news-toggle").addEventListener("click", () => setSidePanel($("news-panel").hidden ? "news" : null));
+  $("learn-toggle").addEventListener("click", () => setSidePanel($("learn-panel").hidden ? "learn" : null));
+  $("news-close").addEventListener("click", () => setSidePanel(null));
+  $("learn-close").addEventListener("click", () => setSidePanel(null));
   document.querySelectorAll(".news-tab").forEach((tab) => {
     tab.addEventListener("click", () => { newsState.tab = tab.dataset.tab; renderNews(); });
   });
