@@ -34,8 +34,9 @@ jobs:
           path: dist
 
   deploy:
-    # Only the default branch publishes the demo.
-    if: github.ref_name == github.event.repository.default_branch
+    # Publish from the default branch only. Scheduled and manual runs always
+    # use the default branch (their event payload has no repository info).
+    if: github.event_name != 'push' || github.ref_name == github.event.repository.default_branch
     needs: build
     runs-on: ubuntu-latest
     environment:
