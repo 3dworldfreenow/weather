@@ -54,6 +54,8 @@ _LON = {"goes_west": -137.2, "goes_east": -75.2, "meteosat": 0.0, "iodc": 45.5, 
 SATELLITES: list[dict[str, Any]] = [
     {
         "id": "goes_west", "name": "GOES-West", "agency": "NOAA", "source": "gibs",
+        "truecolor_patterns": [r"^GOES-West_ABI_GeoColor", r"^GOES-West.*GeoColor"],
+        "homepage": "https://www.star.nesdis.noaa.gov/GOES/index.php", "longitude": -137.2,
         "patterns": [r"^GOES-West_ABI_Band13_Clean_Infrared$", r"^GOES-West_ABI_Band13"],
         "fallback": {"layer": "GOES-West_ABI_Band13_Clean_Infrared",
                      "matrix_set": "GoogleMapsCompatible_Level6", "ext": "png"},
@@ -62,6 +64,8 @@ SATELLITES: list[dict[str, Any]] = [
     },
     {
         "id": "goes_east", "name": "GOES-East", "agency": "NOAA", "source": "gibs",
+        "truecolor_patterns": [r"^GOES-East_ABI_GeoColor", r"^GOES-East.*GeoColor"],
+        "homepage": "https://www.star.nesdis.noaa.gov/GOES/index.php", "longitude": -75.2,
         "patterns": [r"^GOES-East_ABI_Band13_Clean_Infrared$", r"^GOES-East_ABI_Band13"],
         "fallback": {"layer": "GOES-East_ABI_Band13_Clean_Infrared",
                      "matrix_set": "GoogleMapsCompatible_Level6", "ext": "png"},
@@ -70,6 +74,8 @@ SATELLITES: list[dict[str, Any]] = [
     },
     {
         "id": "meteosat", "name": "Meteosat 0°", "agency": "EUMETSAT", "source": "eumetview",
+        "truecolor_patterns": [r"^mtg_fd:rgb_geocolou?r", r"^msg_fes:rgb_geocolou?r"],
+        "homepage": "https://www.eumetsat.int/our-satellites/meteosat-series", "longitude": 0.0,
         "patterns": [r"^mtg_fd:ir105_hrfi$", r"^mtg_fd:ir105", r"^msg_fes:ir108$"],
         "fallback": {"layer": "msg_fes:ir108"},
         "band": [_seam(_LON["goes_east"], _LON["meteosat"]),
@@ -77,6 +83,8 @@ SATELLITES: list[dict[str, Any]] = [
     },
     {
         "id": "iodc", "name": "Meteosat IODC", "agency": "EUMETSAT", "source": "eumetview",
+        "truecolor_patterns": [r"^msg_iodc:rgb_geocolou?r"],
+        "homepage": "https://www.eumetsat.int/indian-ocean-data-coverage", "longitude": 45.5,
         "patterns": [r"^msg_iodc:ir108$", r"^msg_iodc:ir"],
         "fallback": {"layer": "msg_iodc:ir108"},
         "band": [_seam(_LON["meteosat"], _LON["iodc"]),
@@ -84,6 +92,8 @@ SATELLITES: list[dict[str, Any]] = [
     },
     {
         "id": "himawari", "name": "Himawari", "agency": "JMA", "source": "gibs",
+        "truecolor_patterns": [r"^Himawari_AHI_GeoColor", r"^Himawari.*GeoColor"],
+        "homepage": "https://www.data.jma.go.jp/mscweb/en/himawari89/", "longitude": 140.7,
         "patterns": [r"^Himawari_AHI_Band13_Clean_Infrared$", r"^Himawari_AHI_Band13"],
         "fallback": {"layer": "Himawari_AHI_Band13_Clean_Infrared",
                      "matrix_set": "GoogleMapsCompatible_Level6", "ext": "png"},
@@ -91,6 +101,13 @@ SATELLITES: list[dict[str, Any]] = [
                  _seam(_LON["himawari"], _LON["goes_west"] + 360)],
     },
 ]
+
+SOURCE_INFO = {
+    "gibs": {"provider": "NASA GIBS", "url": "https://www.earthdata.nasa.gov/engage/open-data-services-software/earthdata-developer-portal/gibs-api"},
+    "eumetview": {"provider": "EUMETSAT EUMETView", "url": "https://view.eumetsat.int/"},
+}
+
+STYLES = ("infrared", "truecolor")
 
 ATTRIBUTION = {
     "gibs": 'Satellite <a href="https://earthdata.nasa.gov/gibs">NASA GIBS</a>',
@@ -178,42 +195,63 @@ def _max_zoom(matrix_set: str) -> int:
     return int(m.group(1)) if m else 6
 
 
-def get_satellites(now: dt.datetime | None = None) -> dict[str, Any]:
+def _product_label(layer: str, style: str) -> str:
+    if style == "truecolor":
+        return "GeoColor (true colour by day, infrared by night)"
+    return "Infrared ~10.4 µm (clouds day and night)"
+
+
+def get_satellites(now: dt.datetime | None = None, style: str = "infrared") -> dict[str, Any]:
+    """Layers for the stitched live view.
+
+    style="truecolor" uses each satellite's GeoColor product where the provider
+    publishes one (checked in its capabilities) and infrared elsewhere.
+    """
+    if style not in STYLES:
+        raise ValueError(f"Unknown style '{style}'")
     image_time = latest_image_time(now)
     layers = []
     for sat in SATELLITES:
         catalogue = _catalogue(sat["source"])
         discovered = catalogue is not None
+        names = catalogue or ({} if sat["source"] == "gibs" else [])
+
+        name, used_style = None, "infrared"
+        if discovered and style == "truecolor":
+            name = _pick(names, sat["truecolor_patterns"])
+            used_style = "truecolor" if name else "infrared"
+        if discovered and not name:
+            name = _pick(names, sat["patterns"])
+            if not name:
+                continue  # Provider no longer offers this satellite.
+
         entry: dict[str, Any] = {
             "id": sat["id"],
             "name": sat["name"],
             "agency": sat["agency"],
+            "longitude": sat["longitude"],
+            "homepage": sat["homepage"],
+            "provider": SOURCE_INFO[sat["source"]]["provider"],
+            "provider_url": SOURCE_INFO[sat["source"]]["url"],
             "band": [round(v, 2) for v in sat["band"]],
             "attribution": ATTRIBUTION[sat["source"]],
+            "style": used_style,
+            "time": image_time,
         }
         if sat["source"] == "gibs":
-            name = _pick(catalogue or {}, sat["patterns"]) if discovered else None
-            if discovered and not name:
-                continue  # Provider no longer offers this satellite.
             info = catalogue[name] if name else sat["fallback"]
             name = name or sat["fallback"]["layer"]
             entry.update({
                 "type": "wmts",
-                "layer": name,
                 "url": GIBS_TILE_URL.format(layer=name, time=image_time,
                                             matrix_set=info["matrix_set"], ext=info["ext"]),
                 "max_native_zoom": _max_zoom(info["matrix_set"]),
             })
         else:
-            name = _pick(catalogue or [], sat["patterns"]) if discovered else None
-            if discovered and not name:
-                continue
-            entry.update({
-                "type": "wms",
-                "layer": name or sat["fallback"]["layer"],
-                "url": EUMETVIEW_WMS,
-                "max_native_zoom": 8,
-            })
+            name = name or sat["fallback"]["layer"]
+            entry.update({"type": "wms", "url": EUMETVIEW_WMS, "max_native_zoom": 8})
+        entry["layer"] = name
+        entry["product"] = _product_label(name, used_style)
         entry["verified"] = discovered
         layers.append(entry)
-    return {"time": image_time, "layers": layers}
+    return {"time": image_time, "style": style, "layers": layers}

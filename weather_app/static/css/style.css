@@ -142,7 +142,55 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* Live satellite panes: infrared clouds are blended over the base imagery
    so clear-sky areas let the map show through. */
-.sat-pane { mix-blend-mode: screen; }
+.sat-pane.sat-blend { mix-blend-mode: screen; }
+.link-btn { border: 0; background: none; color: var(--accent); font-size: 12px; padding: 0 2px; text-decoration: underline; }
+
+/* ---------- Sources ---------- */
+.sources-panel {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(720px, calc(100vw - 24px));
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+  padding: 16px 18px;
+  z-index: 1050;
+}
+.sources-panel h2 { font-size: 16px; margin: 0 0 4px; }
+.sources-panel h3 { font-size: 13px; margin: 16px 0 6px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+.sources-panel p { margin: 4px 0; color: var(--muted); font-size: 12px; }
+.sources-panel table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.sources-panel th, .sources-panel td { text-align: left; padding: 5px 6px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.sources-panel th { color: var(--muted); font-weight: 600; }
+.sources-panel a { color: var(--accent); }
+.sources-panel ul { margin: 0; padding-left: 18px; font-size: 12px; }
+.sources-panel li { margin: 3px 0; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+.dot.ok { background: #3ecf8e; }
+.dot.guess { background: #f5a524; }
+
+/* ---------- El Niño ---------- */
+.enso-panel { top: 130px; left: 12px; width: 320px; max-height: calc(100vh - 300px); overflow: auto; padding: 14px; }
+.enso-headline { font-size: 16px; font-weight: 700; margin: 2px 0 4px; }
+.enso-phase { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 10px; text-transform: uppercase; }
+.enso-phase.el_nino { background: #d93a3a; color: #fff; }
+.enso-phase.la_nina { background: #2f6fde; color: #fff; }
+.enso-phase.neutral { background: var(--bg-hover); color: var(--text); }
+.enso-big { font-size: 30px; font-weight: 300; }
+.enso-focus { margin: 8px 0; padding: 8px 10px; border-left: 3px solid #ff7a45; background: rgba(255, 122, 69, .1); border-radius: 4px; font-size: 12px; }
+.enso-row { display: grid; grid-template-columns: 70px 52px 1fr 48px; gap: 6px; align-items: center; padding: 5px 4px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+.enso-row:hover, .enso-row.focus { background: var(--bg-hover); }
+.enso-row .anom { font-weight: 700; text-align: right; }
+.enso-row .chg { font-size: 11px; text-align: right; }
+.warm { color: #ff7a6b; }
+.cool { color: #6ba8ff; }
+.enso-oni { display: flex; gap: 4px; flex-wrap: wrap; font-size: 11px; }
+.enso-oni span { background: var(--bg-hover); padding: 2px 6px; border-radius: 6px; }
+.enso-note { color: var(--muted); font-size: 11px; margin-top: 10px; }
+.enso-label { background: rgba(10, 14, 20, .78); color: #fff; border: 1px solid rgba(255,255,255,.25); border-radius: 6px; padding: 2px 6px; font-size: 11px; font-weight: 600; white-space: nowrap; box-shadow: none; }
+.enso-label::before { display: none; }
+.enso-focus-box { animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 50% { stroke-opacity: .25; fill-opacity: .02; } }
 
 /* ---------- Legend ---------- */
 .legend { left: 12px; bottom: 96px; width: 260px; padding: 8px 10px; }
@@ -243,6 +291,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .brand { display: none; }
   .layer-panel { max-height: calc(100vh - 140px); overflow-y: auto; }
   .layer-btn, .toggle-btn { width: 60px; }
+  .enso-panel { top: auto; left: 8px; right: 8px; bottom: 92px; width: auto; max-height: 45vh; }
   .info-panel { top: auto; left: 8px; right: 8px; bottom: 92px; width: auto; max-height: 45vh; }
   .legend { bottom: 92px; width: 200px; }
   .sat-panel { bottom: auto; top: 70px; left: 8px; right: 92px; flex-wrap: wrap; }

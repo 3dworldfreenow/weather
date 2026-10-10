@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from flask import Blueprint, current_app, jsonify, render_template, request
 
-from . import satellites, services
+from . import enso, satellites, services
 
 bp = Blueprint("main", __name__)
 
@@ -72,7 +72,12 @@ def radar():
 
 @bp.get("/api/satellites")
 def satellite_layers():
-    return jsonify(satellites.get_satellites())
+    return jsonify(satellites.get_satellites(style=request.args.get("style", "infrared")))
+
+
+@bp.get("/api/enso")
+def enso_status():
+    return jsonify(enso.get_enso())
 
 
 @bp.get("/api/events")

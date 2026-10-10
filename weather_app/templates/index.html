@@ -33,6 +33,7 @@
     <button class="layer-btn" data-layer="humidity"><span>💧</span>Humidity</button>
     <button class="layer-btn" data-layer="clouds"><span>☁️</span>Clouds</button>
     <button class="layer-btn" data-layer="pressure"><span>🧭</span>Pressure</button>
+    <button class="layer-btn" data-layer="enso"><span>🌊</span>El Niño</button>
     <hr>
     <button class="toggle-btn active" id="events-toggle" title="Storms, wildfires & volcanoes">
       <span>🌀</span>Events</button>
@@ -49,11 +50,29 @@
       <option value="dark">Dark map</option>
     </select>
     <input id="sat-date" type="date" aria-label="Imagery date" hidden>
-    <label class="switch" title="Live infrared clouds from 5 geostationary satellites">
-      <input id="clouds-toggle" type="checkbox" checked> Live clouds
+    <label for="live-style">Live</label>
+    <select id="live-style" title="Real-time imagery from 5 geostationary satellites">
+      <option value="truecolor">True colour</option>
+      <option value="infrared">Infrared clouds</option>
+      <option value="off">Off</option>
+    </select>
+    <label class="switch" title="Show where it is day and night right now">
+      <input id="night-toggle" type="checkbox" checked> Day/night
     </label>
     <span id="clouds-time" class="clouds-time"></span>
+    <button id="sources-btn" class="link-btn" type="button">Sources</button>
   </div>
+
+  <!-- Data sources -->
+  <aside class="panel sources-panel" id="sources-panel" hidden aria-label="Data sources">
+    <button class="close-btn" id="sources-close" aria-label="Close">✕</button>
+    <div id="sources-content"></div>
+  </aside>
+
+  <!-- El Niño -->
+  <aside class="panel enso-panel" id="enso-panel" hidden aria-live="polite">
+    <div id="enso-content"></div>
+  </aside>
 
   <!-- Legend -->
   <div class="panel legend" id="legend" hidden>

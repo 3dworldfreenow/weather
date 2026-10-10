@@ -123,3 +123,23 @@ def test_api_endpoint(monkeypatch):
     resp = create_app({"TESTING": True}).test_client().get("/api/satellites")
     assert resp.status_code == 200
     assert len(resp.get_json()["layers"]) == 5
+
+
+def test_truecolor_uses_geocolor_where_published(monkeypatch):
+    gibs = GIBS_XML.replace(b"<Layer><ows:Identifier>MODIS", b"""<Layer><ows:Identifier>GOES-East_ABI_GeoColor</ows:Identifier>
+   <Format>image/jpeg</Format>
+   <TileMatrixSetLink><TileMatrixSet>GoogleMapsCompatible_Level7</TileMatrixSet></TileMatrixSetLink></Layer>
+  <Layer><ows:Identifier>MODIS""")
+    fake_download(monkeypatch, gibs=gibs)
+    by_id = {l["id"]: l for l in satellites.get_satellites(NOW, style="truecolor")["layers"]}
+    assert by_id["goes_east"]["style"] == "truecolor"
+    assert by_id["goes_east"]["url"].endswith(".jpg")
+    assert by_id["goes_west"]["style"] == "infrared"  # no GeoColor published -> infrared
+    assert by_id["goes_west"]["layer"] == "GOES-West_ABI_Band13_Clean_Infrared"
+    assert by_id["himawari"]["homepage"].startswith("https://")
+
+
+def test_unknown_style_rejected(monkeypatch):
+    fake_download(monkeypatch)
+    resp = create_app({"TESTING": True}).test_client().get("/api/satellites?style=nope")
+    assert resp.status_code == 400

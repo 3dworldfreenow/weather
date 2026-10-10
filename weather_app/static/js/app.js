@@ -263,9 +263,10 @@
   const BandTileLayer = bandLimited(L.TileLayer);
   const BandWMSLayer = bandLimited(L.TileLayer.WMS);
 
-  const clouds = { layers: [], panes: [], on: true, time: null };
-  try { clouds.on = localStorage.getItem("clouds") !== "off"; } catch (e) { /* ignore */ }
-  $("clouds-toggle").checked = clouds.on;
+  const clouds = { layers: [], panes: [], style: "truecolor", data: null };
+  try { clouds.style = localStorage.getItem("liveStyle") || "truecolor"; } catch (e) { /* ignore */ }
+  if (!["truecolor", "infrared", "off"].includes(clouds.style)) clouds.style = "truecolor";
+  $("live-style").value = clouds.style;
 
   // Clip each satellite's pane exactly to its longitude band, in every world copy.
   function clipSatellitePanes() {
@@ -281,33 +282,38 @@
   map.on("zoomend viewreset", clipSatellitePanes);
   map.on("zoomstart", () => clouds.panes.forEach(({ pane }) => { pane.style.clipPath = "none"; }));
 
-  function satellitePane(id, band) {
-    const name = `sat-${id}`;
+  function satellitePane(sat) {
+    const name = `sat-${sat.id}`;
     let pane = map.getPane(name);
     if (!pane) {
       pane = map.createPane(name);
       pane.style.zIndex = 300;
       pane.classList.add("sat-pane");
-      clouds.panes.push({ pane, band });
+      clouds.panes.push({ pane, band: sat.band });
     }
+    // Infrared clouds are blended over the base map; true colour is drawn as is.
+    pane.classList.toggle("sat-blend", sat.style === "infrared");
     return name;
   }
 
   async function loadClouds() {
     clouds.layers.forEach((l) => map.removeLayer(l));
     clouds.layers = [];
+    clouds.data = null;
     $("clouds-time").textContent = "";
-    if (!clouds.on) return;
+    const style = clouds.style;
+    if (style === "off") return;
     try {
-      const data = await api("/api/satellites");
-      if (!clouds.on) return;
+      const data = await api("/api/satellites", { style });
+      if (clouds.style !== style) return;
+      clouds.data = data;
       clouds.layers = data.layers.map((sat) => {
         const opts = {
-          pane: satellitePane(sat.id, sat.band),
+          pane: satellitePane(sat),
           band: sat.band,
           maxNativeZoom: sat.max_native_zoom,
           maxZoom: 12,
-          opacity: 0.9,
+          opacity: sat.style === "infrared" ? 0.9 : 1,
           bounds: [[-SAT_LAT_LIMIT, -540], [SAT_LAT_LIMIT, 540]],
           attribution: sat.attribution,
         };
@@ -318,20 +324,115 @@
       });
       clipSatellitePanes();
       const t = new Date(data.time);
-      $("clouds-time").textContent = `${t.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })} · ${data.layers.length} satellites`;
+      const mins = Math.round((Date.now() - t) / 60000);
+      $("clouds-time").textContent = `${t.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })} (${mins} min ago) · ${data.layers.length} satellites`;
       $("clouds-time").title = data.layers.map((l) => `${l.name} (${l.agency})`).join(", ");
+      if (!$("sources-panel").hidden) renderSources();
     } catch (err) {
-      toast(`Live clouds: ${err.message}`);
+      toast(`Live satellites: ${err.message}`);
     }
   }
 
-  $("clouds-toggle").addEventListener("change", (e) => {
-    clouds.on = e.target.checked;
-    try { localStorage.setItem("clouds", clouds.on ? "on" : "off"); } catch (err) { /* ignore */ }
+  $("live-style").addEventListener("change", (e) => {
+    clouds.style = e.target.value;
+    try { localStorage.setItem("liveStyle", clouds.style); } catch (err) { /* ignore */ }
     loadClouds();
   });
   // New images arrive every 10 minutes.
-  setInterval(() => { if (clouds.on) loadClouds(); }, 10 * 60 * 1000);
+  setInterval(() => { if (clouds.style !== "off") loadClouds(); }, 10 * 60 * 1000);
+
+  // ------------------------------------------------------------------
+  // Live day/night shading (computed from the sun's current position)
+  // ------------------------------------------------------------------
+  map.createPane("night").style.zIndex = 330;
+  map.getPane("night").style.pointerEvents = "none";
+  const night = { layer: null, on: true };
+  try { night.on = localStorage.getItem("night") !== "off"; } catch (e) { /* ignore */ }
+  $("night-toggle").checked = night.on;
+
+  function sunPosition(date) {
+    const rad = Math.PI / 180;
+    const n = date.getTime() / 864e5 + 2440587.5 - 2451545.0; // days since J2000
+    const L = (280.460 + 0.9856474 * n) % 360;
+    const g = ((357.528 + 0.9856003 * n) % 360) * rad;
+    const lambda = (L + 1.915 * Math.sin(g) + 0.02 * Math.sin(2 * g)) * rad;
+    const eps = (23.439 - 0.0000004 * n) * rad;
+    const ra = Math.atan2(Math.cos(eps) * Math.sin(lambda), Math.cos(lambda));
+    const dec = Math.asin(Math.sin(eps) * Math.sin(lambda));
+    const gmst = (18.697374558 + 24.06570982441908 * n) % 24;
+    let lon = ra / rad - gmst * 15;
+    lon = ((lon + 540) % 360) - 180;
+    return { lat: dec / rad, lon };
+  }
+
+  function nightPolygon(date) {
+    const rad = Math.PI / 180;
+    const sun = sunPosition(date);
+    let dec = sun.lat * rad;
+    if (Math.abs(dec) < 0.001) dec = 0.001;
+    const pts = [];
+    for (let lon = -540; lon <= 540; lon += 2) {
+      const lat = Math.atan(-Math.cos((lon - sun.lon) * rad) / Math.tan(dec)) / rad;
+      pts.push([lat, lon]);
+    }
+    const pole = dec > 0 ? -85 : 85; // the pole tilted away from the sun is dark
+    pts.push([pole, 540], [pole, -540]);
+    return pts;
+  }
+
+  function updateNight() {
+    if (night.layer) { map.removeLayer(night.layer); night.layer = null; }
+    if (!night.on) return;
+    night.layer = L.polygon(nightPolygon(new Date()), {
+      pane: "night", stroke: false, fillColor: "#000814", fillOpacity: 0.38, interactive: false,
+    }).addTo(map);
+  }
+  $("night-toggle").addEventListener("change", (e) => {
+    night.on = e.target.checked;
+    try { localStorage.setItem("night", night.on ? "on" : "off"); } catch (err) { /* ignore */ }
+    updateNight();
+  });
+  setInterval(updateNight, 5 * 60 * 1000);
+
+  // ------------------------------------------------------------------
+  // Sources panel: every data source with links and image times
+  // ------------------------------------------------------------------
+  const STATIC_SOURCES = [
+    ["Forecasts, forecast maps, place search", "Open-Meteo (national weather service models)", "https://open-meteo.com/"],
+    ["Rain radar (past 2 h, 10-min steps)", "RainViewer (aggregated national radars)", "https://www.rainviewer.com/api.html"],
+    ["Storms, wildfires, volcanoes", "NASA EONET", "https://eonet.gsfc.nasa.gov/"],
+    ["High-res base imagery, labels, dark map", "Esri World Imagery / Reference", "https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9"],
+    ["Daily true-colour imagery", "NASA GIBS (VIIRS, MODIS)", "https://www.earthdata.nasa.gov/engage/open-data-services-software/earthdata-developer-portal/gibs-api"],
+  ];
+
+  function renderSources() {
+    const live = clouds.data;
+    const link = (url, text) => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(text)}</a>`;
+    const satRows = live ? live.layers.map((l) => `
+      <tr>
+        <td><b>${escapeHtml(l.name)}</b><br><small>${link(l.homepage, l.agency)} · ${Math.abs(l.longitude)}°${l.longitude < 0 ? "W" : "E"}</small></td>
+        <td>${escapeHtml(l.product)}<br><small><code>${escapeHtml(l.layer)}</code></small></td>
+        <td>${escapeHtml(new Date(l.time).toISOString().slice(11, 16))} UTC</td>
+        <td>${link(l.provider_url, l.provider)}<br><small><span class="dot ${l.verified ? "ok" : "guess"}"></span>${l.verified ? "found in provider catalogue" : "provider unreachable, using known name"}</small></td>
+      </tr>`).join("") : "";
+    const ensoSources = enso.data ? enso.data.sources.map((src) => `<li>${link(src.url, src.name)}</li>`).join("") : "";
+    $("sources-content").innerHTML = `
+      <h2>Data sources</h2>
+      <p>Everything on this map comes from free, public sources. Satellite images are near real time:
+         geostationary satellites scan the full Earth every 10 minutes and images appear here about 20–40 minutes later.</p>
+      <h3>Live satellites</h3>
+      ${live && live.style === "truecolor" ? "<p>True colour uses each satellite's GeoColor product where the provider publishes one; the others fall back to infrared.</p>" : ""}
+      ${live ? `<table><thead><tr><th>Satellite</th><th>Product</th><th>Image time</th><th>Served by</th></tr></thead><tbody>${satRows}</tbody></table>
+        <p>Each satellite is shown only in its own longitude band (seams halfway between neighbours). Areas beyond about 81° N/S are outside geostationary view.</p>`
+        : "<p>Live satellite layer is off.</p>"}
+      <h3>Other layers</h3>
+      <ul>${STATIC_SOURCES.map(([what, who, url]) => `<li>${escapeHtml(what)}: ${link(url, who)}</li>`).join("")}
+      <li>Day/night line: calculated from the sun's position (no download)</li></ul>
+      ${ensoSources ? `<h3>El Niño</h3><ul>${ensoSources}</ul>` : ""}`;
+  }
+
+  $("sources-btn").addEventListener("click", () => { renderSources(); $("sources-panel").hidden = false; });
+  $("sources-close").addEventListener("click", () => { $("sources-panel").hidden = true; });
 
   // ------------------------------------------------------------------
   // Timeline
@@ -692,6 +793,100 @@
   // ------------------------------------------------------------------
   // Layer switching
   // ------------------------------------------------------------------
+  // ------------------------------------------------------------------
+  // El Niño: SST anomaly map + Niño regions + NOAA status
+  // ------------------------------------------------------------------
+  const enso = { data: null, tiles: null, group: L.layerGroup(), boxes: {} };
+  const signed = (v, d = 1) => `${v >= 0 ? "+" : "−"}${Math.abs(v).toFixed(d)}`;
+  const PACIFIC = [[-25, -215], [25, -70]];
+
+  function sparkline(values) {
+    const w = 100, h = 24, max = Math.max(1, ...values.map(Math.abs));
+    const y = (v) => h / 2 - (v / max) * (h / 2 - 2);
+    const pts = values.map((v, i) => `${(i / Math.max(1, values.length - 1)) * w},${y(v).toFixed(1)}`).join(" ");
+    const last = values[values.length - 1];
+    return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">
+      <line x1="0" x2="${w}" y1="${h / 2}" y2="${h / 2}" stroke="rgba(255,255,255,.2)" />
+      <polyline points="${pts}" fill="none" stroke="${last >= 0 ? "#ff7a6b" : "#6ba8ff"}" stroke-width="1.6" /></svg>`;
+  }
+
+  function renderEnsoLegend() {
+    $("legend-title").textContent = "Sea surface temperature vs normal (°C)";
+    $("legend-bar").style.background = "linear-gradient(to right, #2c3e9e, #4f8fd8, #bfe0f5, #f7f7f7, #fbd3b0, #ec7a4f, #a8191c)";
+    $("legend-labels").innerHTML = "<span>−3</span><span>−2</span><span>−1</span><span>0</span><span>+1</span><span>+2</span><span>+3</span>";
+    $("legend").hidden = false;
+  }
+
+  function renderEnso(d) {
+    const rows = d.regions.map((r) => `
+      <div class="enso-row ${r.id === d.focus.id ? "focus" : ""}" data-region="${r.id}" title="${escapeHtml(r.about)}">
+        <span>${escapeHtml(r.name)}</span>
+        <span class="anom ${r.anomaly >= 0 ? "warm" : "cool"}">${signed(r.anomaly)}°</span>
+        ${sparkline(r.history)}
+        <span class="chg ${r.change_4w >= 0 ? "warm" : "cool"}">${r.change_4w >= 0 ? "▲" : "▼"} ${Math.abs(r.change_4w).toFixed(1)}</span>
+      </div>`).join("");
+    const oni = d.oni.map((o) => `<span class="${o.anomaly >= 0 ? "warm" : "cool"}">${o.season} ${o.year}: ${signed(o.anomaly)}</span>`).join("");
+    $("enso-content").innerHTML = `
+      <span class="enso-phase ${d.phase}">${d.phase === "el_nino" ? "El Niño" : d.phase === "la_nina" ? "La Niña" : "Neutral"}</span>
+      <div class="enso-headline">${escapeHtml(d.headline)}</div>
+      <div><span class="enso-big ${d.nino34_anomaly >= 0 ? "warm" : "cool"}">${signed(d.nino34_anomaly)} °C</span>
+        Niño 3.4, week of ${escapeHtml(new Date(`${d.week}T12:00`).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }))}
+        <br><small>${d.trend_4w >= 0 ? "▲" : "▼"} ${signed(d.trend_4w)} °C in the last 4 weeks</small></div>
+      <div class="enso-focus">🎯 ${escapeHtml(d.focus.text)}</div>
+      <div class="section-title">Niño regions · anomaly · last 12 weeks · 4-week change</div>
+      ${rows}
+      ${oni ? `<div class="section-title">Oceanic Niño Index (official, 3-month)</div><div class="enso-oni">${oni}</div>` : ""}
+      <div class="enso-note">${escapeHtml(d.note)} Map: daily sea temperature anomaly for ${escapeHtml(d.sst_layer.date)}.
+        <a href="#" id="enso-sources" style="color:var(--accent)">Sources</a></div>`;
+    $("enso-content").querySelectorAll(".enso-row").forEach((row) => {
+      row.addEventListener("click", () => {
+        const box = enso.boxes[row.dataset.region];
+        if (box) map.flyToBounds(box.getBounds().pad(0.6), { duration: 1.2 });
+      });
+    });
+    $("enso-sources").addEventListener("click", (e) => { e.preventDefault(); $("sources-btn").click(); });
+  }
+
+  async function enableEnso() {
+    try {
+      const d = await api("/api/enso");
+      if (state.layer !== "enso") return;
+      enso.data = d;
+      enso.tiles = L.tileLayer(d.sst_layer.url, {
+        pane: "heat", opacity: 0.8, maxNativeZoom: d.sst_layer.max_native_zoom, maxZoom: 12,
+        attribution: d.sst_layer.attribution,
+      }).addTo(map);
+      enso.group.clearLayers();
+      enso.boxes = {};
+      d.regions.forEach((r) => {
+        const isFocus = r.id === d.focus.id;
+        const color = r.anomaly >= 0.5 ? "#ff5a3c" : r.anomaly <= -0.5 ? "#4d8dff" : "#ffffff";
+        const box = L.rectangle([[r.south, r.west], [r.north, r.east]], {
+          color, weight: isFocus ? 3 : 1.5, dashArray: isFocus ? null : "5 5",
+          fillColor: color, fillOpacity: isFocus ? 0.12 : 0.04,
+          className: isFocus ? "enso-focus-box" : "",
+        }).bindTooltip(`${r.name} ${signed(r.anomaly)}°C ${r.change_4w >= 0 ? "▲" : "▼"}`, {
+          permanent: true, direction: "center", className: "enso-label",
+        }).addTo(enso.group);
+        enso.boxes[r.id] = box;
+      });
+      enso.group.addTo(map);
+      renderEnso(d);
+      renderEnsoLegend();
+      $("enso-panel").hidden = false;
+      map.flyToBounds(PACIFIC, { duration: 1.5 });
+    } catch (err) {
+      toast(`El Niño: ${err.message}`);
+    }
+  }
+
+  function disableEnso() {
+    if (enso.tiles) map.removeLayer(enso.tiles);
+    enso.tiles = null;
+    map.removeLayer(enso.group);
+    $("enso-panel").hidden = true;
+  }
+
   function setLayer(layer) {
     state.layer = layer;
     document.querySelectorAll(".layer-btn").forEach((b) => {
@@ -699,10 +894,12 @@
     });
     removeRadar();
     removeGrid();
+    disableEnso();
     clearTimeline();
     $("legend").hidden = true;
 
     if (layer === "radar") enableRadar();
+    else if (layer === "enso") enableEnso();
     else if (SCALES[layer]) loadGrid(layer);
     updateHash();
   }
@@ -781,6 +978,7 @@
     if (pin) pin.setLatLng([lat, lon]); else pin = L.marker([lat, lon]).addTo(map);
     const panel = $("info-panel");
     panel.hidden = false;
+    $("enso-panel").hidden = true;
     $("info-content").innerHTML = `<div class="info-place">${escapeHtml(place || "Loading…")}</div>`;
     if (forecastController) forecastController.abort();
     forecastController = new AbortController();
@@ -850,6 +1048,7 @@
     $("info-panel").hidden = true;
     if (pin) { map.removeLayer(pin); pin = null; }
     lastPlace = null;
+    if (state.layer === "enso" && enso.data) $("enso-panel").hidden = false;
   });
 
   map.on("click", (e) => openForecast(e.latlng.lat, e.latlng.lng));
@@ -957,8 +1156,9 @@
   // ------------------------------------------------------------------
   renderUnits();
   loadClouds();
+  updateNight();
   setEvents(true);
-  const startLayer = initial.layer && (initial.layer === "radar" || initial.layer === "satellite" || SCALES[initial.layer])
+  const startLayer = initial.layer && (["radar", "satellite", "enso"].includes(initial.layer) || SCALES[initial.layer])
     ? initial.layer : "satellite";
   setLayer(startLayer);
 })();

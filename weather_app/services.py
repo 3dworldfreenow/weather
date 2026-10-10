@@ -124,6 +124,16 @@ def _get_json(url: str, params: dict[str, Any] | None = None) -> Any:
         raise UpstreamError(f"{url} returned invalid JSON") from exc
 
 
+def _get_text(url: str) -> str:
+    try:
+        resp = _session.get(url, timeout=HTTP_TIMEOUT)
+    except requests.RequestException as exc:
+        raise UpstreamError(f"Request to {url} failed: {exc}") from exc
+    if not resp.ok:
+        raise UpstreamError(f"{url} returned HTTP {resp.status_code}", status=resp.status_code)
+    return resp.text
+
+
 # --------------------------------------------------------------------------
 # Point forecast
 # --------------------------------------------------------------------------

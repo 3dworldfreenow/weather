@@ -4,7 +4,11 @@ An interactive live weather map in the style of [zoom.earth](https://zoom.earth/
 
 ## Features
 
-- ☁️ **Live clouds:** near-real-time infrared imagery from five geostationary weather satellites (GOES-West, GOES-East, Meteosat 0°, Meteosat IODC, Himawari), each clipped to its own longitude band and stitched into one global layer, updated every 10 minutes, day and night
+- 🌍 **Live Earth:** near-real-time imagery from five geostationary weather satellites (GOES-West, GOES-East, Meteosat 0°, Meteosat IODC, Himawari), each clipped to its own longitude band and stitched into one global layer, updated every 10 minutes
+  - *True colour*: each satellite's GeoColor product where the provider publishes one (real colour by day, infrared at night), infrared elsewhere
+  - *Infrared clouds*: clouds day and night, blended over the base map
+  - Live day/night shading from the sun's position, and a **Sources** panel listing every satellite, product, image time and provider
+- 🌊 **El Niño:** daily sea surface temperature anomaly map, the four official Niño regions with their latest weekly anomaly, 12-week trend and 4-week change, current phase (El Niño / La Niña / neutral), the Oceanic Niño Index, and a highlight on the region where warming is strongest
 - 🛰️ **Base imagery:** high-res Esri imagery, NASA VIIRS/MODIS daily true colour with a date picker, or a dark map
 - 🌧️ **Rain radar:** about 2 hours of animated radar frames (RainViewer)
 - 💨 **Wind:** animated wind particles over a wind-speed heat map
@@ -22,6 +26,8 @@ All data sources are free and need **no API keys**:
 | Radar | [RainViewer](https://www.rainviewer.com/api.html) |
 | Storms / fires / volcanoes | [NASA EONET](https://eonet.gsfc.nasa.gov/) |
 | Live satellites | GOES & Himawari via [NASA GIBS](https://earthdata.nasa.gov/gibs), Meteosat via [EUMETView](https://view.eumetsat.int/) |
+| El Niño indices | [NOAA CPC weekly Niño SSTs](https://www.cpc.ncep.noaa.gov/data/indices/wksst9120.for), [Oceanic Niño Index](https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt) |
+| Sea surface temperature anomaly map | [GHRSST MUR](https://podaac.jpl.nasa.gov/MEaSUREs-MUR) via NASA GIBS |
 | Base imagery, labels, dark map | Esri, NASA GIBS |
 
 > Open-Meteo's free API is for non-commercial use. Check each provider's terms before running this commercially.
@@ -56,10 +62,11 @@ weather_app/
   routes.py                # page + JSON API
   services.py              # upstream API clients, caching, grid building
   satellites.py            # live satellite layer discovery and stitching
+  enso.py                  # El Niño / La Niña status from NOAA CPC data
   templates/index.html     # page markup
   static/css/style.css     # UI styles
   static/js/app.js         # map, layers, timeline, wind particles, forecast panel
-tests/test_app.py          # API tests (upstream calls are mocked)
+tests/                     # API tests (upstream calls are mocked)
 ```
 
 ## API
@@ -70,7 +77,8 @@ tests/test_app.py          # API tests (upstream calls are mocked)
 | `GET /api/search?q=` | Place search |
 | `GET /api/grid?layer=&south=&west=&north=&east=` | 48-hour forecast grid for the map view. `layer` is one of `temperature`, `wind`, `precipitation`, `clouds`, `humidity`, `pressure` |
 | `GET /api/radar` | Available radar frames |
-| `GET /api/satellites` | Live satellite layers, each with its longitude band |
+| `GET /api/satellites?style=truecolor\|infrared` | Live satellite layers, each with its longitude band, product and image time |
+| `GET /api/enso` | El Niño status, Niño region anomalies and the SST anomaly map layer |
 | `GET /api/events` | Active storms, wildfires and volcanoes |
 | `GET /healthz` | Health check |
 
