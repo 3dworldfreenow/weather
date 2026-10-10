@@ -133,3 +133,28 @@ def test_api_news(monkeypatch):
     resp = create_app({"TESTING": True}).test_client().get("/api/news")
     assert resp.status_code == 200
     assert resp.get_json()["youtube_search"].startswith("https://www.youtube.com/results")
+
+
+def test_gdelt_retries_after_rate_limit(monkeypatch):
+    calls = []
+
+    def get_json(url, params=None):
+        calls.append(url)
+        if len(calls) < 3:
+            raise services.UpstreamError("429", status=429)
+        return GDELT
+
+    monkeypatch.setattr(services, "_get_json", get_json)
+    monkeypatch.setattr(news.time, "sleep", lambda s: None)
+    assert len(news.fetch_gdelt()) == 2
+    assert len(calls) == 3
+
+
+def test_gdelt_gives_up_after_retries(monkeypatch):
+    def get_json(url, params=None):
+        raise services.UpstreamError("429", status=429)
+
+    monkeypatch.setattr(services, "_get_json", get_json)
+    monkeypatch.setattr(news.time, "sleep", lambda s: None)
+    with pytest.raises(services.UpstreamError):
+        news.fetch_gdelt()

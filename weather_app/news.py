@@ -13,6 +13,7 @@ import datetime as dt
 import email.utils
 import logging
 import re
+import time
 import xml.etree.ElementTree as ET
 from typing import Any
 from urllib.parse import quote_plus, urlparse
@@ -117,12 +118,24 @@ def parse_gdelt(data: dict[str, Any]) -> list[dict[str, Any]]:
     return articles
 
 
+GDELT_RETRY_DELAYS = (6, 15)  # GDELT allows about one request per 5 seconds per address
+
+
 def fetch_gdelt() -> list[dict[str, Any]]:
-    data = services._get_json(GDELT_URL, {
+    params = {
         "query": GDELT_QUERY, "mode": "artlist", "format": "json",
         "maxrecords": 100, "sort": "datedesc", "timespan": "7d",
-    })
-    return parse_gdelt(data if isinstance(data, dict) else {})
+    }
+    for delay in (*GDELT_RETRY_DELAYS, None):
+        try:
+            data = services._get_json(GDELT_URL, params)
+            return parse_gdelt(data if isinstance(data, dict) else {})
+        except services.UpstreamError as exc:
+            if not exc.rate_limited or delay is None:
+                raise
+            log.info("GDELT rate limit, retrying in %s s", delay)
+            time.sleep(delay)
+    return []
 
 
 # --------------------------------------------------------------------------
