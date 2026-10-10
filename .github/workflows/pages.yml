@@ -4,7 +4,7 @@ on:
   push:
     branches: ["**"]
   schedule:
-    # Refresh El Niño data, satellite catalogue and events every 30 minutes.
+    # Refresh El Niño data and the satellite catalogue every 30 minutes.
     - cron: "*/30 * * * *"
   workflow_dispatch:
 

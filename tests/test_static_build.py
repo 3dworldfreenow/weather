@@ -18,7 +18,6 @@ def offline(monkeypatch):
     services.cache.clear()
     monkeypatch.setattr(satellites, "_catalogue", lambda source: None)
     monkeypatch.setattr(services, "_get_text", lambda url: WEEKLY if url == enso.WEEKLY_URL else ONI)
-    monkeypatch.setattr(services, "get_events", lambda: [{"id": "1", "type": "fire"}])
     yield
     services.cache.clear()
 
@@ -42,7 +41,7 @@ def test_build_static_site(tmp_path):
         assert all("{time}" in l["url"] for l in gibs)  # browser fills in the time
 
     assert json.loads((out / "data" / "enso.json").read_text())["focus"]["id"] == "nino12"
-    assert json.loads((out / "data" / "events.json").read_text())["events"][0]["type"] == "fire"
+    assert not (out / "data" / "events.json").exists()
     assert json.loads((out / "data" / "build.json").read_text())["failed"] == []
 
 

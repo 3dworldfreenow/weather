@@ -1,39 +1,29 @@
-# Weather Map
+# El Niño Tracker
 
-An interactive live weather map and 3D globe in the style of [zoom.earth](https://zoom.earth/), built with **Python + Flask**, **Leaflet** and **MapLibre GL**.
+A live El Niño tracker on a 3D globe and map, in the style of [zoom.earth](https://zoom.earth/), built with **Python + Flask**, **Leaflet** and **MapLibre GL**.
 
 **Live demo:** https://3dworldfreenow.github.io/weather/ (after GitHub Pages is enabled; see [Host the demo on GitHub Pages](#host-the-demo-on-github-pages))
 
 ## Features
 
-- 🌐 **3D globe:** the site opens on a spinning round Earth (MapLibre GL) with the live satellite imagery, day/night shading and labels. Click anywhere to open the detailed map and forecast for that place
-- 🌍 **Live Earth:** near-real-time imagery from five geostationary weather satellites (GOES-West, GOES-East, Meteosat 0°, Meteosat IODC, Himawari), each clipped to its own longitude band and stitched into one global layer, updated every 10 minutes
-  - *True colour*: each satellite's GeoColor product where the provider publishes one (real colour by day, infrared at night), infrared elsewhere
-  - *Infrared clouds*: clouds day and night, blended over the base map
-  - Live day/night shading from the sun's position, and a **Sources** panel listing every satellite, product, image time and provider
-- 🌊 **El Niño:** daily sea surface temperature anomaly map, the four official Niño regions with their latest weekly anomaly, 12-week trend and 4-week change, current phase (El Niño / La Niña / neutral), the Oceanic Niño Index, and a highlight on the region where warming is strongest
-- 🛰️ **Base imagery:** high-res Esri imagery, NASA VIIRS/MODIS daily true colour with a date picker, or a dark map
-- 🌧️ **Rain radar:** about 2 hours of animated radar frames (RainViewer)
-- 💨 **Wind:** animated wind particles over a wind-speed heat map
-- 🌡️ **Temperature, ☔ precipitation, 💧 humidity, ☁️ clouds, 🧭 pressure:** smooth forecast overlays for the next 48 hours
-- ⏯️ **Timeline:** play/pause and scrub through radar frames or forecast hours (keyboard: space, ←, →)
-- 🌀 **Events:** active tropical storms (with tracks), wildfires and volcanoes from NASA EONET
-- 📍 **Click anywhere** (or search a place, or use your location) for current conditions, the next 24 hours and a 7-day forecast
-- °C/°F toggle, shareable URLs (`/#28.61,77.21,6z/wind`), and a mobile-friendly layout
+- 🌊 **El Niño status:** current phase (El Niño / La Niña / neutral) and strength from the latest weekly Niño 3.4 anomaly, the 4-week trend, and NOAA's official Oceanic Niño Index
+- 🎯 **Where it is building:** the four official Niño regions (1+2, 3, 3.4, 4), each with its latest anomaly, a 12-week trend line and its 4-week change; the warmest region is highlighted. Click a region to zoom to it
+- 🌡️ **Sea temperature map:** daily sea surface temperature anomaly (how much warmer or colder than normal), switchable with the *Sea temp* button
+- 🌐 **3D globe and flat map:** the site opens on a round Earth centred on the equatorial Pacific; switch to the flat map any time
+- 🛰️ **Live Earth backdrop:** near-real-time imagery from five geostationary weather satellites (GOES-West, GOES-East, Meteosat 0°, Meteosat IODC, Himawari), stitched by longitude band, in true colour or infrared, plus live day/night shading
+- 📚 **Sources panel** listing every data source, satellite, product and image time
 
 All data sources are free and need **no API keys**:
 
 | Data | Provider |
 | --- | --- |
-| Forecasts, grids, place search | [Open-Meteo](https://open-meteo.com/) |
-| Radar | [RainViewer](https://www.rainviewer.com/api.html) |
-| Storms / fires / volcanoes | [NASA EONET](https://eonet.gsfc.nasa.gov/) |
-| Live satellites | GOES & Himawari via [NASA GIBS](https://earthdata.nasa.gov/gibs), Meteosat via [EUMETView](https://view.eumetsat.int/) |
-| El Niño indices | [NOAA CPC weekly Niño SSTs](https://www.cpc.ncep.noaa.gov/data/indices/wksst9120.for), [Oceanic Niño Index](https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt) |
-| Sea surface temperature anomaly map | [GHRSST MUR](https://podaac.jpl.nasa.gov/MEaSUREs-MUR) via NASA GIBS |
-| Base imagery, labels, dark map | Esri, NASA GIBS |
+| Niño region indices (weekly) | [NOAA CPC weekly Niño SSTs](https://www.cpc.ncep.noaa.gov/data/indices/wksst9120.for) |
+| Oceanic Niño Index (official, 3-month) | [NOAA CPC ONI](https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt) |
+| Sea surface temperature anomaly map | [GHRSST MUR](https://podaac.jpl.nasa.gov/MEaSUREs-MUR) via [NASA GIBS](https://earthdata.nasa.gov/gibs) |
+| Live satellites | GOES & Himawari via NASA GIBS, Meteosat via [EUMETView](https://view.eumetsat.int/) |
+| Base imagery and labels | Esri, NASA GIBS |
 
-> Open-Meteo's free API is for non-commercial use. Check each provider's terms before running this commercially.
+The El Niño / La Niña label comes from the latest weekly Niño 3.4 reading. NOAA officially declares El Niño using the 3-month ONI together with atmospheric signs; see the [CPC ENSO discussion](https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml).
 
 ## Quick start
 
@@ -52,10 +42,7 @@ gunicorn -w 2 -b 0.0.0.0:8000 app:app
 
 ## Host the demo on GitHub Pages
 
-GitHub Pages only serves static files, so the demo is a static build of the same app:
-
-- forecasts, forecast maps, place search and radar are fetched by the visitor's browser straight from Open-Meteo and RainViewer (`static/js/static-api.js`)
-- data browsers cannot fetch themselves (NOAA El Niño files, satellite catalogues, events) is built by the Python code into `data/*.json`
+GitHub Pages only serves static files, so the demo is a static build of the same app. The data the browser needs (NOAA files, which browsers cannot fetch directly, and the satellite catalogues) is built by the Python code into `data/*.json`, which `static/js/static-api.js` reads.
 
 The workflow `.github/workflows/pages.yml` runs the tests, builds the site with `scripts/build_static.py` and publishes it. It runs on every push and every 30 minutes, to keep the data fresh.
 
@@ -87,33 +74,24 @@ app.py                     # entry point (dev server / gunicorn target)
 weather_app/
   __init__.py              # Flask app factory
   routes.py                # page + JSON API
-  services.py              # upstream API clients, caching, grid building
-  satellites.py            # live satellite layer discovery and stitching
   enso.py                  # El Niño / La Niña status from NOAA CPC data
+  satellites.py            # live satellite layer discovery and stitching
+  services.py              # HTTP helper and in-memory cache
   templates/index.html     # page markup
   static/css/style.css     # UI styles
-  static/js/app.js         # map, globe, layers, timeline, wind particles, panels
+  static/js/app.js         # map, globe, El Niño panel and overlays, live satellites
   static/js/static-api.js  # browser-only API used by the GitHub Pages demo
 scripts/build_static.py    # builds the static demo into dist/
 .github/workflows/pages.yml  # tests, builds and deploys the demo
-tests/                     # API tests (upstream calls are mocked)
+tests/                     # tests (upstream calls are mocked)
 ```
 
 ## API
 
 | Endpoint | Description |
 | --- | --- |
-| `GET /api/weather?lat=&lon=` | Current conditions, 24-hour and 7-day forecast |
-| `GET /api/search?q=` | Place search |
-| `GET /api/grid?layer=&south=&west=&north=&east=` | 48-hour forecast grid for the map view. `layer` is one of `temperature`, `wind`, `precipitation`, `clouds`, `humidity`, `pressure` |
-| `GET /api/radar` | Available radar frames |
-| `GET /api/satellites?style=truecolor\|infrared` | Live satellite layers, each with its longitude band, product and image time |
 | `GET /api/enso` | El Niño status, Niño region anomalies and the SST anomaly map layer |
-| `GET /api/events` | Active storms, wildfires and volcanoes |
+| `GET /api/satellites?style=truecolor\|infrared` | Live satellite layers, each with its longitude band, product and image time |
 | `GET /healthz` | Health check |
 
-Satellite layer names are read from the NASA GIBS and EUMETView capability documents at run time, so changes on their side are picked up automatically. If a provider can't be reached, well-known layer names are used instead.
-
-The forecast grid is snapped to a coarse lattice and fetched once for all overlay layers, so panning and switching layers reuse cached data. Open-Meteo's free tier counts every grid point as one call. If the limit is reached, the site shows a "wait a minute" message.
-
-Responses are cached in memory, from 2 minutes (radar) to 1 hour (search), to stay well within the providers' rate limits.
+Satellite layer names are read from the NASA GIBS and EUMETView capability documents at run time, so changes on their side are picked up automatically. If a provider can't be reached, well-known layer names are used instead. Responses are cached in memory (El Niño data for 6 hours).

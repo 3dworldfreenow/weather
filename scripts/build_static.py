@@ -1,10 +1,10 @@
 """Build the static GitHub Pages demo into ./dist.
 
-The page is rendered by the Flask app with STATIC_SITE=True, so the browser
-fetches forecasts, grids, search and radar directly from the free APIs (see
-static/js/static-api.js). Data that browsers cannot fetch themselves (NOAA
-files without CORS, satellite catalogues, events) is pre-built here into
-dist/data/*.json. A scheduled GitHub Actions workflow re-runs this script.
+The page is rendered by the Flask app with STATIC_SITE=True. The data the
+browser needs (NOAA El Niño files, which have no CORS headers, and the
+satellite catalogues) is pre-built here into dist/data/*.json, which
+static/js/static-api.js reads. A scheduled GitHub Actions workflow re-runs
+this script to keep it fresh.
 
 Usage:  python scripts/build_static.py [output_dir]
 """
@@ -21,7 +21,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from weather_app import create_app, enso, satellites, services  # noqa: E402
+from weather_app import create_app, enso, satellites  # noqa: E402
 
 log = logging.getLogger("build_static")
 
@@ -58,7 +58,6 @@ def build(out: Path) -> None:
     builders = {
         "satellites.json": satellites_data,
         "enso.json": enso.get_enso,
-        "events.json": lambda: {"events": services.get_events()},
     }
     failed = []
     for name, builder in builders.items():
