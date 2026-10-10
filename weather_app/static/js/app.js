@@ -200,14 +200,16 @@
     modis: L.tileLayer(gibsUrl("MODIS_Terra_CorrectedReflectance_TrueColor", "GoogleMapsCompatible_Level9"), {
       maxNativeZoom: 9, maxZoom: 12, time: yesterdayUTC(), attribution: GIBS_ATTR,
     }),
-    dark: L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png", {
-      maxZoom: 19, subdomains: "abcd",
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
-    }),
+    dark: L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+      { maxNativeZoom: 16, maxZoom: 19, attribution: "Map &copy; Esri, HERE, Garmin, OpenStreetMap contributors" },
+    ),
   };
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png", {
-    pane: "labels", maxZoom: 19, subdomains: "abcd",
-  }).addTo(map);
+  // Country borders and place names on top of every layer (no API key needed).
+  L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+    { pane: "labels", maxNativeZoom: 16, maxZoom: 19 },
+  ).addTo(map);
 
   let currentBase = null;
   function setBase(key) {
@@ -235,6 +237,101 @@
   $("sat-source").value = baseLayers[savedBase] ? savedBase : "esri";
   setBase($("sat-source").value);
   $("sat-source").addEventListener("change", (e) => setBase(e.target.value));
+
+  // ------------------------------------------------------------------
+  // Live clouds: geostationary satellites stitched into one global layer
+  // ------------------------------------------------------------------
+  const SAT_LAT_LIMIT = 81; // edge of the geostationary disks
+
+  // Is a longitude range (any world copy) overlapping a satellite's band?
+  function overlapsBand(w, e, band) {
+    const shift = Math.floor((w + 180) / 360) * 360;
+    w -= shift; e -= shift;
+    return [-360, 0, 360].some((off) => w < band[1] + off && e > band[0] + off);
+  }
+
+  // Tile layers that only request tiles inside their satellite's band.
+  // (Declaring `band` as an option also keeps it out of WMS request params.)
+  const bandLimited = (Base) => Base.extend({
+    options: { band: [-180, 180] },
+    _isValidTile(coords) {
+      if (!Base.prototype._isValidTile.call(this, coords)) return false;
+      const n = Math.pow(2, coords.z);
+      return overlapsBand((coords.x / n) * 360 - 180, ((coords.x + 1) / n) * 360 - 180, this.options.band);
+    },
+  });
+  const BandTileLayer = bandLimited(L.TileLayer);
+  const BandWMSLayer = bandLimited(L.TileLayer.WMS);
+
+  const clouds = { layers: [], panes: [], on: true, time: null };
+  try { clouds.on = localStorage.getItem("clouds") !== "off"; } catch (e) { /* ignore */ }
+  $("clouds-toggle").checked = clouds.on;
+
+  // Clip each satellite's pane exactly to its longitude band, in every world copy.
+  function clipSatellitePanes() {
+    clouds.panes.forEach(({ pane, band }) => {
+      const d = [-360, 0, 360].map((off) => {
+        const a = map.latLngToLayerPoint([SAT_LAT_LIMIT, band[0] + off]);
+        const b = map.latLngToLayerPoint([-SAT_LAT_LIMIT, band[1] + off]);
+        return `M${a.x} ${a.y}H${b.x}V${b.y}H${a.x}Z`;
+      }).join("");
+      pane.style.clipPath = `path("${d}")`;
+    });
+  }
+  map.on("zoomend viewreset", clipSatellitePanes);
+  map.on("zoomstart", () => clouds.panes.forEach(({ pane }) => { pane.style.clipPath = "none"; }));
+
+  function satellitePane(id, band) {
+    const name = `sat-${id}`;
+    let pane = map.getPane(name);
+    if (!pane) {
+      pane = map.createPane(name);
+      pane.style.zIndex = 300;
+      pane.classList.add("sat-pane");
+      clouds.panes.push({ pane, band });
+    }
+    return name;
+  }
+
+  async function loadClouds() {
+    clouds.layers.forEach((l) => map.removeLayer(l));
+    clouds.layers = [];
+    $("clouds-time").textContent = "";
+    if (!clouds.on) return;
+    try {
+      const data = await api("/api/satellites");
+      if (!clouds.on) return;
+      clouds.layers = data.layers.map((sat) => {
+        const opts = {
+          pane: satellitePane(sat.id, sat.band),
+          band: sat.band,
+          maxNativeZoom: sat.max_native_zoom,
+          maxZoom: 12,
+          opacity: 0.9,
+          bounds: [[-SAT_LAT_LIMIT, -540], [SAT_LAT_LIMIT, 540]],
+          attribution: sat.attribution,
+        };
+        const layer = sat.type === "wms"
+          ? new BandWMSLayer(sat.url, { ...opts, layers: sat.layer, format: "image/png", transparent: true, version: "1.3.0" })
+          : new BandTileLayer(sat.url, opts);
+        return layer.addTo(map);
+      });
+      clipSatellitePanes();
+      const t = new Date(data.time);
+      $("clouds-time").textContent = `${t.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })} · ${data.layers.length} satellites`;
+      $("clouds-time").title = data.layers.map((l) => `${l.name} (${l.agency})`).join(", ");
+    } catch (err) {
+      toast(`Live clouds: ${err.message}`);
+    }
+  }
+
+  $("clouds-toggle").addEventListener("change", (e) => {
+    clouds.on = e.target.checked;
+    try { localStorage.setItem("clouds", clouds.on ? "on" : "off"); } catch (err) { /* ignore */ }
+    loadClouds();
+  });
+  // New images arrive every 10 minutes.
+  setInterval(() => { if (clouds.on) loadClouds(); }, 10 * 60 * 1000);
 
   // ------------------------------------------------------------------
   // Timeline
@@ -364,7 +461,7 @@
   // ------------------------------------------------------------------
   // Grid layers (temperature, wind, ...) rendered as a smooth image overlay
   // ------------------------------------------------------------------
-  const grid = { data: null, overlay: null, controller: null, frame: 0 };
+  const grid = { data: null, overlays: [], controller: null, frame: 0 };
 
   function interpolate(field, rows, cols, gx, gy) {
     gx = clamp(gx, 0, cols - 1);
@@ -401,29 +498,35 @@
     return canvas.toDataURL();
   }
 
+  // The grid is drawn three times (one world apart) so it also covers the
+  // repeated world copies on wide screens and views across the date line.
+  const WORLD_OFFSETS = [-360, 0, 360];
+
   function showGridFrame(i) {
     const data = grid.data;
     if (!data) return;
     grid.frame = i;
     const b = data.bounds;
-    const bounds = [[b.south, b.west], [b.north, b.east]];
     const url = gridImage(data, i);
-    if (grid.overlay) {
-      grid.overlay.setUrl(url);
-      grid.overlay.setBounds(L.latLngBounds(bounds));
-    } else {
-      grid.overlay = L.imageOverlay(url, bounds, {
-        pane: "heat", opacity: 0.75,
-        attribution: 'Forecast <a href="https://open-meteo.com/">Open-Meteo</a>',
-      }).addTo(map);
-    }
+    WORLD_OFFSETS.forEach((off, k) => {
+      const bounds = L.latLngBounds([[b.south, b.west + off], [b.north, b.east + off]]);
+      if (grid.overlays[k]) {
+        grid.overlays[k].setUrl(url);
+        grid.overlays[k].setBounds(bounds);
+      } else {
+        grid.overlays[k] = L.imageOverlay(url, bounds, {
+          pane: "heat", opacity: 0.75,
+          attribution: off === 0 ? 'Forecast <a href="https://open-meteo.com/">Open-Meteo</a>' : undefined,
+        }).addTo(map);
+      }
+    });
     if (data.layer === "wind") wind.setField(data, i);
   }
 
   function removeGrid() {
     if (grid.controller) grid.controller.abort();
-    if (grid.overlay) map.removeLayer(grid.overlay);
-    grid.overlay = null;
+    grid.overlays.forEach((o) => map.removeLayer(o));
+    grid.overlays = [];
     grid.data = null;
     wind.stop();
   }
@@ -442,6 +545,21 @@
       west: west.toFixed(2),
       east: east.toFixed(2),
     };
+  }
+
+  // True when the loaded grid already covers the visible map at a useful
+  // resolution, so panning and small zooms need no new request.
+  function gridCoversView() {
+    const data = grid.data;
+    if (!data) return false;
+    const g = data.bounds;
+    const v = map.getBounds();
+    const south = clamp(v.getSouth(), -85, 85), north = clamp(v.getNorth(), -85, 85);
+    const viewWidth = Math.min(v.getEast() - v.getWest(), 360);
+    if (south < g.south || north > g.north) return false;
+    if (g.east - g.west > viewWidth * 6) return false; // zoomed in: fetch more detail
+    if (data.global) return true;
+    return WORLD_OFFSETS.some((off) => v.getWest() + off >= g.west && v.getEast() + off <= g.east);
   }
 
   async function loadGrid(layer) {
@@ -498,7 +616,10 @@
     function velocity(x, y) {
       if (!field) return null;
       const { nw, se, rows, cols, u, v } = field;
-      const gx = ((x - nw.x) / (se.x - nw.x)) * cols - 0.5;
+      // Map x into the grid's world copy (the overlay repeats every world width).
+      const worldPx = 256 * Math.pow(2, map.getZoom());
+      const dx = (((x - nw.x) % worldPx) + worldPx) % worldPx;
+      const gx = (dx / (se.x - nw.x)) * cols - 0.5;
       const gy = ((y - nw.y) / (se.y - nw.y)) * rows - 0.5;
       if (gx < -0.5 || gy < -0.5 || gx > cols - 0.5 || gy > rows - 0.5) return null;
       const uu = interpolate(u, rows, cols, gx, gy);
@@ -590,7 +711,9 @@
     btn.addEventListener("click", () => setLayer(btn.dataset.layer));
   });
 
-  const reloadGrid = debounce(() => { if (SCALES[state.layer]) loadGrid(state.layer); }, 400);
+  const reloadGrid = debounce(() => {
+    if (SCALES[state.layer] && !gridCoversView()) loadGrid(state.layer);
+  }, 400);
   map.on("moveend", () => { updateHash(); reloadGrid(); });
 
   function updateHash() {
@@ -833,6 +956,7 @@
   // Start
   // ------------------------------------------------------------------
   renderUnits();
+  loadClouds();
   setEvents(true);
   const startLayer = initial.layer && (initial.layer === "radar" || initial.layer === "satellite" || SCALES[initial.layer])
     ? initial.layer : "satellite";

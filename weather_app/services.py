@@ -23,6 +23,7 @@ HTTP_TIMEOUT = 15
 USER_AGENT = "weather-map/1.0 (+https://github.com/3dworldfreenow/weather)"
 
 # Map layer name -> Open-Meteo hourly variables needed to draw it.
+# All of them are fetched in one request, so switching layers is free.
 GRID_LAYERS: dict[str, list[str]] = {
     "temperature": ["temperature_2m"],
     "wind": ["wind_speed_10m", "wind_direction_10m"],
@@ -32,8 +33,10 @@ GRID_LAYERS: dict[str, list[str]] = {
     "pressure": ["pressure_msl"],
 }
 
-GRID_COLS = 16
-GRID_MAX_ROWS = 14
+# Open-Meteo counts every grid point as one API call (free tier: 600/min,
+# 5,000/hour, 10,000/day), so keep the grid small and reuse it a lot.
+GRID_COLS = 12
+GRID_MAX_ROWS = 10
 GRID_FORECAST_HOURS = 48
 GRID_STEP_HOURS = 3
 MAX_MERCATOR_LAT = 85.0
@@ -47,6 +50,15 @@ EONET_CATEGORIES = {
 
 class UpstreamError(RuntimeError):
     """Raised when an upstream data provider fails or returns bad data."""
+
+    def __init__(self, message: str, status: int | None = None, reason: str | None = None):
+        super().__init__(message)
+        self.status = status
+        self.reason = reason
+
+    @property
+    def rate_limited(self) -> bool:
+        return self.status == 429
 
 
 class TTLCache:
@@ -72,6 +84,15 @@ class TTLCache:
             self._data[key] = (now + ttl, value)
         return value
 
+    def get(self, key: Any, default: Any = None) -> Any:
+        with self._lock:
+            hit = self._data.get(key)
+            return hit[1] if hit and hit[0] > time.monotonic() else default
+
+    def set(self, key: Any, value: Any, ttl: float) -> None:
+        with self._lock:
+            self._data[key] = (time.monotonic() + ttl, value)
+
     def clear(self) -> None:
         with self._lock:
             self._data.clear()
@@ -85,10 +106,22 @@ _session.headers["User-Agent"] = USER_AGENT
 def _get_json(url: str, params: dict[str, Any] | None = None) -> Any:
     try:
         resp = _session.get(url, params=params, timeout=HTTP_TIMEOUT)
-        resp.raise_for_status()
-        return resp.json()
-    except (requests.RequestException, ValueError) as exc:
+    except requests.RequestException as exc:
         raise UpstreamError(f"Request to {url} failed: {exc}") from exc
+    if not resp.ok:
+        reason = None
+        try:
+            reason = resp.json().get("reason")
+        except (ValueError, AttributeError):
+            pass
+        raise UpstreamError(
+            f"{url} returned HTTP {resp.status_code}: {reason or resp.text[:200]}",
+            status=resp.status_code, reason=reason,
+        )
+    try:
+        return resp.json()
+    except ValueError as exc:
+        raise UpstreamError(f"{url} returned invalid JSON") from exc
 
 
 # --------------------------------------------------------------------------
@@ -186,6 +219,29 @@ def _normalise_lon(lon: float) -> float:
     return ((lon + 180) % 360) - 180
 
 
+def snap_bbox(south: float, west: float, north: float, east: float
+              ) -> tuple[float, float, float, float]:
+    """Expand a bbox outwards to a coarse lattice so nearby views share a grid.
+
+    The lattice step is a power of two degrees, about a quarter of the view
+    width. Views wider than the globe snap to the full -180..180 range.
+    """
+    span = max(east - west, (north - south) / 2, 0.5)
+    step = 2.0 ** math.floor(math.log2(span / 4))
+    step = min(max(step, 0.25), 90.0)
+    west = math.floor(west / step) * step
+    east = math.ceil(east / step) * step
+    south = max(-MAX_MERCATOR_LAT, math.floor(south / step) * step)
+    north = min(MAX_MERCATOR_LAT, math.ceil(north / step) * step)
+    if east - west >= 360:
+        west, east = -180.0, 180.0
+    elif west < -180 or west >= 180:
+        # Shift into the canonical world copy; the client handles wrapping.
+        shift = math.floor((west + 180) / 360) * 360
+        west, east = west - shift, east - shift
+    return south, west, north, east
+
+
 def get_grid(layer: str, south: float, west: float, north: float, east: float
              ) -> dict[str, Any]:
     if layer not in GRID_LAYERS:
@@ -195,21 +251,18 @@ def get_grid(layer: str, south: float, west: float, north: float, east: float
     north = max(-MAX_MERCATOR_LAT, min(MAX_MERCATOR_LAT, north))
     if north <= south or east <= west:
         raise ValueError("Invalid bounding box")
-    if east - west > 360:
-        west, east = -180.0, 180.0
 
-    # Round the bbox so nearby map views share cache entries.
-    south, west, north, east = (round(v, 1) for v in (south, west, north, east))
-    key = ("grid", layer, south, west, north, east)
-    return cache.get_or_set(key, 900, lambda: _fetch_grid(layer, south, west, north, east))
+    south, west, north, east = snap_bbox(south, west, north, east)
+    raw = cache.get_or_set(("grid", south, west, north, east), 1800,
+                           lambda: _fetch_grid(south, west, north, east))
+    return _grid_layer(raw, layer)
 
 
-def _fetch_grid(layer: str, south: float, west: float, north: float, east: float
-                ) -> dict[str, Any]:
+def _fetch_grid(south: float, west: float, north: float, east: float) -> dict[str, Any]:
     lats, lons = build_grid_points(south, west, north, east)
     point_lats = [round(lat, 3) for lat in lats for _ in lons]
     point_lons = [round(_normalise_lon(lon), 3) for _ in lats for lon in lons]
-    variables = GRID_LAYERS[layer]
+    variables = sorted({v for vs in GRID_LAYERS.values() for v in vs})
 
     data = _get_json(FORECAST_URL, {
         "latitude": ",".join(map(str, point_lats)),
@@ -228,44 +281,48 @@ def _fetch_grid(layer: str, south: float, west: float, north: float, east: float
     times = data[0]["hourly"]["time"][::GRID_STEP_HOURS]
     n_t, rows, cols = len(times), len(lats), len(lons)
 
-    def series(var: str) -> list[list[float | None]]:
-        return [loc["hourly"][var][::GRID_STEP_HOURS][:n_t] for loc in data]
-
-    def to_frames(per_point: list[list[float | None]]) -> list[list[list[float | None]]]:
+    def frames(var: str) -> list[list[list[float | None]]]:
+        per_point = [loc["hourly"][var][::GRID_STEP_HOURS][:n_t] for loc in data]
         return [
             [[per_point[r * cols + c][t] for c in range(cols)] for r in range(rows)]
             for t in range(n_t)
         ]
 
-    result: dict[str, Any] = {
-        "layer": layer,
+    return {
         "bounds": {"south": south, "west": west, "north": north, "east": east},
         "rows": rows,
         "cols": cols,
         "times": times,
+        "fields": {var: frames(var) for var in variables},
     }
 
-    if layer == "wind":
-        speeds, dirs = series("wind_speed_10m"), series("wind_direction_10m")
-        u_pts, v_pts = [], []
-        for sp_row, dir_row in zip(speeds, dirs):
-            u_row, v_row = [], []
-            for sp, d in zip(sp_row, dir_row):
-                if sp is None or d is None:
-                    u_row.append(None)
-                    v_row.append(None)
-                    continue
-                # Meteorological direction is where the wind blows *from*.
-                rad = math.radians(d)
-                u_row.append(round(-sp * math.sin(rad), 2))
-                v_row.append(round(-sp * math.cos(rad), 2))
-            u_pts.append(u_row)
-            v_pts.append(v_row)
-        result["values"] = to_frames(speeds)
-        result["u"] = to_frames(u_pts)
-        result["v"] = to_frames(v_pts)
-    else:
-        result["values"] = to_frames(series(variables[0]))
+
+def _grid_layer(raw: dict[str, Any], layer: str) -> dict[str, Any]:
+    fields = raw["fields"]
+    result = {k: raw[k] for k in ("bounds", "rows", "cols", "times")}
+    result["layer"] = layer
+    result["global"] = raw["bounds"]["east"] - raw["bounds"]["west"] >= 360
+
+    if layer != "wind":
+        result["values"] = fields[GRID_LAYERS[layer][0]]
+        return result
+
+    def vector(sp: float | None, d: float | None) -> tuple[float | None, float | None]:
+        if sp is None or d is None:
+            return None, None
+        # Meteorological direction is where the wind blows *from*.
+        rad = math.radians(d)
+        return round(-sp * math.sin(rad), 2), round(-sp * math.cos(rad), 2)
+
+    speeds, dirs = fields["wind_speed_10m"], fields["wind_direction_10m"]
+    u_frames, v_frames = [], []
+    for sp_f, d_f in zip(speeds, dirs):
+        uv = [[vector(sp, d) for sp, d in zip(sp_r, d_r)] for sp_r, d_r in zip(sp_f, d_f)]
+        u_frames.append([[p[0] for p in row] for row in uv])
+        v_frames.append([[p[1] for p in row] for row in uv])
+    result["values"] = speeds
+    result["u"] = u_frames
+    result["v"] = v_frames
     return result
 
 

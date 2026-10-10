@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from flask import Blueprint, jsonify, render_template, request
+from flask import Blueprint, current_app, jsonify, render_template, request
 
-from . import services
+from . import satellites, services
 
 bp = Blueprint("main", __name__)
 
@@ -27,7 +27,15 @@ def bad_request(exc: ValueError):
 
 @bp.errorhandler(services.UpstreamError)
 def upstream_failed(exc: services.UpstreamError):
-    return jsonify(error="Weather data provider is unavailable, please try again."), 502
+    current_app.logger.warning("Upstream error: %s", exc)
+    if exc.rate_limited:
+        message = ("The free weather data limit was reached. "
+                   "Please wait a minute and try again.")
+        return jsonify(error=message, reason=exc.reason), 503
+    message = "Weather data provider is unavailable, please try again."
+    if exc.reason:
+        message = f"Weather data provider error: {exc.reason}"
+    return jsonify(error=message), 502
 
 
 @bp.get("/")
@@ -60,6 +68,11 @@ def grid():
 @bp.get("/api/radar")
 def radar():
     return jsonify(services.get_radar_frames())
+
+
+@bp.get("/api/satellites")
+def satellite_layers():
+    return jsonify(satellites.get_satellites())
 
 
 @bp.get("/api/events")

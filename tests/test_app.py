@@ -72,6 +72,38 @@ def test_upstream_failure_returns_502(client, monkeypatch):
     assert "error" in resp.get_json()
 
 
+def test_rate_limit_returns_friendly_503(client, monkeypatch):
+    def limited(url, params=None):
+        raise services.UpstreamError("429", status=429, reason="Minutely API request limit exceeded")
+    monkeypatch.setattr(services, "_get_json", limited)
+    resp = client.get("/api/weather?lat=1&lon=1")
+    assert resp.status_code == 503
+    assert "limit" in resp.get_json()["error"]
+
+
+def test_provider_reason_is_shown(client, monkeypatch):
+    def bad(url, params=None):
+        raise services.UpstreamError("400", status=400, reason="Cannot initialize WeatherVariable")
+    monkeypatch.setattr(services, "_get_json", bad)
+    resp = client.get("/api/weather?lat=1&lon=1")
+    assert resp.status_code == 502
+    assert "Cannot initialize WeatherVariable" in resp.get_json()["error"]
+
+
+def test_get_json_reports_status_and_reason(monkeypatch):
+    class Resp:
+        ok = False
+        status_code = 429
+        text = "{}"
+        def json(self):
+            return {"error": True, "reason": "Too many requests"}
+    monkeypatch.setattr(services._session, "get", lambda *a, **k: Resp())
+    with pytest.raises(services.UpstreamError) as info:
+        services._get_json("https://example.com")
+    assert info.value.rate_limited
+    assert info.value.reason == "Too many requests"
+
+
 def test_search(client, fake_upstream):
     fake_upstream(lambda url, params: {"results": [{
         "name": "Delhi", "admin1": "Delhi", "country": "India", "country_code": "IN",
@@ -101,13 +133,20 @@ def test_build_grid_points_mercator_spacing():
     assert all(s == pytest.approx(steps[0]) for s in steps)
 
 
-def _grid_handler(variables_values):
+GRID_DEFAULTS = {
+    "temperature_2m": 10.0, "wind_speed_10m": 5.0, "wind_direction_10m": 0.0,
+    "precipitation": 0.0, "cloud_cover": 0.0, "relative_humidity_2m": 50.0,
+    "pressure_msl": 1013.0,
+}
+
+
+def _grid_handler(overrides):
     def handler(url, params):
         n = len(params["latitude"].split(","))
         hours = params["forecast_hours"]
         hourly = {"time": [1_700_000_000 + 3600 * h for h in range(hours)]}
-        for var, value in variables_values.items():
-            hourly[var] = [value] * hours
+        for var in params["hourly"].split(","):
+            hourly[var] = [overrides.get(var, GRID_DEFAULTS[var])] * hours
         return [{"hourly": dict(hourly)} for _ in range(n)]
     return handler
 
@@ -123,7 +162,16 @@ def test_grid_temperature(client, fake_upstream):
     assert len(data["values"][0]) == data["rows"]
     assert len(data["values"][0][0]) == data["cols"]
     assert data["values"][0][0][0] == 21.5
-    assert calls[0][1]["hourly"] == "temperature_2m"
+    assert "fields" not in data
+    assert set(calls[0][1]["hourly"].split(",")) == set(GRID_DEFAULTS)
+
+
+def test_grid_layers_and_nearby_views_share_one_request(client, fake_upstream):
+    calls = fake_upstream(_grid_handler({}))
+    for layer in ("temperature", "wind", "clouds", "pressure"):
+        assert client.get(f"/api/grid?layer={layer}&south=1&west=61&north=29&east=99").status_code == 200
+    assert client.get("/api/grid?layer=humidity&south=2&west=62&north=28&east=98").status_code == 200
+    assert len(calls) == 1
 
 
 def test_grid_wind_vectors(client, fake_upstream):
@@ -136,12 +184,36 @@ def test_grid_wind_vectors(client, fake_upstream):
 
 
 def test_grid_normalises_wrapped_longitudes(client, fake_upstream):
-    calls = fake_upstream(_grid_handler({"cloud_cover": 50}))
+    calls = fake_upstream(_grid_handler({}))
     resp = client.get("/api/grid?layer=clouds&south=0&west=170&north=10&east=200")
     assert resp.status_code == 200
     lons = [float(v) for v in calls[0][1]["longitude"].split(",")]
     assert all(-180 <= v <= 180 for v in lons)
-    assert resp.get_json()["bounds"]["east"] == 200
+    bounds = resp.get_json()["bounds"]
+    assert bounds["west"] <= 170 and bounds["east"] >= 200
+
+
+@pytest.mark.parametrize("bbox", [
+    (10.3, 70.2, 30.7, 95.9),
+    (-80, -300, 80, 300),
+    (0, -200, 10, -170),
+    (50, 2.1, 51, 3.3),
+])
+def test_snap_bbox_contains_view_and_is_canonical(bbox):
+    south, west, north, east = bbox
+    s, w, n, e = services.snap_bbox(*bbox)
+    assert -180 <= w < 180
+    assert s <= max(south, -85) and n >= min(north, 85)
+    if e - w < 360:
+        assert any(w <= west + k <= east + k <= e for k in (-360, 0, 360))
+    assert e - w <= 360
+
+
+def test_grid_world_view_is_global(client, fake_upstream):
+    fake_upstream(_grid_handler({}))
+    data = client.get("/api/grid?layer=temperature&south=-80&west=-250&north=80&east=250").get_json()
+    assert data["global"] is True
+    assert (data["bounds"]["west"], data["bounds"]["east"]) == (-180, 180)
 
 
 def test_grid_rejects_bad_input(client):

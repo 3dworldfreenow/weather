@@ -136,6 +136,14 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .sat-panel option { background: var(--bg-solid); }
 
+.sat-panel .switch { display: flex; align-items: center; gap: 4px; color: var(--text); font-size: 12px; cursor: pointer; }
+.sat-panel .switch input { accent-color: var(--accent); }
+.clouds-time { color: var(--muted); font-size: 11px; }
+
+/* Live satellite panes: infrared clouds are blended over the base imagery
+   so clear-sky areas let the map show through. */
+.sat-pane { mix-blend-mode: screen; }
+
 /* ---------- Legend ---------- */
 .legend { left: 12px; bottom: 96px; width: 260px; padding: 8px 10px; }
 .legend-title { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
@@ -237,7 +245,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .layer-btn, .toggle-btn { width: 60px; }
   .info-panel { top: auto; left: 8px; right: 8px; bottom: 92px; width: auto; max-height: 45vh; }
   .legend { bottom: 92px; width: 200px; }
-  .sat-panel { bottom: auto; top: 70px; left: 8px; right: 92px; }
+  .sat-panel { bottom: auto; top: 70px; left: 8px; right: 92px; flex-wrap: wrap; }
   .timeline { bottom: 12px; }
   .leaflet-control-zoom { display: none; }
 }

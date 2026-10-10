@@ -4,7 +4,8 @@ An interactive live weather map in the style of [zoom.earth](https://zoom.earth/
 
 ## Features
 
-- 🛰️ **Satellite:** high-res Esri imagery, or NASA VIIRS/MODIS daily true-colour imagery with a date picker
+- ☁️ **Live clouds:** near-real-time infrared imagery from five geostationary weather satellites (GOES-West, GOES-East, Meteosat 0°, Meteosat IODC, Himawari), each clipped to its own longitude band and stitched into one global layer, updated every 10 minutes, day and night
+- 🛰️ **Base imagery:** high-res Esri imagery, NASA VIIRS/MODIS daily true colour with a date picker, or a dark map
 - 🌧️ **Rain radar:** about 2 hours of animated radar frames (RainViewer)
 - 💨 **Wind:** animated wind particles over a wind-speed heat map
 - 🌡️ **Temperature, ☔ precipitation, 💧 humidity, ☁️ clouds, 🧭 pressure:** smooth forecast overlays for the next 48 hours
@@ -20,8 +21,8 @@ All data sources are free and need **no API keys**:
 | Forecasts, grids, place search | [Open-Meteo](https://open-meteo.com/) |
 | Radar | [RainViewer](https://www.rainviewer.com/api.html) |
 | Storms / fires / volcanoes | [NASA EONET](https://eonet.gsfc.nasa.gov/) |
-| Satellite imagery | [NASA GIBS](https://earthdata.nasa.gov/gibs), Esri World Imagery |
-| Labels / dark map | CARTO, OpenStreetMap |
+| Live satellites | GOES & Himawari via [NASA GIBS](https://earthdata.nasa.gov/gibs), Meteosat via [EUMETView](https://view.eumetsat.int/) |
+| Base imagery, labels, dark map | Esri, NASA GIBS |
 
 > Open-Meteo's free API is for non-commercial use. Check each provider's terms before running this commercially.
 
@@ -54,6 +55,7 @@ weather_app/
   __init__.py              # Flask app factory
   routes.py                # page + JSON API
   services.py              # upstream API clients, caching, grid building
+  satellites.py            # live satellite layer discovery and stitching
   templates/index.html     # page markup
   static/css/style.css     # UI styles
   static/js/app.js         # map, layers, timeline, wind particles, forecast panel
@@ -68,7 +70,12 @@ tests/test_app.py          # API tests (upstream calls are mocked)
 | `GET /api/search?q=` | Place search |
 | `GET /api/grid?layer=&south=&west=&north=&east=` | 48-hour forecast grid for the map view. `layer` is one of `temperature`, `wind`, `precipitation`, `clouds`, `humidity`, `pressure` |
 | `GET /api/radar` | Available radar frames |
+| `GET /api/satellites` | Live satellite layers, each with its longitude band |
 | `GET /api/events` | Active storms, wildfires and volcanoes |
 | `GET /healthz` | Health check |
+
+Satellite layer names are read from the NASA GIBS and EUMETView capability documents at run time, so changes on their side are picked up automatically. If a provider can't be reached, well-known layer names are used instead.
+
+The forecast grid is snapped to a coarse lattice and fetched once for all overlay layers, so panning and switching layers reuse cached data. Open-Meteo's free tier counts every grid point as one call. If the limit is reached, the site shows a "wait a minute" message.
 
 Responses are cached in memory, from 2 minutes (radar) to 1 hour (search), to stay well within the providers' rate limits.
