@@ -326,6 +326,8 @@
       <h3>Other layers</h3>
       <ul>${STATIC_SOURCES.map(([what, who, url]) => `<li>${escapeHtml(what)}: ${link(url, who)}</li>`).join("")}
       <li>Day/night line: calculated from the sun's position (no download)</li></ul>
+      ${newsState.data ? `<h3>News &amp; videos</h3><ul>${newsState.data.sources.map((src) =>
+        `<li><span class="dot ${src.ok ? "ok" : "guess"}"></span>${link(src.url, src.name)}${src.ok ? ` (${src.count})` : " (unavailable)"}</li>`).join("")}</ul>` : ""}
       <h3>El Niño</h3>
       ${ensoSources ? `<ul>${ensoSources}</ul>` : "<p>El Niño data has not loaded.</p>"}`;
   }
@@ -663,6 +665,130 @@
 
   $("globe-toggle").addEventListener("click", showGlobe);
   $("map-toggle").addEventListener("click", hideGlobe);
+
+  // ------------------------------------------------------------------
+  // El Niño news and videos
+  // ------------------------------------------------------------------
+  const newsState = { data: null, loadedAt: 0, tab: "articles" };
+  const VIDEO_ID = /^[A-Za-z0-9_-]{11}$/;
+  const safeUrl = (u) => (/^https?:\/\//i.test(u || "") ? u : null);
+
+  function timeAgo(iso) {
+    if (!iso) return "";
+    const mins = Math.round((Date.now() - new Date(iso)) / 60000);
+    if (mins < 60) return `${Math.max(mins, 1)} min ago`;
+    if (mins < 48 * 60) return `${Math.round(mins / 60)} h ago`;
+    return `${Math.round(mins / 1440)} days ago`;
+  }
+
+  function fillSelect(select, values, label) {
+    const counts = {};
+    values.filter(Boolean).forEach((v) => { counts[v] = (counts[v] || 0) + 1; });
+    const current = select.value;
+    select.innerHTML = `<option value="">${label}</option>` + Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .map(([v, n]) => `<option value="${escapeHtml(v)}">${escapeHtml(v)} (${n})</option>`).join("");
+    if (counts[current]) select.value = current;
+  }
+
+  function renderArticles() {
+    const d = newsState.data;
+    const country = $("news-country").value;
+    const language = $("news-language").value;
+    const items = d.articles.filter((a) => (!country || a.country === country) && (!language || a.language === language));
+    if (!items.length) {
+      $("news-body").innerHTML = '<p class="muted">No El Niño news for this selection right now.</p>';
+      return;
+    }
+    $("news-body").innerHTML = items.map((a) => {
+      const url = safeUrl(a.url);
+      if (!url) return "";
+      const img = safeUrl(a.image);
+      return `<a class="news-item" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">
+        ${img ? `<img src="${escapeHtml(img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}
+        <div><div class="news-title">${escapeHtml(a.title)}</div>
+          <div class="news-meta">${a.country ? `<span class="flag">${escapeHtml(a.country)}</span>` : ""}${escapeHtml(a.source)}
+            ${a.language ? ` · ${escapeHtml(a.language)}` : ""}${a.published ? ` · ${escapeHtml(timeAgo(a.published))}` : ""}</div></div>
+      </a>`;
+    }).join("");
+  }
+
+  function renderVideos() {
+    const d = newsState.data;
+    const videos = d.videos.filter((v) => VIDEO_ID.test(v.id));
+    const latest = videos.filter((v) => !v.explainer);
+    const card = (v) => `<button class="video-card" data-id="${v.id}" data-title="${escapeHtml(v.title)}">
+        <span class="thumb"><img src="https://i.ytimg.com/vi/${v.id}/hqdefault.jpg" alt="" loading="lazy"></span>
+        <div class="vt">${escapeHtml(v.title)}</div>
+        <div class="vm">${escapeHtml(v.channel)}${v.published ? ` · ${escapeHtml(timeAgo(v.published))}` : ""}</div>
+      </button>`;
+    const search = safeUrl(d.youtube_search);
+    $("news-body").innerHTML = `
+      ${search ? `<a class="yt-search" href="${escapeHtml(search)}" target="_blank" rel="noopener noreferrer">▶ Search all El Niño videos on YouTube</a>` : ""}
+      <div class="section-title">Latest from weather &amp; climate agencies</div>
+      ${latest.length ? `<div class="video-grid">${latest.map(card).join("")}</div>`
+        : '<p class="muted">No new El Niño videos from NOAA, NASA, WMO, the Met Office or the Bureau of Meteorology in their latest uploads.</p>'}
+      <div class="section-title">Explainers</div>
+      <div class="video-grid">${videos.filter((v) => v.explainer).map(card).join("")}</div>`;
+    $("news-body").querySelectorAll(".video-card").forEach((btn) => {
+      btn.addEventListener("click", () => playVideo(btn.dataset.id, btn.dataset.title));
+    });
+  }
+
+  function renderNews() {
+    const d = newsState.data;
+    if (!d) return;
+    $("news-filters").hidden = newsState.tab !== "articles";
+    document.querySelectorAll(".news-tab").forEach((t) => t.classList.toggle("active", t.dataset.tab === newsState.tab));
+    if (newsState.tab === "articles") renderArticles(); else renderVideos();
+    const ok = d.sources.filter((src) => src.ok).length;
+    $("news-foot").innerHTML = `${d.articles.length} articles · ${d.videos.length} videos from ${ok} free sources
+      · updated ${escapeHtml(timeAgo(d.updated))} · <a href="#" id="news-sources">Sources</a>`;
+    $("news-sources").addEventListener("click", (e) => { e.preventDefault(); $("sources-btn").click(); });
+  }
+
+  async function loadNews() {
+    try {
+      const d = await api("/api/news");
+      newsState.data = d;
+      newsState.loadedAt = Date.now();
+      fillSelect($("news-country"), d.articles.map((a) => a.country), "All countries");
+      fillSelect($("news-language"), d.articles.map((a) => a.language), "All languages");
+      renderNews();
+      if (!$("sources-panel").hidden) renderSources();
+    } catch (err) {
+      $("news-body").innerHTML = `<p class="muted">News is unavailable right now: ${escapeHtml(err.message)}</p>`;
+    }
+  }
+
+  function playVideo(id, title) {
+    if (!VIDEO_ID.test(id)) return;
+    $("video-frame").innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0"
+      title="${escapeHtml(title)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
+    $("video-title").textContent = title;
+    $("video-modal").hidden = false;
+  }
+
+  function closeVideo() {
+    $("video-frame").innerHTML = ""; // stops playback
+    $("video-modal").hidden = true;
+  }
+
+  $("news-toggle").addEventListener("click", () => {
+    const open = $("news-panel").hidden;
+    $("news-panel").hidden = !open;
+    $("news-toggle").classList.toggle("active", open);
+    if (open && Date.now() - newsState.loadedAt > 30 * 60 * 1000) loadNews();
+  });
+  $("news-close").addEventListener("click", () => $("news-toggle").click());
+  document.querySelectorAll(".news-tab").forEach((tab) => {
+    tab.addEventListener("click", () => { newsState.tab = tab.dataset.tab; renderNews(); });
+  });
+  $("news-country").addEventListener("change", renderArticles);
+  $("news-language").addEventListener("change", renderArticles);
+  $("video-close").addEventListener("click", closeVideo);
+  $("video-modal").addEventListener("click", (e) => { if (e.target === $("video-modal")) closeVideo(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("video-modal").hidden) closeVideo(); });
 
   // ------------------------------------------------------------------
   // Start

@@ -1,7 +1,7 @@
 /* Browser-only implementation of the /api/* endpoints, used by the static
  * GitHub Pages demo where no Flask server runs.
  *
- * Satellite layers and El Niño data are read from data/*.json, which a
+ * Satellite layers, El Niño data and the news feed are read from data/*.json, which a
  * scheduled GitHub Actions job builds with the same Python code as the server
  * (scripts/build_static.py).
  */
@@ -47,8 +47,9 @@
   }
 
   const enso = () => dataFile("enso.json");
+  const news = () => dataFile("news.json");
 
-  const ROUTES = { "/api/satellites": satellites, "/api/enso": enso };
+  const ROUTES = { "/api/satellites": satellites, "/api/enso": enso, "/api/news": news };
 
   window.StaticApi = {
     handle(path, params) {

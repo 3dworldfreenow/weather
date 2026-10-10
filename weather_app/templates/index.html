@@ -30,7 +30,35 @@
     <button class="toggle-btn view-btn" id="map-toggle" title="Flat map"><span>🗺️</span>Map</button>
     <hr>
     <button class="toggle-btn active" id="sst-toggle" title="Sea surface temperature anomaly map"><span>🌡️</span>Sea temp</button>
+    <hr>
+    <button class="toggle-btn view-btn" id="news-toggle" title="El Niño news and videos"><span>📰</span>News</button>
   </nav>
+
+  <!-- News and videos -->
+  <aside class="panel news-panel" id="news-panel" hidden aria-label="El Niño news and videos">
+    <div class="news-head">
+      <div class="news-tabs" role="tablist">
+        <button class="news-tab active" data-tab="articles" role="tab">🌍 World news</button>
+        <button class="news-tab" data-tab="videos" role="tab">▶️ Videos</button>
+      </div>
+      <button class="close-btn" id="news-close" aria-label="Close">✕</button>
+    </div>
+    <div class="news-filters" id="news-filters">
+      <select id="news-country" aria-label="Country"><option value="">All countries</option></select>
+      <select id="news-language" aria-label="Language"><option value="">All languages</option></select>
+    </div>
+    <div class="news-body" id="news-body"><p class="muted">Loading El Niño news…</p></div>
+    <div class="news-foot" id="news-foot"></div>
+  </aside>
+
+  <!-- Video player -->
+  <div class="video-modal" id="video-modal" hidden role="dialog" aria-modal="true" aria-label="Video">
+    <div class="video-box panel">
+      <button class="close-btn" id="video-close" aria-label="Close">✕</button>
+      <div class="video-frame" id="video-frame"></div>
+      <div class="video-title" id="video-title"></div>
+    </div>
+  </div>
 
   <!-- Imagery -->
   <div class="panel sat-panel" id="sat-panel">

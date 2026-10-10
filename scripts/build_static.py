@@ -21,7 +21,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from weather_app import create_app, enso, satellites  # noqa: E402
+from weather_app import create_app, enso, news, satellites  # noqa: E402
 
 log = logging.getLogger("build_static")
 
@@ -58,6 +58,7 @@ def build(out: Path) -> None:
     builders = {
         "satellites.json": satellites_data,
         "enso.json": enso.get_enso,
+        "news.json": news.get_news,
     }
     failed = []
     for name, builder in builders.items():

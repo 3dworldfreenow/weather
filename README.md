@@ -11,6 +11,8 @@ A live El Niño tracker on a 3D globe and map, in the style of [zoom.earth](http
 - 🌡️ **Sea temperature map:** daily sea surface temperature anomaly (how much warmer or colder than normal), switchable with the *Sea temp* button
 - 🌐 **3D globe and flat map:** the site opens on a round Earth centred on the equatorial Pacific; switch to the flat map any time
 - 🛰️ **Live Earth backdrop:** near-real-time imagery from five geostationary weather satellites (GOES-West, GOES-East, Meteosat 0°, Meteosat IODC, Himawari), stitched by longitude band, in true colour or infrared, plus live day/night shading
+- 📰 **World news:** El Niño articles from around the world, in many languages, filterable by country and language, from GDELT and Google News editions (India in English and Hindi, US, UK, Australia, Philippines, Peru, Brazil, France, Indonesia, Japan)
+- ▶️ **Videos:** the latest El Niño / ENSO videos from NOAA, NASA, WMO, the Met Office and Australia's Bureau of Meteorology (YouTube channel feeds), known explainers, and a one-click YouTube search; videos play inside the site
 - 📚 **Sources panel** listing every data source, satellite, product and image time
 
 All data sources are free and need **no API keys**:
@@ -21,6 +23,8 @@ All data sources are free and need **no API keys**:
 | Oceanic Niño Index (official, 3-month) | [NOAA CPC ONI](https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt) |
 | Sea surface temperature anomaly map | [GHRSST MUR](https://podaac.jpl.nasa.gov/MEaSUREs-MUR) via [NASA GIBS](https://earthdata.nasa.gov/gibs) |
 | Live satellites | GOES & Himawari via NASA GIBS, Meteosat via [EUMETView](https://view.eumetsat.int/) |
+| World news | [GDELT](https://www.gdeltproject.org/) DOC API, [Google News](https://news.google.com/) RSS |
+| Videos | YouTube channel RSS feeds (no API key); YouTube search links out |
 | Base imagery and labels | Esri, NASA GIBS |
 
 The El Niño / La Niña label comes from the latest weekly Niño 3.4 reading. NOAA officially declares El Niño using the 3-month ONI together with atmospheric signs; see the [CPC ENSO discussion](https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml).
@@ -42,7 +46,7 @@ gunicorn -w 2 -b 0.0.0.0:8000 app:app
 
 ## Host the demo on GitHub Pages
 
-GitHub Pages only serves static files, so the demo is a static build of the same app. The data the browser needs (NOAA files, which browsers cannot fetch directly, and the satellite catalogues) is built by the Python code into `data/*.json`, which `static/js/static-api.js` reads.
+GitHub Pages only serves static files, so the demo is a static build of the same app. The data the browser needs (NOAA files, which browsers cannot fetch directly, the satellite catalogues and the news feed) is built by the Python code into `data/*.json`, which `static/js/static-api.js` reads.
 
 The workflow `.github/workflows/pages.yml` runs the tests, builds the site with `scripts/build_static.py` and publishes it. It runs on every push and every 30 minutes, to keep the data fresh.
 
@@ -75,6 +79,7 @@ weather_app/
   __init__.py              # Flask app factory
   routes.py                # page + JSON API
   enso.py                  # El Niño / La Niña status from NOAA CPC data
+  news.py                  # El Niño news (GDELT, Google News) and videos (YouTube feeds)
   satellites.py            # live satellite layer discovery and stitching
   services.py              # HTTP helper and in-memory cache
   templates/index.html     # page markup
@@ -92,6 +97,7 @@ tests/                     # tests (upstream calls are mocked)
 | --- | --- |
 | `GET /api/enso` | El Niño status, Niño region anomalies and the SST anomaly map layer |
 | `GET /api/satellites?style=truecolor\|infrared` | Live satellite layers, each with its longitude band, product and image time |
+| `GET /api/news` | El Niño news articles and videos, with the status of each source |
 | `GET /healthz` | Health check |
 
-Satellite layer names are read from the NASA GIBS and EUMETView capability documents at run time, so changes on their side are picked up automatically. If a provider can't be reached, well-known layer names are used instead. Responses are cached in memory (El Niño data for 6 hours).
+Satellite layer names are read from the NASA GIBS and EUMETView capability documents at run time, so changes on their side are picked up automatically. If a provider can't be reached, well-known layer names are used instead. Responses are cached in memory (El Niño data for 6 hours, news for 30 minutes). News links open the original publisher's site; YouTube's search API needs a key, so videos come from channel feeds and the search button opens YouTube.

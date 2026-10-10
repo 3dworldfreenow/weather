@@ -67,6 +67,19 @@ _session = requests.Session()
 _session.headers["User-Agent"] = USER_AGENT
 
 
+def _get_json(url: str, params: dict[str, Any] | None = None) -> Any:
+    try:
+        resp = _session.get(url, params=params, timeout=HTTP_TIMEOUT)
+    except requests.RequestException as exc:
+        raise UpstreamError(f"Request to {url} failed: {exc}") from exc
+    if not resp.ok:
+        raise UpstreamError(f"{url} returned HTTP {resp.status_code}", status=resp.status_code)
+    try:
+        return resp.json()
+    except ValueError as exc:
+        raise UpstreamError(f"{url} returned invalid JSON") from exc
+
+
 def _get_text(url: str) -> str:
     try:
         resp = _session.get(url, timeout=HTTP_TIMEOUT)

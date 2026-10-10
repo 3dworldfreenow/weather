@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import build_static  # noqa: E402
-from weather_app import enso, satellites, services  # noqa: E402
+from weather_app import enso, news, satellites, services  # noqa: E402
 
 from test_enso import ONI, WEEKLY  # noqa: E402
 
@@ -18,6 +18,7 @@ def offline(monkeypatch):
     services.cache.clear()
     monkeypatch.setattr(satellites, "_catalogue", lambda source: None)
     monkeypatch.setattr(services, "_get_text", lambda url: WEEKLY if url == enso.WEEKLY_URL else ONI)
+    monkeypatch.setattr(news, "get_news", lambda: {"articles": [{"title": "El Niño"}], "videos": [], "sources": []})
     yield
     services.cache.clear()
 
@@ -42,6 +43,7 @@ def test_build_static_site(tmp_path):
 
     assert json.loads((out / "data" / "enso.json").read_text())["focus"]["id"] == "nino12"
     assert not (out / "data" / "events.json").exists()
+    assert json.loads((out / "data" / "news.json").read_text())["articles"][0]["title"] == "El Niño"
     assert json.loads((out / "data" / "build.json").read_text())["failed"] == []
 
 
