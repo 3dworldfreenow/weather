@@ -1,5 +1,7 @@
-/* El Niño tracker: live Earth (map + 3D globe) with Pacific sea temperature
-   anomalies, the Niño monitoring regions and NOAA's ENSO status. */
+/* El Niño Tracker front-end.
+   Live Earth (Leaflet map + MapLibre 3D globe) with the Pacific sea temperature
+   anomaly and Niño regions, plus a tabbed panel: Status, Impacts, News, History, Learn.
+   On phones the panel is a draggable bottom sheet; on wide screens a side panel. */
 (() => {
   "use strict";
 
@@ -48,16 +50,13 @@
     }
   }
 
+
   // ------------------------------------------------------------------
   // Map + base layers
   // ------------------------------------------------------------------
-  function parseHash() {
-    const m = window.location.hash.match(/^#(-?[\d.]+),(-?[\d.]+),([\d.]+)z/);
-    if (!m) return null;
-    return { lat: +m[1], lon: +m[2], zoom: +m[3] };
-  }
-  const linkedView = Boolean(parseHash()); // read before the map rewrites the hash
   const PACIFIC = [[-25, -215], [25, -70]];
+  const IMPACTS = JSON.parse($("impacts-data").textContent);
+  const IMPACT_BY_SLUG = Object.fromEntries(IMPACTS.countries.map((c) => [c.slug, c]));
 
   const map = L.map("map", {
     minZoom: 2,
@@ -66,20 +65,13 @@
     zoomControl: false,
     keyboard: false,
   });
-  const initial = parseHash();
-  if (initial) map.setView([initial.lat, initial.lon], initial.zoom);
-  else map.fitBounds(PACIFIC);
+  map.fitBounds(PACIFIC);
   L.control.zoom({ position: "bottomright" }).addTo(map);
 
+  map.createPane("impacts").style.zIndex = 340;
   map.createPane("sst").style.zIndex = 350;
   map.createPane("labels").style.zIndex = 640;
   map.getPane("labels").style.pointerEvents = "none";
-
-  map.on("moveend", () => {
-    const c = map.getCenter();
-    const lng = ((c.lng + 540) % 360) - 180;
-    history.replaceState(null, "", `#${c.lat.toFixed(2)},${lng.toFixed(2)},${map.getZoom()}z`);
-  });
 
   const todayUTC = () => new Date().toISOString().slice(0, 10);
   const yesterdayUTC = () => new Date(Date.now() - 864e5).toISOString().slice(0, 10);
@@ -136,6 +128,7 @@
   $("sat-source").value = baseLayers[savedBase] ? savedBase : "esri";
   setBase($("sat-source").value);
   $("sat-source").addEventListener("change", (e) => setBase(e.target.value));
+
 
   // ------------------------------------------------------------------
   // Live clouds: geostationary satellites stitched into one global layer
@@ -328,6 +321,9 @@
       <li>Day/night line: calculated from the sun's position (no download)</li></ul>
       ${newsState.data ? `<h3>News &amp; videos</h3><ul>${newsState.data.sources.map((src) =>
         `<li><span class="dot ${src.ok ? "ok" : "guess"}"></span>${link(src.url, src.name)}${src.ok ? ` (${src.count})` : " (unavailable)"}</li>`).join("")}</ul>` : ""}
+      <h3>Country impacts</h3>
+      <ul>${IMPACTS.sources.map((src) => `<li>${link(src.url, src.name)}</li>`).join("")}
+        <li>National weather services, linked on each country's card</li></ul>
       <h3>El Niño</h3>
       ${ensoSources ? `<ul>${ensoSources}</ul>` : "<p>El Niño data has not loaded.</p>"}`;
   }
@@ -335,13 +331,172 @@
   $("sources-btn").addEventListener("click", () => { renderSources(); $("sources-panel").hidden = false; });
   $("sources-close").addEventListener("click", () => { $("sources-panel").hidden = true; });
 
+
   // ------------------------------------------------------------------
-  // El Niño: SST anomaly map + Niño regions + NOAA status
+  // Panel: bottom sheet on phones, side panel on wide screens
+  // ------------------------------------------------------------------
+  const sheetEl = $("sheet");
+  const root = document.documentElement;
+  const mqPhone = window.matchMedia("(max-width: 899px)");
+  const mqPhoneLandscape = window.matchMedia("(max-width: 899px) and (orientation: landscape) and (max-height: 520px)");
+  const isSheetMode = () => mqPhone.matches && !mqPhoneLandscape.matches;
+  const SHEET_STATES = ["peek", "half", "full"];
+  const sheet = { state: "half", visible: 0 };
+
+  function sheetVisible(state) {
+    const full = sheetEl.offsetHeight;
+    if (state === "full") return full;
+    if (state === "peek") return Math.min(full, 112);
+    return Math.min(full, Math.round(window.innerHeight * 0.48));
+  }
+
+  // Space the map should keep clear of the panels, in CSS pixels.
+  function viewPadding() {
+    const top = (document.querySelector(".topbar").getBoundingClientRect().bottom || 64) + 8;
+    if (isSheetMode()) return { top, bottom: sheet.visible + 8, left: 8, right: 8 };
+    const r = sheetEl.getBoundingClientRect();
+    return { top, bottom: 16, left: r.right + 12, right: 16 };
+  }
+
+  function applySheet(visible) {
+    if (!isSheetMode()) {
+      sheet.visible = 0;
+      sheetEl.style.removeProperty("--sheet-offset");
+      root.style.removeProperty("--sheet-h");
+      document.body.classList.remove("sheet-full");
+    } else {
+      const full = sheetEl.offsetHeight;
+      sheet.visible = clamp(visible, 0, full);
+      sheetEl.style.setProperty("--sheet-offset", `${full - sheet.visible}px`);
+      root.style.setProperty("--sheet-h", `${sheet.visible}px`);
+      document.body.classList.toggle("sheet-full", sheet.visible >= full - 2);
+    }
+    updateGlobePadding();
+  }
+
+  function setSheetState(state) {
+    sheet.state = state;
+    sheetEl.dataset.state = state;
+    $("sheet-handle").setAttribute("aria-label", state === "full" ? "Collapse the panel" : "Expand the panel");
+    applySheet(sheetVisible(state));
+  }
+
+  // Drag the handle or the tab bar to resize; tap the handle to cycle sizes.
+  // Moves are tracked on the window, so the finger can leave the thin handle.
+  (() => {
+    let drag = null;
+    let suppressClick = false;
+    const onMove = (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const dy = e.clientY - drag.y;
+      if (!drag.moved && Math.abs(dy) < 8) return;
+      if (!drag.moved) { drag.moved = true; sheetEl.classList.add("dragging"); }
+      e.preventDefault();
+      applySheet(drag.visible - dy);
+    };
+    const onUp = (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const d = drag;
+      drag = null;
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onUp);
+      sheetEl.classList.remove("dragging");
+      if (!d.moved) {
+        if (d.target === $("sheet-handle")) {
+          setSheetState(SHEET_STATES[(SHEET_STATES.indexOf(sheet.state) + 1) % SHEET_STATES.length]);
+        }
+        return;
+      }
+      suppressClick = true; // the drag must not also press a tab
+      setTimeout(() => { suppressClick = false; }, 0);
+      // Snap to the nearest size, nudged by the flick direction.
+      const velocity = (d.y - e.clientY) / Math.max(1, performance.now() - d.t); // px/ms, + = up
+      const target = sheet.visible + clamp(velocity, -2, 2) * 200;
+      const best = SHEET_STATES.reduce((a, b) =>
+        (Math.abs(sheetVisible(b) - target) < Math.abs(sheetVisible(a) - target) ? b : a));
+      setSheetState(best);
+    };
+    const onDown = (e) => {
+      if (!isSheetMode() || (e.button !== undefined && e.button !== 0)) return;
+      drag = { y: e.clientY, visible: sheet.visible, t: performance.now(), moved: false, target: e.currentTarget, id: e.pointerId };
+      window.addEventListener("pointermove", onMove, { passive: false });
+      window.addEventListener("pointerup", onUp);
+      window.addEventListener("pointercancel", onUp);
+    };
+    $("sheet-handle").addEventListener("pointerdown", onDown);
+    document.querySelector(".tabs").addEventListener("pointerdown", onDown);
+    document.querySelector(".tabs").addEventListener("click", (e) => {
+      if (suppressClick) { e.stopPropagation(); e.preventDefault(); }
+    }, true);
+  })();
+
+  const relayout = () => { applySheet(sheetVisible(sheet.state)); map.invalidateSize(); if (globe.map) globe.map.resize(); };
+  window.addEventListener("resize", relayout);
+  mqPhone.addEventListener("change", relayout);
+  mqPhoneLandscape.addEventListener("change", relayout);
+
+  // ------------------------------------------------------------------
+  // Tabs and links (#impact=peru, #tab=news)
+  // ------------------------------------------------------------------
+  const TABS = ["status", "impacts", "news", "history", "learn"];
+  const ui = { tab: "status" };
+
+  function setTab(name, { expand = true } = {}) {
+    if (!TABS.includes(name)) return;
+    ui.tab = name;
+    TABS.forEach((t) => {
+      $(`tab-${t}`).hidden = t !== name;
+      $(`tab-btn-${t}`).setAttribute("aria-selected", String(t === name));
+    });
+    $("sheet-body").scrollTop = 0;
+    if (expand && isSheetMode() && sheet.state === "peek") setSheetState("half");
+    if (name === "impacts") setImpactsLayer(true);
+    if (name === "news" && Date.now() - newsState.loadedAt > 30 * 60 * 1000) loadNews();
+    if (name === "history") renderHistory();
+    if (name !== "impacts" || !impactsState.selected) setHash(name === "status" ? "" : `tab=${name}`);
+  }
+
+  function setHash(value) {
+    history.replaceState(null, "", value ? `#${value}` : window.location.pathname + window.location.search);
+  }
+
+  document.querySelectorAll(".tab").forEach((btn) => btn.addEventListener("click", () => setTab(btn.dataset.tab)));
+
+  function routeFromHash() {
+    const params = new URLSearchParams(window.location.hash.slice(1));
+    if (params.get("impact") && IMPACT_BY_SLUG[params.get("impact")]) {
+      setTab("impacts");
+      selectCountry(params.get("impact"), { fly: true });
+    } else if (params.get("tab")) {
+      setTab(params.get("tab"));
+    }
+  }
+  window.addEventListener("hashchange", routeFromHash);
+
+  // ------------------------------------------------------------------
+  // Layers menu
+  // ------------------------------------------------------------------
+  function setLayersOpen(open) {
+    $("layers-pop").hidden = !open;
+    $("layers-btn").setAttribute("aria-expanded", String(open));
+  }
+  $("layers-btn").addEventListener("click", (e) => { e.stopPropagation(); setLayersOpen($("layers-pop").hidden); });
+  $("layers-close").addEventListener("click", () => setLayersOpen(false));
+  document.addEventListener("click", (e) => {
+    if (!$("layers-pop").hidden && !$("layers-pop").contains(e.target) && e.target !== $("layers-btn")) setLayersOpen(false);
+  });
+
+  // ------------------------------------------------------------------
+  // El Niño status: SST anomaly map + Niño regions + NOAA numbers
   // ------------------------------------------------------------------
   const enso = { data: null, tiles: null, group: L.layerGroup(), boxes: {}, sstOn: true };
   const signed = (v, d = 1) => `${v >= 0 ? "+" : "−"}${Math.abs(v).toFixed(d)}`;
   const regionColor = (a) => (a >= 0.5 ? "#ff5a3c" : a <= -0.5 ? "#4d8dff" : "#ffffff");
-  const regionLabel = (r) => `${r.name} ${signed(r.anomaly)}°C ${r.change_4w >= 0 ? "▲" : "▼"}`;
+  const regionLabel = (r) => (isSheetMode()
+    ? `${r.name.replace("Niño ", "")} ${signed(r.anomaly)}°`
+    : `${r.name} ${signed(r.anomaly)}°C ${r.change_4w >= 0 ? "▲" : "▼"}`);
+  const fmtWeek = (iso) => new Date(`${iso}T12:00`).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
 
   function sparkline(values) {
     const w = 100, h = 24, max = Math.max(1, ...values.map(Math.abs));
@@ -350,44 +505,53 @@
     const last = values[values.length - 1];
     return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">
       <line x1="0" x2="${w}" y1="${h / 2}" y2="${h / 2}" stroke="rgba(255,255,255,.2)" />
-      <polyline points="${pts}" fill="none" stroke="${last >= 0 ? "#ff7a6b" : "#6ba8ff"}" stroke-width="1.6" /></svg>`;
+      <polyline points="${pts}" fill="none" stroke="${last >= 0 ? "#ff8a7a" : "#7fb2ff"}" stroke-width="1.6" /></svg>`;
   }
 
   function renderEnso(d) {
     const rows = d.regions.map((r) => `
-      <div class="enso-row ${r.id === d.focus.id ? "focus" : ""}" data-region="${r.id}" title="${escapeHtml(r.about)}">
+      <button class="enso-row ${r.id === d.focus.id ? "focus" : ""}" data-region="${r.id}" title="${escapeHtml(r.about)}">
         <span>${escapeHtml(r.name)}</span>
         <span class="anom ${r.anomaly >= 0 ? "warm" : "cool"}">${signed(r.anomaly)}°</span>
         ${sparkline(r.history)}
         <span class="chg ${r.change_4w >= 0 ? "warm" : "cool"}">${r.change_4w >= 0 ? "▲" : "▼"} ${Math.abs(r.change_4w).toFixed(1)}</span>
-      </div>`).join("");
+      </button>`).join("");
     const oni = d.oni.map((o) => `<span class="${o.anomaly >= 0 ? "warm" : "cool"}">${o.season} ${o.year}: ${signed(o.anomaly)}</span>`).join("");
     $("enso-content").innerHTML = `
       <span class="enso-phase ${d.phase}">${d.phase === "el_nino" ? "El Niño" : d.phase === "la_nina" ? "La Niña" : "Neutral"}</span>
-      <div class="enso-headline">${escapeHtml(d.headline)}</div>
-      <div><span class="enso-big ${d.nino34_anomaly >= 0 ? "warm" : "cool"}">${signed(d.nino34_anomaly)} °C</span>
-        Niño 3.4, week of ${escapeHtml(new Date(`${d.week}T12:00`).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }))}
-        <br><small>${d.trend_4w >= 0 ? "▲" : "▼"} ${signed(d.trend_4w)} °C in the last 4 weeks</small></div>
-      <div class="enso-focus">🎯 ${escapeHtml(d.focus.text)}</div>
-      <div class="section-title">Niño regions · anomaly · last 12 weeks · 4-week change</div>
+      <h2 class="enso-headline">${escapeHtml(d.headline)}</h2>
+      <p><span class="enso-big ${d.nino34_anomaly >= 0 ? "warm" : "cool"}">${signed(d.nino34_anomaly)} °C</span>
+        Niño 3.4, week of ${escapeHtml(fmtWeek(d.week))}
+        <br><small>${d.trend_4w >= 0 ? "▲" : "▼"} ${signed(d.trend_4w)} °C in the last 4 weeks</small></p>
+      <p class="enso-focus">🎯 ${escapeHtml(d.focus.text)}</p>
+      <h3 class="section-title">Niño regions · anomaly · 12 weeks · 4-week change</h3>
       ${rows}
-      ${oni ? `<div class="section-title">Oceanic Niño Index (official, 3-month)</div><div class="enso-oni">${oni}</div>` : ""}
-      <div class="enso-note">${escapeHtml(d.note)} Map: daily sea temperature anomaly for ${escapeHtml(d.sst_layer.date)}.
-        <a href="#" id="enso-sources" style="color:var(--accent)">Sources</a></div>`;
+      ${oni ? `<h3 class="section-title">Oceanic Niño Index (official, 3-month)</h3><div class="enso-oni">${oni}</div>` : ""}
+      <p class="enso-note">${escapeHtml(d.note)} Map: daily sea temperature anomaly for ${escapeHtml(d.sst_layer.date)}.
+        <button class="link-btn" id="enso-sources">Sources</button></p>`;
     $("enso-content").querySelectorAll(".enso-row").forEach((row) => {
       row.addEventListener("click", () => focusRegion(row.dataset.region));
     });
-    $("enso-sources").addEventListener("click", (e) => { e.preventDefault(); $("sources-btn").click(); });
+    $("enso-sources").addEventListener("click", () => $("sources-btn").click());
+  }
+
+  // Fly so that a lat/lon box is visible in the free space around the panels.
+  function flyToBox(south, west, north, east, globeZoom = 3.4) {
+    const p = viewPadding();
+    if (globe.active && globe.map) {
+      globe.map.flyTo({ center: [(((west + east) / 2 + 540) % 360) - 180, (south + north) / 2], zoom: globeZoom, padding: p, duration: 1400 });
+    } else {
+      map.flyToBounds([[south, west], [north, east]], {
+        paddingTopLeft: [p.left + 16, p.top + 16], paddingBottomRight: [p.right + 16, p.bottom + 16], duration: 1.2, maxZoom: 6,
+      });
+    }
   }
 
   function focusRegion(id) {
     const r = enso.data && enso.data.regions.find((x) => x.id === id);
     if (!r) return;
-    if (globe.active && globe.map) {
-      globe.map.flyTo({ center: [(r.west + r.east) / 2, (r.south + r.north) / 2], zoom: 3.6, duration: 1500 });
-    } else {
-      map.flyToBounds([[r.south, r.west], [r.north, r.east]], { padding: [80, 80], duration: 1.2 });
-    }
+    if (isSheetMode() && sheet.state === "full") setSheetState("half");
+    flyToBox(r.south, r.west, r.north, r.east, 3.6);
   }
 
   function drawEnsoOnMap(d) {
@@ -405,7 +569,7 @@
       // Draw each box in three world copies so it shows wherever the map is panned.
       [-360, 0, 360].forEach((off) => {
         const box = L.rectangle([[r.south, r.west + off], [r.north, r.east + off]], {
-          color, weight: isFocus ? 3 : 1.5, dashArray: isFocus ? null : "5 5",
+          pane: "sst", color, weight: isFocus ? 3 : 1.5, dashArray: isFocus ? null : "5 5",
           fillColor: color, fillOpacity: isFocus ? 0.12 : 0.04,
           className: isFocus ? "enso-focus-box" : "",
         }).bindTooltip(regionLabel(r), { permanent: true, direction: "center", className: "enso-label" })
@@ -424,28 +588,476 @@
       renderEnso(d);
       drawEnsoOnMap(d);
       updateGlobeEnso();
+      if (ui.tab === "history") renderHistory();
       if (!$("sources-panel").hidden) renderSources();
     } catch (err) {
-      $("enso-content").innerHTML = `<div class="enso-headline">El Niño data is unavailable</div>
-        <p>${escapeHtml(err.message)}</p>`;
-      toast(`El Niño: ${err.message}`);
+      $("enso-content").innerHTML = `<h2 class="enso-headline">El Niño data is unavailable</h2>
+        <p class="muted">${escapeHtml(err.message)}</p>`;
     }
   }
 
-  $("sst-toggle").addEventListener("click", () => {
-    enso.sstOn = !enso.sstOn;
-    $("sst-toggle").classList.toggle("active", enso.sstOn);
-    $("legend").hidden = !enso.sstOn;
-    if (enso.tiles) {
-      if (enso.sstOn) enso.tiles.addTo(map); else map.removeLayer(enso.tiles);
+  function updateLegend() {
+    const parts = [];
+    if (enso.sstOn) {
+      parts.push(`<div class="legend-title">Sea temperature vs normal (°C)</div>
+        <div class="legend-bar sst-gradient"></div>
+        <div class="legend-labels"><span>−3</span><span>−2</span><span>−1</span><span>0</span><span>+1</span><span>+2</span><span>+3</span></div>`);
     }
+    if (impactsState.on) {
+      parts.push(`<div class="legend-title" style="margin-top:${parts.length ? 6 : 0}px">Typical El Niño effect</div>
+        <div class="legend-effects">${Object.values(IMPACTS.effects).map((e) =>
+          `<span><i style="background:${e.color}"></i>${escapeHtml(e.label.split(/[:/]/)[0].trim())}</span>`).join("")}</div>`);
+    }
+    $("legend").innerHTML = parts.join("");
+    $("legend").hidden = !parts.length;
+  }
+
+  $("sst-toggle").addEventListener("change", (e) => {
+    enso.sstOn = e.target.checked;
+    if (enso.tiles) { if (enso.sstOn) enso.tiles.addTo(map); else map.removeLayer(enso.tiles); }
     updateGlobeEnso();
+    updateLegend();
   });
   // NOAA updates weekly and the SST map daily; refresh a few times a day.
   setInterval(loadEnso, 6 * 3600 * 1000);
 
   // ------------------------------------------------------------------
-  // 3D globe (MapLibre GL, loaded on first use)
+  // Impacts: typical El Niño effects by country (map, globe and panel)
+  // ------------------------------------------------------------------
+  const impactsState = { on: false, geo: null, layer: L.layerGroup(), selected: null, loading: null };
+  const effectColor = (effect) => IMPACTS.effects[effect].color;
+  const SLUG_BY_SHAPE = {};
+  IMPACTS.countries.forEach((c) => {
+    c.map_ids.forEach((id) => { SLUG_BY_SHAPE[`id:${id}`] = c.slug; });
+    c.map_names.forEach((n) => { SLUG_BY_SHAPE[`name:${n}`] = c.slug; });
+  });
+  const slugForFeature = (f) => SLUG_BY_SHAPE[`id:${f.properties.id}`] || SLUG_BY_SHAPE[`name:${f.properties.name}`];
+  // Countries too small for the world shapes (e.g. Kiribati) are drawn as dots.
+  const POINT_COUNTRIES = IMPACTS.countries.filter((c) => !c.map_ids.length && !c.map_names.length);
+  const staticUrl = (path) => {
+    const css = document.querySelector('link[rel="stylesheet"][href*="css/style.css"]');
+    return new URL(path, css ? css.href.replace(/css\/style\.css.*$/, "") : `${window.location.origin}/static/`).href;
+  };
+
+  function loadCountryShapes() {
+    if (!impactsState.loading) {
+      impactsState.loading = fetch(staticUrl("data/countries.geojson"))
+        .then((r) => { if (!r.ok) throw new Error(`Country shapes unavailable (${r.status})`); return r.json(); })
+        .then((geo) => {
+          geo.features = geo.features.filter((f) => {
+            const slug = slugForFeature(f);
+            if (slug) { f.properties.slug = slug; f.properties.color = effectColor(IMPACT_BY_SLUG[slug].effect); }
+            return Boolean(slug);
+          });
+          impactsState.geo = geo;
+          return geo;
+        })
+        .catch((err) => { impactsState.loading = null; throw err; });
+    }
+    return impactsState.loading;
+  }
+
+  async function drawImpactsOnMap() {
+    const geo = await loadCountryShapes();
+    impactsState.layer.clearLayers();
+    [-360, 0, 360].forEach((off) => {
+      L.geoJSON(geo, {
+        pane: "impacts",
+        coordsToLatLng: (c) => L.latLng(c[1], c[0] + off),
+        style: (f) => ({
+          color: f.properties.color, weight: f.properties.slug === impactsState.selected ? 3 : 1,
+          opacity: 0.9, fillColor: f.properties.color, fillOpacity: f.properties.slug === impactsState.selected ? 0.65 : 0.42,
+        }),
+        onEachFeature: (f, layer) => {
+          layer.bindTooltip(IMPACT_BY_SLUG[f.properties.slug].name, { sticky: true });
+          layer.on("click", () => selectCountry(f.properties.slug, { fly: false }));
+        },
+      }).addTo(impactsState.layer);
+      POINT_COUNTRIES.forEach((c) => {
+        L.circleMarker([c.lat, c.lon + off], {
+          pane: "impacts", radius: 9, color: "#fff", weight: 1.5, fillColor: effectColor(c.effect), fillOpacity: 0.9,
+        }).bindTooltip(c.name).on("click", () => selectCountry(c.slug, { fly: false })).addTo(impactsState.layer);
+      });
+    });
+  }
+
+  async function setImpactsLayer(on) {
+    impactsState.on = on;
+    $("impacts-toggle").checked = on;
+    updateLegend();
+    try {
+      if (on) {
+        await drawImpactsOnMap();
+        if (impactsState.on) impactsState.layer.addTo(map);
+      } else {
+        map.removeLayer(impactsState.layer);
+      }
+      updateGlobeImpacts();
+    } catch (err) {
+      toast(err.message);
+    }
+  }
+  $("impacts-toggle").addEventListener("change", (e) => setImpactsLayer(e.target.checked));
+
+  function countryNews(slug, limit = 5) {
+    const d = newsState.data;
+    if (!d) return [];
+    return d.articles.filter((a) => (a.countries || []).includes(slug)).slice(0, limit);
+  }
+
+  function renderImpactDetail() {
+    const c = IMPACT_BY_SLUG[impactsState.selected];
+    if (!c) { $("impact-detail").innerHTML = ""; return; }
+    const effect = IMPACTS.effects[c.effect];
+    const news = countryNews(c.slug);
+    const newsHtml = news.length ? news.map((a) => newsItemHtml(a)).join("")
+      : `<p class="muted">${newsState.data ? "No recent El Niño headlines mention this country." : "Loading the latest news…"}</p>`;
+    $("impact-detail").innerHTML = `
+      <article class="impact-card" aria-live="polite">
+        <button class="close-btn" id="impact-close" aria-label="Close">✕</button>
+        <h3>El Niño in ${escapeHtml(c.name)}</h3>
+        <span class="badge" style="background:${effect.color}">${escapeHtml(effect.label)}</span>
+        <span class="season">${escapeHtml(c.season)}</span>
+        <p>${escapeHtml(c.summary)}</p>
+        ${c.details.length ? `<ul>${c.details.map((x) => `<li>${escapeHtml(x)}</li>`).join("")}</ul>` : ""}
+        ${c.past.length ? `<h4 class="section-title">Past El Niño events</h4><ul>${c.past.map((x) => `<li>${escapeHtml(x)}</li>`).join("")}</ul>` : ""}
+        <h4 class="section-title">Latest El Niño news about ${escapeHtml(c.name)}</h4>
+        ${newsHtml}
+        <div class="actions">
+          ${c.service ? `<a href="${escapeHtml(c.service.url)}" target="_blank" rel="noopener">Official forecasts: ${escapeHtml(c.service.name)} ↗</a>` : ""}
+          <button class="link-btn" id="impact-all-news">All news about ${escapeHtml(c.name)} →</button>
+          <a href="impacts/${encodeURIComponent(c.slug)}/">Full page ↗</a>
+        </div>
+      </article>`;
+    $("impact-close").addEventListener("click", () => selectCountry(null));
+    $("impact-all-news").addEventListener("click", () => {
+      newsState.filters.country = `slug:${c.slug}`;
+      newsState.filters.theme = "";
+      setTab("news");
+      renderNews();
+    });
+  }
+
+  function countryBounds(slug) {
+    const c = IMPACT_BY_SLUG[slug];
+    const f = impactsState.geo && impactsState.geo.features.filter((x) => x.properties.slug === slug);
+    if (!f || !f.length) return [c.lat - 6, c.lon - 8, c.lat + 6, c.lon + 8];
+    const b = L.geoJSON({ type: "FeatureCollection", features: f }).getBounds();
+    return [b.getSouth(), b.getWest(), b.getNorth(), b.getEast()];
+  }
+
+  async function selectCountry(slug, { fly = true } = {}) {
+    impactsState.selected = slug && IMPACT_BY_SLUG[slug] ? slug : null;
+    document.querySelectorAll(".impact-row").forEach((r) => r.classList.toggle("selected", r.dataset.slug === impactsState.selected));
+    renderImpactDetail();
+    if (impactsState.on) { drawImpactsOnMap().catch(() => {}); updateGlobeImpacts(); }
+    if (!impactsState.selected) { setHash("tab=impacts"); return; }
+    setHash(`impact=${impactsState.selected}`);
+    if (ui.tab === "impacts") $("sheet-body").scrollTop = 0;
+    if (!newsState.data) loadNews().then(renderImpactDetail);
+    if (fly) {
+      try { await loadCountryShapes(); } catch (e) { /* fall back to the country's centre */ }
+      const [s, w, n, e] = countryBounds(impactsState.selected);
+      // Very wide countries (Russia/US across the date line) fall back to a centre view.
+      if (e - w > 200) flyToBox(IMPACT_BY_SLUG[slug].lat - 10, IMPACT_BY_SLUG[slug].lon - 20, IMPACT_BY_SLUG[slug].lat + 10, IMPACT_BY_SLUG[slug].lon + 20, 2.8);
+      else flyToBox(s, w, n, e, 3);
+    }
+  }
+
+  document.querySelectorAll(".impact-row").forEach((row) => {
+    row.addEventListener("click", (e) => { e.preventDefault(); selectCountry(row.dataset.slug); });
+  });
+  $("my-country").addEventListener("change", (e) => {
+    if (!e.target.value) return;
+    setTab("impacts");
+    selectCountry(e.target.value);
+    e.target.value = "";
+  });
+  $("impact-search").addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    document.querySelectorAll("#impact-list .impact-list").forEach((list) => {
+      let shown = 0;
+      list.querySelectorAll("li").forEach((li) => {
+        const c = IMPACT_BY_SLUG[li.firstElementChild.dataset.slug];
+        const match = !q || c.name.toLowerCase().includes(q) || c.region.toLowerCase().includes(q);
+        li.hidden = !match;
+        if (match) shown += 1;
+      });
+      list.hidden = !shown;
+      list.previousElementSibling.hidden = !shown;
+    });
+  });
+  document.querySelectorAll(".theme-news").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      newsState.filters.theme = btn.dataset.theme;
+      newsState.filters.country = "";
+      setTab("news");
+      renderNews();
+    });
+  });
+
+  // ------------------------------------------------------------------
+  // History: NOAA Oceanic Niño Index since 1950 + episode table
+  // ------------------------------------------------------------------
+  const SEASONS = ["DJF", "JFM", "FMA", "MAM", "AMJ", "MJJ", "JJA", "JAS", "ASO", "SON", "OND", "NDJ"];
+  const historyState = { years: 0 };
+  const svgNS = "http://www.w3.org/2000/svg";
+
+  function renderEpisodes() {
+    const d = enso.data;
+    if (!d || !d.episodes) return;
+    const showLaNina = $("show-la-nina").checked;
+    const rows = d.episodes.filter((e) => showLaNina || e.phase === "el_nino").slice().reverse();
+    const status = (e) => (e.ongoing && !e.confirmed ? " (developing)" : e.ongoing ? " (ongoing)" : "");
+    $("episodes").innerHTML = `<table class="episodes">
+      <thead><tr><th>Years</th><th>Phase</th><th>Peak ONI</th><th>Strength</th></tr></thead>
+      <tbody>${rows.map((e) => `<tr class="${/strong/.test(e.strength) ? "strong" : ""}">
+        <td>${escapeHtml(e.start)} – ${escapeHtml(e.end)}${status(e)}</td>
+        <td class="${e.phase === "el_nino" ? "warm" : "cool"}">${e.phase === "el_nino" ? "El Niño" : "La Niña"}</td>
+        <td>${signed(e.peak)} °C</td><td>${escapeHtml(e.strength)}</td></tr>`).join("")}</tbody></table>`;
+  }
+
+  function renderHistory() {
+    const d = enso.data;
+    const fig = $("oni-chart");
+    if (!d || !d.oni_history || !d.oni_history.length) return;
+    renderEpisodes();
+    let pts = d.oni_history.map(([year, si, v]) => ({ x: year + (si + 0.5) / 12, v, label: `${SEASONS[si]} ${year}` }));
+    if (historyState.years) {
+      const cut = pts[pts.length - 1].x - historyState.years;
+      pts = pts.filter((p) => p.x >= cut);
+    }
+    const width = Math.max(280, fig.clientWidth || 360);
+    const height = width < 480 ? 210 : 240;
+    const m = { l: 32, r: 10, t: 14, b: 24 };
+    const x0 = pts[0].x, x1 = pts[pts.length - 1].x;
+    const yMin = Math.min(-2.5, ...pts.map((p) => p.v)), yMax = Math.max(2.8, ...pts.map((p) => p.v));
+    const sx = (x) => m.l + ((x - x0) / (x1 - x0 || 1)) * (width - m.l - m.r);
+    const sy = (v) => m.t + ((yMax - v) / (yMax - yMin)) * (height - m.t - m.b);
+    const area = (fn) => `M${sx(pts[0].x)},${sy(0)} ${pts.map((p) => `L${sx(p.x).toFixed(1)},${sy(fn(p.v)).toFixed(1)}`).join(" ")} L${sx(x1)},${sy(0)} Z`;
+    const span = x1 - x0;
+    const step = span > 40 ? 10 : span > 15 ? 5 : 2;
+    const xTicks = [];
+    for (let y = Math.ceil(x0 / step) * step; y <= x1; y += step) xTicks.push(y);
+    const yTicks = [-2, -1, 0, 1, 2].filter((v) => v >= yMin && v <= yMax);
+
+    fig.innerHTML = `<svg viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img"
+        aria-label="Oceanic Niño Index from ${escapeHtml(pts[0].label)} to ${escapeHtml(pts[pts.length - 1].label)}">
+      <g class="grid">${yTicks.filter((v) => v !== 0).map((v) => `<line x1="${m.l}" x2="${width - m.r}" y1="${sy(v)}" y2="${sy(v)}"/>`).join("")}</g>
+      <path d="${area((v) => Math.max(v, 0))}" fill="var(--warm-mark)"/>
+      <path d="${area((v) => Math.min(v, 0))}" fill="var(--cool-mark)"/>
+      <line class="zero" x1="${m.l}" x2="${width - m.r}" y1="${sy(0)}" y2="${sy(0)}"/>
+      <line class="threshold" x1="${m.l}" x2="${width - m.r}" y1="${sy(0.5)}" y2="${sy(0.5)}"/>
+      <line class="threshold" x1="${m.l}" x2="${width - m.r}" y1="${sy(-0.5)}" y2="${sy(-0.5)}"/>
+      <text class="threshold-label" x="${m.l + 4}" y="${sy(yMax) + 10}">El Niño ≥ +0.5</text>
+      <text class="threshold-label" x="${m.l + 4}" y="${sy(yMin) - 4}">La Niña ≤ −0.5</text>
+      <g class="axis">
+        ${yTicks.map((v) => `<text x="${m.l - 6}" y="${sy(v) + 4}" text-anchor="end">${v > 0 ? "+" : ""}${v}</text>`).join("")}
+        ${xTicks.map((y) => `<text x="${sx(y)}" y="${height - 6}" text-anchor="middle">${y}</text>`).join("")}
+      </g>
+      <line class="crosshair" id="oni-cross" y1="${m.t}" y2="${height - m.b}" visibility="hidden"/>
+      <circle id="oni-dot" r="4" fill="var(--text)" stroke="var(--bg-solid)" stroke-width="2" visibility="hidden"/>
+      <rect id="oni-hit" x="${m.l}" y="0" width="${width - m.l - m.r}" height="${height}" fill="transparent"/>
+    </svg><div class="chart-tip" id="oni-tip" hidden></div>`;
+
+    const hit = $("oni-hit"), cross = $("oni-cross"), dot = $("oni-dot"), tip = $("oni-tip");
+    const show = (e) => {
+      const rect = fig.querySelector("svg").getBoundingClientRect();
+      const px = ((e.clientX - rect.left) / rect.width) * width;
+      const xv = x0 + ((px - m.l) / (width - m.l - m.r)) * (x1 - x0);
+      let best = pts[0];
+      for (const p of pts) if (Math.abs(p.x - xv) < Math.abs(best.x - xv)) best = p;
+      const cx = sx(best.x), cy = sy(best.v);
+      cross.setAttribute("x1", cx); cross.setAttribute("x2", cx); cross.setAttribute("visibility", "visible");
+      dot.setAttribute("cx", cx); dot.setAttribute("cy", cy); dot.setAttribute("visibility", "visible");
+      const v1 = Math.round(best.v * 10) / 10; // NOAA publishes the ONI to one decimal
+      const phase = v1 >= 0.5 ? "El Niño range" : v1 <= -0.5 ? "La Niña range" : "Neutral";
+      tip.innerHTML = `<b>${escapeHtml(best.label)}</b> · ${signed(best.v)} °C · ${phase}`;
+      tip.hidden = false;
+      tip.style.left = `${clamp((cx / width) * rect.width, 70, rect.width - 70)}px`;
+      tip.style.top = `${(cy / height) * rect.height}px`;
+    };
+    const hide = () => { cross.setAttribute("visibility", "hidden"); dot.setAttribute("visibility", "hidden"); tip.hidden = true; };
+    hit.addEventListener("pointermove", show);
+    hit.addEventListener("pointerdown", show);
+    hit.addEventListener("pointerleave", hide);
+  }
+
+  document.querySelectorAll("#history-range .chip").forEach((chip) => {
+    chip.addEventListener("click", () => {
+      historyState.years = Number(chip.dataset.years);
+      document.querySelectorAll("#history-range .chip").forEach((c) => c.classList.toggle("active", c === chip));
+      renderHistory();
+    });
+  });
+  $("show-la-nina").addEventListener("change", renderEpisodes);
+  window.addEventListener("resize", () => { if (ui.tab === "history") renderHistory(); });
+
+  // ------------------------------------------------------------------
+  // El Niño news and videos
+  // ------------------------------------------------------------------
+  const PAGE_SIZE = 40;
+  const newsState = {
+    data: null, loadedAt: 0, tab: "articles", shown: PAGE_SIZE,
+    filters: { theme: "", country: "", language: "", q: "" },
+  };
+  const THEME_BY_ID = Object.fromEntries(IMPACTS.themes.map((t) => [t.id, t]));
+  const VIDEO_ID = /^[A-Za-z0-9_-]{11}$/;
+  const safeUrl = (u) => (/^https?:\/\//i.test(u || "") ? u : null);
+
+  function timeAgo(iso) {
+    if (!iso) return "";
+    const mins = Math.round((Date.now() - new Date(iso)) / 60000);
+    if (mins < 60) return `${Math.max(mins, 1)} min ago`;
+    if (mins < 48 * 60) return `${Math.round(mins / 60)} h ago`;
+    return `${Math.round(mins / 1440)} days ago`;
+  }
+
+  function newsItemHtml(a) {
+    const url = safeUrl(a.url);
+    if (!url) return "";
+    const img = safeUrl(a.image);
+    const tags = [
+      ...(a.themes || []).filter((t) => THEME_BY_ID[t]).map((t) => `<span class="tag">${THEME_BY_ID[t].icon} ${escapeHtml(THEME_BY_ID[t].title)}</span>`),
+      ...(a.countries || []).filter((c) => IMPACT_BY_SLUG[c]).slice(0, 3).map((c) => `<span class="tag">📍 ${escapeHtml(IMPACT_BY_SLUG[c].name)}</span>`),
+    ].join("");
+    return `<a class="news-item" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">
+      ${img ? `<img src="${escapeHtml(img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}
+      <div><div class="news-title">${escapeHtml(a.title)}</div>
+        <div class="news-meta">${a.country ? `<span class="flag">${escapeHtml(a.country)}</span>` : ""}${escapeHtml(a.source)}${a.language ? ` · ${escapeHtml(a.language)}` : ""}${a.published ? ` · ${escapeHtml(timeAgo(a.published))}` : ""}</div>
+        ${tags ? `<div class="news-tags">${tags}</div>` : ""}</div>
+    </a>`;
+  }
+
+  function fillNewsSelects() {
+    const d = newsState.data;
+    const slugCounts = {}, editionCounts = {}, langCounts = {};
+    d.articles.forEach((a) => {
+      (a.countries || []).forEach((c) => { if (IMPACT_BY_SLUG[c]) slugCounts[c] = (slugCounts[c] || 0) + 1; });
+      if (a.country) editionCounts[a.country] = (editionCounts[a.country] || 0) + 1;
+      if (a.language) langCounts[a.language] = (langCounts[a.language] || 0) + 1;
+    });
+    const covered = new Set(Object.keys(slugCounts).map((s) => IMPACT_BY_SLUG[s].name));
+    const options = [
+      ...Object.entries(slugCounts).map(([s, n]) => [`slug:${s}`, IMPACT_BY_SLUG[s].name, n]),
+      ...Object.entries(editionCounts).filter(([name]) => !covered.has(name)).map(([name, n]) => [`ed:${name}`, name, n]),
+    ].sort((a, b) => a[1].localeCompare(b[1]));
+    $("news-country").innerHTML = `<option value="">All countries</option>${options.map(([v, label, n]) =>
+      `<option value="${escapeHtml(v)}">${escapeHtml(label)} (${n})</option>`).join("")}`;
+    $("news-language").innerHTML = `<option value="">All languages</option>${Object.entries(langCounts)
+      .sort((a, b) => b[1] - a[1]).map(([l, n]) => `<option value="${escapeHtml(l)}">${escapeHtml(l)} (${n})</option>`).join("")}`;
+  }
+
+  function filteredArticles() {
+    const { theme, country, language, q } = newsState.filters;
+    const query = q.trim().toLowerCase();
+    return newsState.data.articles.filter((a) =>
+      (!theme || (a.themes || []).includes(theme))
+      && (!country || (country.startsWith("slug:") ? (a.countries || []).includes(country.slice(5)) : a.country === country.slice(3)))
+      && (!language || a.language === language)
+      && (!query || a.title.toLowerCase().includes(query) || (a.source || "").toLowerCase().includes(query)));
+  }
+
+  function renderArticles() {
+    const items = filteredArticles();
+    if (!items.length) {
+      $("news-body").innerHTML = '<p class="muted">No El Niño news matches these filters right now. Try "All".</p>';
+      return;
+    }
+    const shown = items.slice(0, newsState.shown);
+    $("news-body").innerHTML = shown.map(newsItemHtml).join("")
+      + (items.length > shown.length ? `<button class="more-btn" id="news-more">Show more (${items.length - shown.length} more)</button>` : "");
+    if ($("news-more")) $("news-more").addEventListener("click", () => { newsState.shown += PAGE_SIZE; renderArticles(); });
+  }
+
+  function renderVideos() {
+    const d = newsState.data;
+    const videos = d.videos.filter((v) => VIDEO_ID.test(v.id));
+    const latest = videos.filter((v) => !v.explainer);
+    const card = (v) => `<button class="video-card" data-id="${v.id}" data-title="${escapeHtml(v.title)}">
+        <span class="thumb"><img src="https://i.ytimg.com/vi/${v.id}/hqdefault.jpg" alt="" loading="lazy"></span>
+        <div class="vt">${escapeHtml(v.title)}</div>
+        <div class="vm">${escapeHtml(v.channel)}${v.published ? ` · ${escapeHtml(timeAgo(v.published))}` : ""}</div>
+      </button>`;
+    const search = safeUrl(d.youtube_search);
+    $("news-body").innerHTML = `
+      ${search ? `<a class="yt-search" href="${escapeHtml(search)}" target="_blank" rel="noopener noreferrer">▶ Search all El Niño videos on YouTube</a>` : ""}
+      <h3 class="section-title">Latest from weather &amp; climate agencies</h3>
+      ${latest.length ? `<div class="video-grid">${latest.map(card).join("")}</div>`
+        : '<p class="muted">No new El Niño videos from NOAA, NASA, WMO, the Met Office or the Bureau of Meteorology in their latest uploads.</p>'}
+      <h3 class="section-title">Explainers</h3>
+      <div class="video-grid">${videos.filter((v) => v.explainer).map(card).join("")}</div>`;
+    $("news-body").querySelectorAll(".video-card").forEach((btn) => {
+      btn.addEventListener("click", () => playVideo(btn.dataset.id, btn.dataset.title));
+    });
+  }
+
+  function renderNews() {
+    const d = newsState.data;
+    document.querySelectorAll("[data-news-tab]").forEach((b) => b.classList.toggle("active", b.dataset.newsTab === newsState.tab));
+    $("news-filters").hidden = newsState.tab !== "articles";
+    if (!d) return;
+    const f = newsState.filters;
+    document.querySelectorAll("#news-themes .chip").forEach((c) => c.classList.toggle("active", c.dataset.theme === f.theme));
+    if ([...$("news-country").options].some((o) => o.value === f.country)) $("news-country").value = f.country;
+    else f.country = $("news-country").value = "";
+    $("news-language").value = f.language;
+    if (newsState.tab === "articles") renderArticles(); else renderVideos();
+    const ok = d.sources.filter((src) => src.ok).length;
+    $("news-foot").innerHTML = `${d.articles.length} articles · ${d.videos.length} videos from ${ok} free sources
+      · updated ${escapeHtml(timeAgo(d.updated))} · <button class="link-btn" id="news-sources">Sources</button>`;
+    $("news-sources").addEventListener("click", () => $("sources-btn").click());
+  }
+
+  async function loadNews() {
+    try {
+      const d = await api("/api/news");
+      newsState.data = d;
+      newsState.loadedAt = Date.now();
+      fillNewsSelects();
+      renderNews();
+      if (impactsState.selected) renderImpactDetail();
+      if (!$("sources-panel").hidden) renderSources();
+    } catch (err) {
+      $("news-body").innerHTML = `<p class="muted">News is unavailable right now: ${escapeHtml(err.message)}</p>`;
+    }
+  }
+
+  const resetPaging = () => { newsState.shown = PAGE_SIZE; };
+  document.querySelectorAll("[data-news-tab]").forEach((b) => b.addEventListener("click", () => { newsState.tab = b.dataset.newsTab; renderNews(); }));
+  document.querySelectorAll("#news-themes .chip").forEach((chip) => chip.addEventListener("click", () => {
+    newsState.filters.theme = chip.dataset.theme; resetPaging(); renderNews();
+  }));
+  $("news-country").addEventListener("change", (e) => { newsState.filters.country = e.target.value; resetPaging(); renderNews(); });
+  $("news-language").addEventListener("change", (e) => { newsState.filters.language = e.target.value; resetPaging(); renderNews(); });
+  let searchTimer;
+  $("news-search").addEventListener("input", (e) => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => { newsState.filters.q = e.target.value; resetPaging(); if (newsState.data) renderArticles(); }, 200);
+  });
+
+  function playVideo(id, title) {
+    if (!VIDEO_ID.test(id)) return;
+    $("video-frame").innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0"
+      title="${escapeHtml(title)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
+    $("video-title").textContent = title;
+    $("video-modal").hidden = false;
+  }
+
+  function closeVideo() {
+    $("video-frame").innerHTML = ""; // stops playback
+    $("video-modal").hidden = true;
+  }
+
+  $("video-close").addEventListener("click", closeVideo);
+  $("video-modal").addEventListener("click", (e) => { if (e.target === $("video-modal")) closeVideo(); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    if (!$("video-modal").hidden) closeVideo();
+    else if (!$("sources-panel").hidden) $("sources-panel").hidden = true;
+    else setLayersOpen(false);
+  });
+
   // ------------------------------------------------------------------
   const MAPLIBRE = {
     js: "https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js",
@@ -525,7 +1137,7 @@
         gm.addLayer({
           id, type: "raster", source: id,
           paint: { "raster-opacity": sat.style === "infrared" ? 0.65 : 1, "raster-fade-duration": 0 },
-        }, "night");
+        }, "anchor-impacts");
         globe.satIds.push(id);
       });
     });
@@ -590,14 +1202,40 @@
     });
   }
 
+  function updateGlobeImpacts() {
+    const gm = globe.map;
+    if (!gm || !globe.ready) return;
+    ["impacts-fill", "impacts-line", "impacts-points"].forEach((id) => { if (gm.getLayer(id)) gm.removeLayer(id); });
+    ["impacts", "impact-points"].forEach((id) => { if (gm.getSource(id)) gm.removeSource(id); });
+    if (!impactsState.on || !impactsState.geo) return;
+    const selected = impactsState.selected || "";
+    gm.addSource("impacts", { type: "geojson", data: impactsState.geo });
+    gm.addSource("impact-points", {
+      type: "geojson",
+      data: { type: "FeatureCollection", features: POINT_COUNTRIES.map((c) => ({
+        type: "Feature", properties: { slug: c.slug, color: effectColor(c.effect) },
+        geometry: { type: "Point", coordinates: [c.lon, c.lat] } })) },
+    });
+    gm.addLayer({ id: "impacts-fill", type: "fill", source: "impacts",
+      paint: { "fill-color": ["get", "color"], "fill-opacity": ["case", ["==", ["get", "slug"], selected], 0.7, 0.45] } }, "anchor-sst");
+    gm.addLayer({ id: "impacts-line", type: "line", source: "impacts",
+      paint: { "line-color": ["get", "color"], "line-width": ["case", ["==", ["get", "slug"], selected], 3, 1] } }, "anchor-sst");
+    gm.addLayer({ id: "impacts-points", type: "circle", source: "impact-points",
+      paint: { "circle-radius": 8, "circle-color": ["get", "color"], "circle-stroke-color": "#fff", "circle-stroke-width": 1.5 } }, "anchor-sst");
+  }
+
+  function updateGlobePadding() {
+    if (globe.map && globe.active) globe.map.easeTo({ padding: viewPadding(), duration: 280 });
+  }
+
   async function createGlobe() {
     await loadMapLibre();
     const gm = new maplibregl.Map({
       container: "globe",
       center: [-140, 0], // the equatorial Pacific
-      zoom: 2,
+      zoom: isSheetMode() ? 1.3 : 1.9,
       maxZoom: 12,
-      attributionControl: { compact: true },
+      attributionControl: false,
       style: {
         version: 8,
         projection: { type: "globe" },
@@ -614,38 +1252,60 @@
           },
           night: { type: "geojson", data: nightGeoJSON(new Date()) },
         },
+        // Hidden "anchor" layers keep the stacking order stable as layers come and go:
+        // imagery < satellites < impacts < sea temperature < night < labels < Niño boxes.
         layers: [
           { id: "space", type: "background", paint: { "background-color": "#02040a" } },
           { id: "imagery", type: "raster", source: "imagery" },
+          { id: "anchor-impacts", type: "background", layout: { visibility: "none" } },
+          { id: "anchor-sst", type: "background", layout: { visibility: "none" } },
           { id: "night", type: "fill", source: "night", paint: { "fill-color": "#000814", "fill-opacity": 0.4 } },
           { id: "labels", type: "raster", source: "labels" },
         ],
       },
     });
-    gm.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "bottom-left");
+    gm.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "bottom-right");
+    gm.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-right");
     gm.on("load", () => {
       globe.ready = true;
+      // Start with the credits folded into the (i) button.
+      const attrib = gm.getContainer().querySelector(".maplibregl-ctrl-attrib");
+      if (attrib) attrib.classList.remove("maplibregl-compact-show");
+      gm.setPadding(viewPadding());
       updateGlobeSatellites();
       updateGlobeNight();
       updateGlobeEnso();
+      updateGlobeImpacts();
+    });
+    const pick = (e) => { const f = e.features && e.features[0]; if (f) selectCountry(f.properties.slug, { fly: false }); };
+    gm.on("click", "impacts-fill", pick);
+    gm.on("click", "impacts-points", pick);
+    ["impacts-fill", "impacts-points"].forEach((id) => {
+      gm.on("mouseenter", id, () => { gm.getCanvas().style.cursor = "pointer"; });
+      gm.on("mouseleave", id, () => { gm.getCanvas().style.cursor = ""; });
     });
     globe.map = gm;
+  }
+
+  function setViewButtons() {
+    $("globe-toggle").setAttribute("aria-pressed", String(globe.active));
+    $("map-toggle").setAttribute("aria-pressed", String(!globe.active));
   }
 
   async function showGlobe() {
     globe.active = true;
     document.body.classList.add("globe-mode");
     $("globe").hidden = false;
-    $("globe-toggle").classList.add("active");
-    $("map-toggle").classList.remove("active");
+    setViewButtons();
     try {
       if (!globe.map) await createGlobe();
       else {
         const c = map.getCenter();
         globe.map.resize();
-        globe.map.jumpTo({ center: [((c.lng + 540) % 360) - 180, clamp(c.lat, -60, 60)], zoom: 2 });
+        globe.map.jumpTo({ center: [((c.lng + 540) % 360) - 180, clamp(c.lat, -60, 60)], padding: viewPadding() });
         updateGlobeSatellites();
         updateGlobeNight();
+        updateGlobeImpacts();
       }
     } catch (err) {
       toast(err.message);
@@ -654,154 +1314,27 @@
   }
 
   function hideGlobe() {
-    if (!globe.active) return;
     globe.active = false;
     document.body.classList.remove("globe-mode");
     $("globe").hidden = true;
-    $("globe-toggle").classList.remove("active");
-    $("map-toggle").classList.add("active");
+    setViewButtons();
     map.invalidateSize();
   }
 
   $("globe-toggle").addEventListener("click", showGlobe);
   $("map-toggle").addEventListener("click", hideGlobe);
 
-  // ------------------------------------------------------------------
-  // El Niño news and videos
-  // ------------------------------------------------------------------
-  const newsState = { data: null, loadedAt: 0, tab: "articles" };
-  const VIDEO_ID = /^[A-Za-z0-9_-]{11}$/;
-  const safeUrl = (u) => (/^https?:\/\//i.test(u || "") ? u : null);
-
-  function timeAgo(iso) {
-    if (!iso) return "";
-    const mins = Math.round((Date.now() - new Date(iso)) / 60000);
-    if (mins < 60) return `${Math.max(mins, 1)} min ago`;
-    if (mins < 48 * 60) return `${Math.round(mins / 60)} h ago`;
-    return `${Math.round(mins / 1440)} days ago`;
-  }
-
-  function fillSelect(select, values, label) {
-    const counts = {};
-    values.filter(Boolean).forEach((v) => { counts[v] = (counts[v] || 0) + 1; });
-    const current = select.value;
-    select.innerHTML = `<option value="">${label}</option>` + Object.entries(counts)
-      .sort((a, b) => b[1] - a[1])
-      .map(([v, n]) => `<option value="${escapeHtml(v)}">${escapeHtml(v)} (${n})</option>`).join("");
-    if (counts[current]) select.value = current;
-  }
-
-  function renderArticles() {
-    const d = newsState.data;
-    const country = $("news-country").value;
-    const language = $("news-language").value;
-    const items = d.articles.filter((a) => (!country || a.country === country) && (!language || a.language === language));
-    if (!items.length) {
-      $("news-body").innerHTML = '<p class="muted">No El Niño news for this selection right now.</p>';
-      return;
-    }
-    $("news-body").innerHTML = items.map((a) => {
-      const url = safeUrl(a.url);
-      if (!url) return "";
-      const img = safeUrl(a.image);
-      return `<a class="news-item" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">
-        ${img ? `<img src="${escapeHtml(img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}
-        <div><div class="news-title">${escapeHtml(a.title)}</div>
-          <div class="news-meta">${a.country ? `<span class="flag">${escapeHtml(a.country)}</span>` : ""}${escapeHtml(a.source)}
-            ${a.language ? ` · ${escapeHtml(a.language)}` : ""}${a.published ? ` · ${escapeHtml(timeAgo(a.published))}` : ""}</div></div>
-      </a>`;
-    }).join("");
-  }
-
-  function renderVideos() {
-    const d = newsState.data;
-    const videos = d.videos.filter((v) => VIDEO_ID.test(v.id));
-    const latest = videos.filter((v) => !v.explainer);
-    const card = (v) => `<button class="video-card" data-id="${v.id}" data-title="${escapeHtml(v.title)}">
-        <span class="thumb"><img src="https://i.ytimg.com/vi/${v.id}/hqdefault.jpg" alt="" loading="lazy"></span>
-        <div class="vt">${escapeHtml(v.title)}</div>
-        <div class="vm">${escapeHtml(v.channel)}${v.published ? ` · ${escapeHtml(timeAgo(v.published))}` : ""}</div>
-      </button>`;
-    const search = safeUrl(d.youtube_search);
-    $("news-body").innerHTML = `
-      ${search ? `<a class="yt-search" href="${escapeHtml(search)}" target="_blank" rel="noopener noreferrer">▶ Search all El Niño videos on YouTube</a>` : ""}
-      <div class="section-title">Latest from weather &amp; climate agencies</div>
-      ${latest.length ? `<div class="video-grid">${latest.map(card).join("")}</div>`
-        : '<p class="muted">No new El Niño videos from NOAA, NASA, WMO, the Met Office or the Bureau of Meteorology in their latest uploads.</p>'}
-      <div class="section-title">Explainers</div>
-      <div class="video-grid">${videos.filter((v) => v.explainer).map(card).join("")}</div>`;
-    $("news-body").querySelectorAll(".video-card").forEach((btn) => {
-      btn.addEventListener("click", () => playVideo(btn.dataset.id, btn.dataset.title));
-    });
-  }
-
-  function renderNews() {
-    const d = newsState.data;
-    if (!d) return;
-    $("news-filters").hidden = newsState.tab !== "articles";
-    document.querySelectorAll(".news-tab").forEach((t) => t.classList.toggle("active", t.dataset.tab === newsState.tab));
-    if (newsState.tab === "articles") renderArticles(); else renderVideos();
-    const ok = d.sources.filter((src) => src.ok).length;
-    $("news-foot").innerHTML = `${d.articles.length} articles · ${d.videos.length} videos from ${ok} free sources
-      · updated ${escapeHtml(timeAgo(d.updated))} · <a href="#" id="news-sources">Sources</a>`;
-    $("news-sources").addEventListener("click", (e) => { e.preventDefault(); $("sources-btn").click(); });
-  }
-
-  async function loadNews() {
-    try {
-      const d = await api("/api/news");
-      newsState.data = d;
-      newsState.loadedAt = Date.now();
-      fillSelect($("news-country"), d.articles.map((a) => a.country), "All countries");
-      fillSelect($("news-language"), d.articles.map((a) => a.language), "All languages");
-      renderNews();
-      if (!$("sources-panel").hidden) renderSources();
-    } catch (err) {
-      $("news-body").innerHTML = `<p class="muted">News is unavailable right now: ${escapeHtml(err.message)}</p>`;
-    }
-  }
-
-  function playVideo(id, title) {
-    if (!VIDEO_ID.test(id)) return;
-    $("video-frame").innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0"
-      title="${escapeHtml(title)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
-    $("video-title").textContent = title;
-    $("video-modal").hidden = false;
-  }
-
-  function closeVideo() {
-    $("video-frame").innerHTML = ""; // stops playback
-    $("video-modal").hidden = true;
-  }
-
-  // News and Learn open in the same spot, so only one is shown at a time.
-  function setSidePanel(name) {
-    ["news", "learn"].forEach((p) => {
-      $(`${p}-panel`).hidden = p !== name;
-      $(`${p}-toggle`).classList.toggle("active", p === name);
-    });
-    if (name === "news" && Date.now() - newsState.loadedAt > 30 * 60 * 1000) loadNews();
-  }
-  $("news-toggle").addEventListener("click", () => setSidePanel($("news-panel").hidden ? "news" : null));
-  $("learn-toggle").addEventListener("click", () => setSidePanel($("learn-panel").hidden ? "learn" : null));
-  $("news-close").addEventListener("click", () => setSidePanel(null));
-  $("learn-close").addEventListener("click", () => setSidePanel(null));
-  document.querySelectorAll(".news-tab").forEach((tab) => {
-    tab.addEventListener("click", () => { newsState.tab = tab.dataset.tab; renderNews(); });
-  });
-  $("news-country").addEventListener("change", renderArticles);
-  $("news-language").addEventListener("change", renderArticles);
-  $("video-close").addEventListener("click", closeVideo);
-  $("video-modal").addEventListener("click", (e) => { if (e.target === $("video-modal")) closeVideo(); });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("video-modal").hidden) closeVideo(); });
 
   // ------------------------------------------------------------------
   // Start
   // ------------------------------------------------------------------
-  $("legend").hidden = false;
+  setSheetState(isSheetMode() ? "half" : "half");
+  updateLegend();
   loadClouds();
   updateNight();
   loadEnso();
-  // Open on the globe unless the link points at a specific map view.
-  if (linkedView) $("map-toggle").classList.add("active"); else showGlobe();
+  showGlobe();
+  routeFromHash();
+  // Fetch the news shortly after the first paint so headlines are ready.
+  setTimeout(() => { if (!newsState.data) loadNews(); }, 1500);
 })();

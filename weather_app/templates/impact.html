@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{ meta.title }}</title>
+  <meta name="description" content="{{ meta.description }}">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="{{ meta.url }}">
+  <meta name="theme-color" content="{{ meta.theme_color }}">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="{{ meta.site_name }}">
+  <meta property="og:title" content="{{ meta.title }}">
+  <meta property="og:description" content="{{ meta.description }}">
+  <meta property="og:url" content="{{ meta.url }}">
+  <meta property="og:image" content="{{ meta.image }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ meta.title }}">
+  <meta name="twitter:description" content="{{ meta.description }}">
+  <meta name="twitter:image" content="{{ meta.image }}">
+  {% if meta.google_verification %}<meta name="google-site-verification" content="{{ meta.google_verification }}">{% endif %}
+  {% if meta.bing_verification %}<meta name="msvalidate.01" content="{{ meta.bing_verification }}">{% endif %}
+  <link rel="icon" type="image/png" sizes="48x48" href="{{ url_for('static', filename='img/favicon-48.png') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/apple-touch-icon.png') }}">
+  <script type="application/ld+json">{{ json_ld | safe }}</script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="page">
+  <div class="page-wrap">
+    <nav class="page-nav" aria-label="Site">
+      <a href="../../">🌊 <b>El Niño Tracker</b></a>
+      <a href="../../#impact={{ c.slug }}">Live map →</a>
+    </nav>
+    <p class="crumbs"><a href="../../">Home</a> › <a href="../../#tab=impacts">World impacts</a> › {{ c.name }}</p>
+
+    <article>
+      <h1>El Niño impact on {{ c.name }}</h1>
+      <p><span class="badge" style="display:inline-block;padding:3px 10px;border-radius:8px;color:#fff;font-weight:700;background:{{ effect.color }}">{{ effect.label }}</span>
+        <span class="muted">· Main season: {{ c.season }}</span></p>
+      <p class="lead">{{ c.summary }}</p>
+
+      {% if c.details %}
+      <h2>What El Niño usually means for {{ c.name }}</h2>
+      <ul>{% for d in c.details %}<li>{{ d }}</li>{% endfor %}</ul>
+      {% endif %}
+
+      {% if c.past %}
+      <h2>Past El Niño events in {{ c.name }}</h2>
+      <ul>{% for p in c.past %}<li>{{ p }}</li>{% endfor %}</ul>
+      {% endif %}
+
+      <h2>Is El Niño happening now?</h2>
+      {% if enso %}
+      <p><b>{{ enso.headline }}.</b> The Niño 3.4 sea temperature anomaly was
+        <b class="{{ 'warm' if enso.nino34_anomaly >= 0 else 'cool' }}">{{ enso.nino34_anomaly | signed }} °C</b>
+        in the week of {{ enso.week }} ({{ enso.trend_4w | signed }} °C over 4 weeks), from NOAA's weekly data.</p>
+      {% else %}
+      <p>See the live tracker for the latest weekly NOAA reading.</p>
+      {% endif %}
+      <a class="cta" href="../../#impact={{ c.slug }}">Open the live El Niño map</a>
+
+      <h2>Latest El Niño news about {{ c.name }}</h2>
+      {% if news %}
+        {% for a in news %}
+        <a class="news-item" href="{{ a.url }}" target="_blank" rel="noopener noreferrer">
+          <div><div class="news-title">{{ a.title }}</div>
+            <div class="news-meta">{{ a.source }}{% if a.language %} · {{ a.language }}{% endif %}{% if a.published %} · {{ a.published[:10] }}{% endif %}</div></div>
+        </a>
+        {% endfor %}
+      {% else %}
+      <p class="muted">No recent headlines mention {{ c.name }}. The <a href="../../#tab=news">news page</a> shows El Niño news from around the world.</p>
+      {% endif %}
+
+      <h2>Official forecasts</h2>
+      <p>{% if c.service %}For official seasonal forecasts and warnings in {{ c.name }}, follow
+        <a href="{{ c.service.url }}" target="_blank" rel="noopener">{{ c.service.name }}</a>.{% else %}Follow your national
+        weather service and the <a href="https://wmo.int/topics/el-nino-la-nina" target="_blank" rel="noopener">WMO El Niño updates</a>.{% endif %}</p>
+
+      {% if related %}
+      <h2>El Niño in nearby countries</h2>
+      <ul class="related">{% for r in related %}<li><a href="../{{ r.slug }}/">{{ r.name }}</a></li>{% endfor %}</ul>
+      {% endif %}
+    </article>
+
+    <footer>
+      <p>These are typical El Niño effects from past events, summarised from
+        {% for s in sources %}<a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.name }}</a>{{ ", " if not loop.last else "" }}{% endfor %}
+        and national weather services. Every El Niño is different, and other climate drivers matter too.</p>
+      <p><a href="../../">El Niño Tracker</a>: live El Niño status, Pacific sea temperatures, world impacts and news.</p>
+    </footer>
+  </div>
+</body>
+</html>

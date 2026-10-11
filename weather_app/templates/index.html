@@ -3,6 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>{{ meta.title }}</title>
   <meta name="description" content="{{ meta.description }}">
   <meta name="keywords" content="{{ meta.keywords }}">
@@ -48,93 +51,208 @@
   <div id="map" aria-label="El Niño map"></div>
   <div id="globe" aria-label="3D globe" hidden></div>
 
-  <!-- Title -->
-  <header class="panel brand-panel">
-    <h1 class="brand">🌊 <span>El Niño Tracker</span></h1>
-    <p class="brand-sub">Live El Niño status, sea temperatures &amp; news</p>
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="brand-box panel">
+      <h1 class="brand">🌊 El Niño Tracker</h1>
+      <p class="brand-sub">Live status, sea temperatures, world impacts &amp; news</p>
+    </div>
+    <div class="top-actions panel" role="group" aria-label="View">
+      <button class="seg-btn" id="globe-toggle" aria-pressed="true" title="3D globe">🌐<span>Globe</span></button>
+      <button class="seg-btn" id="map-toggle" aria-pressed="false" title="Flat map">🗺️<span>Map</span></button>
+      <button class="seg-btn" id="layers-btn" aria-expanded="false" aria-controls="layers-pop" title="Map layers">🧭<span>Layers</span></button>
+    </div>
   </header>
 
+  <!-- Layers -->
+  <div class="panel layers-pop" id="layers-pop" hidden>
+    <div class="pop-title">Map layers <button class="close-btn" id="layers-close" aria-label="Close">✕</button></div>
+    <label class="row-switch"><input type="checkbox" id="sst-toggle" checked> Sea temperature vs normal</label>
+    <label class="row-switch"><input type="checkbox" id="impacts-toggle"> Typical El Niño impacts by country</label>
+    <label class="row-switch"><input type="checkbox" id="night-toggle" checked> Day / night</label>
+    <label class="field">Live satellites
+      <select id="live-style" title="Real-time imagery from 5 geostationary satellites">
+        <option value="truecolor">True colour</option>
+        <option value="infrared">Infrared clouds</option>
+        <option value="off">Off</option>
+      </select>
+    </label>
+    <label class="field">Base imagery
+      <select id="sat-source">
+        <option value="esri">High‑res imagery</option>
+        <option value="viirs">NASA VIIRS (daily)</option>
+        <option value="modis">NASA MODIS (daily)</option>
+        <option value="dark">Dark map</option>
+      </select>
+    </label>
+    <input id="sat-date" type="date" aria-label="Imagery date" hidden>
+    <p class="muted" id="clouds-time"></p>
+    <button id="sources-btn" class="link-btn" type="button">📚 Data sources</button>
+  </div>
+
   <noscript>
-    <div class="panel noscript">This live map needs JavaScript. The current El Niño status, the latest
-      headlines and answers to common questions are still shown on this page.</div>
+    <div class="panel noscript">The live map needs JavaScript. The El Niño status, world impacts,
+      headlines and answers below still work without it.</div>
   </noscript>
 
-  <!-- El Niño status -->
-  <main class="panel enso-panel" id="enso-panel" aria-live="polite">
-    <div id="enso-content">
-      {% if enso %}
-      {# Pre-rendered for search engines and first paint; app.js replaces it with the live version. #}
-      <span class="enso-phase {{ enso.phase }}">{{ {"el_nino": "El Niño", "la_nina": "La Niña"}.get(enso.phase, "Neutral") }}</span>
-      <h2 class="enso-headline">{{ enso.headline }}</h2>
-      <p><span class="enso-big {{ 'warm' if enso.nino34_anomaly >= 0 else 'cool' }}">{{ enso.nino34_anomaly | signed }} °C</span>
-        Niño 3.4 sea temperature anomaly, week of {{ enso.week }}<br>
-        <small>{{ enso.trend_4w | signed }} °C in the last 4 weeks</small></p>
-      <p class="enso-focus">{{ enso.focus.text }}</p>
-      <h3 class="section-title">Niño regions: latest weekly anomaly</h3>
-      <ul class="enso-static-list">
-        {% for r in enso.regions %}<li>{{ r.name }}: {{ r.anomaly | signed }} °C ({{ r.change_4w | signed }} in 4 weeks)</li>{% endfor %}
-      </ul>
-      {% else %}
-      <h2 class="enso-headline">Loading the latest El Niño status…</h2>
-      <p class="muted">Weekly Niño region sea temperatures from NOAA's Climate Prediction Center.</p>
-      {% endif %}
-    </div>
-  </main>
+  <!-- Main panel: a side panel on desktop, a bottom sheet on phones -->
+  <section class="sheet panel" id="sheet" data-state="half" aria-label="El Niño information">
+    <button class="sheet-handle" id="sheet-handle" aria-label="Expand or collapse the panel"><span></span></button>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button class="tab" role="tab" id="tab-btn-status" aria-controls="tab-status" aria-selected="true" data-tab="status">📊<span>Status</span></button>
+      <button class="tab" role="tab" id="tab-btn-impacts" aria-controls="tab-impacts" aria-selected="false" data-tab="impacts">🌍<span>Impacts</span></button>
+      <button class="tab" role="tab" id="tab-btn-news" aria-controls="tab-news" aria-selected="false" data-tab="news">📰<span>News</span></button>
+      <button class="tab" role="tab" id="tab-btn-history" aria-controls="tab-history" aria-selected="false" data-tab="history">📈<span>History</span></button>
+      <button class="tab" role="tab" id="tab-btn-learn" aria-controls="tab-learn" aria-selected="false" data-tab="learn">📘<span>Learn</span></button>
+    </nav>
 
-  <!-- View switcher -->
-  <nav class="panel layer-panel" aria-label="View">
-    <button class="toggle-btn view-btn" id="globe-toggle" title="3D globe"><span>🌐</span>Globe</button>
-    <button class="toggle-btn view-btn" id="map-toggle" title="Flat map"><span>🗺️</span>Map</button>
-    <hr>
-    <button class="toggle-btn active" id="sst-toggle" title="Sea surface temperature anomaly map"><span>🌡️</span>Sea temp</button>
-    <hr>
-    <button class="toggle-btn view-btn" id="news-toggle" title="El Niño news and videos"><span>📰</span>News</button>
-    <button class="toggle-btn view-btn" id="learn-toggle" title="What is El Niño? Questions and answers"><span>📘</span>Learn</button>
-  </nav>
+    <div class="sheet-body" id="sheet-body">
 
-  <!-- Learn: plain-language answers (also published as FAQ structured data) -->
-  <aside class="panel learn-panel" id="learn-panel" hidden aria-labelledby="learn-title">
-    <button class="close-btn" id="learn-close" aria-label="Close">✕</button>
-    <h2 id="learn-title">El Niño explained</h2>
-    {% for item in faq %}
-    <details{% if loop.first %} open{% endif %}>
-      <summary><h3>{{ item.q }}</h3></summary>
-      <p>{{ item.a }}</p>
-    </details>
-    {% endfor %}
-    <p class="muted">Official sources: <a href="https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml" target="_blank" rel="noopener">NOAA ENSO discussion</a>,
-      <a href="https://wmo.int/topics/el-nino-la-nina" target="_blank" rel="noopener">WMO El Niño/La Niña</a>,
-      <a href="https://mausam.imd.gov.in/" target="_blank" rel="noopener">India Meteorological Department</a>,
-      <a href="http://www.bom.gov.au/climate/enso/" target="_blank" rel="noopener">Australian Bureau of Meteorology</a>.</p>
-  </aside>
+      <!-- STATUS -->
+      <section class="tab-pane" id="tab-status" role="tabpanel" aria-labelledby="tab-btn-status">
+        <div id="enso-content">
+          {% if enso %}
+          {# Pre-rendered for search engines and first paint; app.js replaces it with the live version. #}
+          <span class="enso-phase {{ enso.phase }}">{{ {"el_nino": "El Niño", "la_nina": "La Niña"}.get(enso.phase, "Neutral") }}</span>
+          <h2 class="enso-headline">{{ enso.headline }}</h2>
+          <p><span class="enso-big {{ 'warm' if enso.nino34_anomaly >= 0 else 'cool' }}">{{ enso.nino34_anomaly | signed }} °C</span>
+            Niño 3.4 sea temperature anomaly, week of {{ enso.week }}<br>
+            <small>{{ enso.trend_4w | signed }} °C in the last 4 weeks</small></p>
+          <p class="enso-focus">{{ enso.focus.text }}</p>
+          <h3 class="section-title">Niño regions: latest weekly anomaly</h3>
+          <ul class="enso-static-list">
+            {% for r in enso.regions %}<li>{{ r.name }}: {{ r.anomaly | signed }} °C ({{ r.change_4w | signed }} in 4 weeks)</li>{% endfor %}
+          </ul>
+          {% else %}
+          <h2 class="enso-headline">Loading the latest El Niño status…</h2>
+          <p class="muted">Weekly Niño region sea temperatures from NOAA's Climate Prediction Center.</p>
+          {% endif %}
+        </div>
+        <div class="card my-country">
+          <label for="my-country" class="section-title">What does El Niño mean where you live?</label>
+          <select id="my-country">
+            <option value="">Choose a country…</option>
+            {% for c in impacts.countries | sort(attribute="name") %}<option value="{{ c.slug }}">{{ c.name }}</option>{% endfor %}
+          </select>
+        </div>
+      </section>
 
-  <!-- News and videos -->
-  <aside class="panel news-panel" id="news-panel" hidden aria-label="El Niño news and videos">
-    <div class="news-head">
-      <div class="news-tabs" role="tablist">
-        <button class="news-tab active" data-tab="articles" role="tab">🌍 World news</button>
-        <button class="news-tab" data-tab="videos" role="tab">▶️ Videos</button>
-      </div>
-      <button class="close-btn" id="news-close" aria-label="Close">✕</button>
+      <!-- IMPACTS -->
+      <section class="tab-pane" id="tab-impacts" role="tabpanel" aria-labelledby="tab-btn-impacts" hidden>
+        <h2 class="pane-title">What El Niño does around the world</h2>
+        <p class="muted">Typical effects seen in past El Niño events. Every event is different; follow your national weather service for official forecasts.</p>
+        <div class="effect-legend">
+          {% for key, e in impacts.effects.items() %}<span><i style="background: {{ e.color }}"></i>{{ e.label }}</span>{% endfor %}
+        </div>
+        <div id="impact-detail"></div>
+        <input type="search" id="impact-search" class="search" placeholder="Find a country…" aria-label="Find a country" autocomplete="off">
+        <div id="impact-list">
+          {% for region, items in impacts.countries | groupby("region") %}
+          <h3 class="section-title">{{ region }}</h3>
+          <ul class="impact-list">
+            {% for c in items %}
+            <li><a class="impact-row" href="impacts/{{ c.slug }}/" data-slug="{{ c.slug }}">
+              <i class="dot" style="background: {{ impacts.effects[c.effect].color }}"></i>
+              <span><b>El Niño in {{ c.name }}</b><small>{{ c.summary }}</small></span></a></li>
+            {% endfor %}
+          </ul>
+          {% endfor %}
+        </div>
+        <h3 class="section-title">Impacts by theme</h3>
+        <div class="theme-grid">
+          {% for t in impacts.themes %}
+          <article class="theme-card" data-theme="{{ t.id }}">
+            <h4>{{ t.icon }} {{ t.title }}</h4>
+            <p>{{ t.text }}</p>
+            <button class="link-btn theme-news" data-theme="{{ t.id }}">Latest {{ t.title | lower }} news →</button>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+
+      <!-- NEWS -->
+      <section class="tab-pane" id="tab-news" role="tabpanel" aria-labelledby="tab-btn-news" hidden>
+        <div class="news-tools">
+          <div class="seg small" role="group" aria-label="News or videos">
+            <button class="seg-btn active" data-news-tab="articles">🌍 World news</button>
+            <button class="seg-btn" data-news-tab="videos">▶️ Videos</button>
+          </div>
+          <div id="news-filters">
+            <input type="search" id="news-search" class="search" placeholder="Search headlines…" aria-label="Search headlines" autocomplete="off">
+            <div class="chips" id="news-themes" role="group" aria-label="Topic">
+              <button class="chip active" data-theme="">All</button>
+              {% for t in impacts.themes %}<button class="chip" data-theme="{{ t.id }}">{{ t.icon }} {{ t.title }}</button>{% endfor %}
+            </div>
+            <div class="news-selects">
+              <select id="news-country" aria-label="Country"><option value="">All countries</option></select>
+              <select id="news-language" aria-label="Language"><option value="">All languages</option></select>
+            </div>
+          </div>
+        </div>
+        <div class="news-body" id="news-body">
+          {% if headlines %}
+          {# Latest headlines pre-rendered for search engines; app.js replaces them with the full feed. #}
+          <h2 class="section-title">Latest El Niño news</h2>
+          {% for a in headlines %}
+          <a class="news-item" href="{{ a.url }}" target="_blank" rel="noopener noreferrer">
+            <div><div class="news-title">{{ a.title }}</div>
+              <div class="news-meta">{% if a.country %}<span class="flag">{{ a.country }}</span>{% endif %}{{ a.source }}{% if a.language %} · {{ a.language }}{% endif %}</div></div>
+          </a>
+          {% endfor %}
+          {% else %}<p class="muted">Loading El Niño news…</p>{% endif %}
+        </div>
+        <div class="news-foot" id="news-foot"></div>
+      </section>
+
+      <!-- HISTORY -->
+      <section class="tab-pane" id="tab-history" role="tabpanel" aria-labelledby="tab-btn-history" hidden>
+        <h2 class="pane-title">El Niño and La Niña since 1950</h2>
+        <p class="muted">NOAA's Oceanic Niño Index (ONI): the 3-month average sea temperature anomaly in the Niño 3.4 region.
+          At least five overlapping seasons at +0.5 °C or above is an El Niño episode; −0.5 °C or below is La Niña.</p>
+        <div class="chips" id="history-range" role="group" aria-label="Time range">
+          <button class="chip active" data-years="0">All</button>
+          <button class="chip" data-years="30">30 years</button>
+          <button class="chip" data-years="10">10 years</button>
+        </div>
+        <figure class="oni-chart" id="oni-chart" aria-label="Oceanic Niño Index chart"><p class="muted">Loading the ONI record…</p></figure>
+        <div class="history-head">
+          <h3 class="section-title">Episodes</h3>
+          <label class="row-switch small"><input type="checkbox" id="show-la-nina"> Show La Niña</label>
+        </div>
+        <div id="episodes">
+          {% if enso and enso.episodes %}
+          <table class="episodes"><thead><tr><th>Years</th><th>Phase</th><th>Peak ONI</th><th>Strength</th></tr></thead><tbody>
+            {% for e in enso.episodes | reverse %}{% if e.phase == "el_nino" %}
+            <tr><td>{{ e.start }} – {{ e.end }}</td><td>El Niño</td><td>{{ e.peak | signed }} °C</td><td>{{ e.strength }}</td></tr>
+            {% endif %}{% endfor %}
+          </tbody></table>
+          {% endif %}
+        </div>
+      </section>
+
+      <!-- LEARN -->
+      <section class="tab-pane" id="tab-learn" role="tabpanel" aria-labelledby="tab-btn-learn" hidden>
+        <h2 class="pane-title">El Niño explained</h2>
+        {% for item in faq %}
+        <details{% if loop.first %} open{% endif %}>
+          <summary><h3>{{ item.q }}</h3></summary>
+          <p>{{ item.a }}</p>
+        </details>
+        {% endfor %}
+        <p class="muted">Official sources: <a href="https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml" target="_blank" rel="noopener">NOAA ENSO discussion</a>,
+          <a href="https://wmo.int/topics/el-nino-la-nina" target="_blank" rel="noopener">WMO El Niño/La Niña</a>,
+          <a href="https://mausam.imd.gov.in/" target="_blank" rel="noopener">India Meteorological Department</a>,
+          <a href="http://www.bom.gov.au/climate/enso/" target="_blank" rel="noopener">Australian Bureau of Meteorology</a>.</p>
+      </section>
     </div>
-    <div class="news-filters" id="news-filters">
-      <select id="news-country" aria-label="Country"><option value="">All countries</option></select>
-      <select id="news-language" aria-label="Language"><option value="">All languages</option></select>
-    </div>
-    <div class="news-body" id="news-body">
-      {% if headlines %}
-      {# Latest headlines pre-rendered for search engines; app.js replaces them with the full feed. #}
-      <h2 class="section-title">Latest El Niño news</h2>
-      {% for a in headlines %}
-      <a class="news-item" href="{{ a.url }}" target="_blank" rel="noopener noreferrer">
-        <div><div class="news-title">{{ a.title }}</div>
-          <div class="news-meta">{% if a.country %}<span class="flag">{{ a.country }}</span>{% endif %}{{ a.source }}{% if a.language %} · {{ a.language }}{% endif %}</div></div>
-      </a>
-      {% endfor %}
-      {% else %}<p class="muted">Loading El Niño news…</p>{% endif %}
-    </div>
-    <div class="news-foot" id="news-foot"></div>
-  </aside>
+  </section>
+
+  <!-- Legend (changes with the active layer) -->
+  <div class="panel legend" id="legend" hidden>
+    <div class="legend-title" id="legend-title">Sea temperature vs normal (°C)</div>
+    <div class="legend-bar sst-gradient" id="legend-bar"></div>
+    <div class="legend-labels" id="legend-labels"><span>−3</span><span>−2</span><span>−1</span><span>0</span><span>+1</span><span>+2</span><span>+3</span></div>
+  </div>
 
   <!-- Video player -->
   <div class="video-modal" id="video-modal" hidden role="dialog" aria-modal="true" aria-label="Video">
@@ -145,45 +263,16 @@
     </div>
   </div>
 
-  <!-- Imagery -->
-  <div class="panel sat-panel" id="sat-panel">
-    <label for="sat-source">Imagery</label>
-    <select id="sat-source">
-      <option value="esri">High‑res imagery</option>
-      <option value="viirs">NASA VIIRS (daily)</option>
-      <option value="modis">NASA MODIS (daily)</option>
-      <option value="dark">Dark map</option>
-    </select>
-    <input id="sat-date" type="date" aria-label="Imagery date" hidden>
-    <label for="live-style">Live</label>
-    <select id="live-style" title="Real-time imagery from 5 geostationary satellites">
-      <option value="truecolor">True colour</option>
-      <option value="infrared">Infrared clouds</option>
-      <option value="off">Off</option>
-    </select>
-    <label class="switch" title="Show where it is day and night right now">
-      <input id="night-toggle" type="checkbox" checked> Day/night
-    </label>
-    <span id="clouds-time" class="clouds-time"></span>
-    <button id="sources-btn" class="link-btn" type="button">Sources</button>
-  </div>
-
   <!-- Data sources -->
   <aside class="panel sources-panel" id="sources-panel" hidden aria-label="Data sources">
     <button class="close-btn" id="sources-close" aria-label="Close">✕</button>
     <div id="sources-content"></div>
   </aside>
 
-  <!-- Legend -->
-  <div class="panel legend" id="legend" hidden>
-    <div class="legend-title">Sea surface temperature vs normal (°C)</div>
-    <div class="legend-bar sst-gradient"></div>
-    <div class="legend-labels"><span>−3</span><span>−2</span><span>−1</span><span>0</span><span>+1</span><span>+2</span><span>+3</span></div>
-  </div>
-
   <div id="loading" class="loading" hidden><div class="spinner"></div></div>
   <div id="toast" class="toast" hidden></div>
 
+  <script type="application/json" id="impacts-data">{{ impacts | tojson }}</script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>window.APP_CONFIG = {{ app_config | tojson }};</script>

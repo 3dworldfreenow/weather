@@ -98,3 +98,28 @@ def test_api_enso_upstream_down(monkeypatch):
     monkeypatch.setattr(services, "_get_text", down)
     resp = create_app({"TESTING": True}).test_client().get("/api/enso")
     assert resp.status_code == 502
+
+
+def _oni(values, start_year=2000):
+    rows = []
+    for i, v in enumerate(values):
+        rows.append({"season": enso.SEASONS[i % 12], "year": start_year + i // 12, "anomaly": v})
+    return rows
+
+
+def test_find_episodes_uses_noaa_five_season_rule():
+    oni = _oni([0.1, 0.6, 0.9, 1.6, 2.1, 1.2, 0.4,      # El Niño, 5 seasons, peak 2.1
+                -0.6, -0.7, -0.5, -0.2,                # only 3 seasons below -0.5: not an episode
+                0.0, 0.5, 0.7])                        # ongoing, 2 seasons so far
+    eps = enso.find_episodes(oni)
+    assert [e["phase"] for e in eps] == ["el_nino", "el_nino"]
+    first, current = eps
+    assert first["start"] == "JFM 2000" and first["end"] == "MJJ 2000"
+    assert first["peak"] == 2.1 and first["strength"] == "very strong" and first["confirmed"]
+    assert current["ongoing"] and not current["confirmed"] and current["strength"] == "weak"
+
+
+def test_summary_includes_compact_history():
+    summary = enso.summarise(enso.parse_weekly(WEEKLY), enso.parse_oni(ONI))
+    assert summary["oni_history"] == [[2025, 5, -0.09], [2025, 6, -0.05], [2025, 7, 0.1]]
+    assert summary["episodes"] == []

@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import json
 
-from flask import Blueprint, Response, current_app, jsonify, render_template, request
+from flask import Blueprint, Response, abort, current_app, jsonify, render_template, request
 
-from . import enso, news, satellites, seo, services
+from . import enso, impacts, news, satellites, seo, services
 
 bp = Blueprint("main", __name__)
 
@@ -32,34 +32,59 @@ def base_url() -> str:
 
 
 def page_data() -> tuple[dict | None, list[dict]]:
-    """El Niño summary and headlines to pre-render into the page for search engines.
+    """El Niño summary and news articles to pre-render into pages for search engines.
 
     The static build passes fresh data in PAGE_DATA; the server uses whatever is
     already cached (never blocks the page on a slow upstream).
     """
     data = current_app.config.get("PAGE_DATA")
     if data is not None:
-        return data.get("enso"), data.get("headlines") or []
+        return data.get("enso"), data.get("articles") or []
     cached_news = services.cache.get("news") or {}
-    return services.cache.get("enso"), (cached_news.get("articles") or [])[:12]
+    return services.cache.get("enso"), cached_news.get("articles") or []
+
+
+def verification() -> dict:
+    return {
+        "google_verification": current_app.config.get("GOOGLE_SITE_VERIFICATION"),
+        "bing_verification": current_app.config.get("BING_SITE_VERIFICATION"),
+    }
 
 
 @bp.get("/")
 def index():
     url = base_url()
-    enso_data, headlines = page_data()
+    enso_data, articles = page_data()
     return render_template(
         "index.html",
         app_config={"static": bool(current_app.config.get("STATIC_SITE"))},
-        meta={
-            **seo.page_meta(url),
-            "google_verification": current_app.config.get("GOOGLE_SITE_VERIFICATION"),
-            "bing_verification": current_app.config.get("BING_SITE_VERIFICATION"),
-        },
+        meta={**seo.page_meta(url), **verification()},
         json_ld=seo.json_ld(url, enso_data),
         faq=seo.FAQ,
+        impacts=impacts.public_data(),
         enso=enso_data,
-        headlines=headlines,
+        headlines=articles[:12],
+    )
+
+
+@bp.get("/impacts/<slug>/")
+def impact_page(slug: str):
+    c = impacts.BY_SLUG.get(slug)
+    if c is None:
+        abort(404)
+    url = base_url()
+    enso_data, articles = page_data()
+    related = [r for r in impacts.COUNTRIES if r["region"] == c["region"] and r["slug"] != slug]
+    return render_template(
+        "impact.html",
+        c=c,
+        effect=impacts.EFFECTS[c["effect"]],
+        meta={**seo.impact_meta(url, c), **verification()},
+        json_ld=seo.impact_json_ld(url, c),
+        enso=enso_data,
+        news=[a for a in articles if slug in (a.get("countries") or [])][:10],
+        related=related,
+        sources=impacts.SOURCES,
     )
 
 
@@ -70,7 +95,8 @@ def robots_txt():
 
 @bp.get("/sitemap.xml")
 def sitemap_xml():
-    return Response(seo.sitemap(base_url()), mimetype="application/xml")
+    paths = [seo.impact_path(c["slug"]) for c in impacts.COUNTRIES]
+    return Response(seo.sitemap(base_url(), paths=paths), mimetype="application/xml")
 
 
 @bp.get("/manifest.webmanifest")

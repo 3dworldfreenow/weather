@@ -112,7 +112,8 @@ def test_get_news_combines_everything(monkeypatch):
     assert [v["id"] for v in data["videos"]] == ["AbCdEfGhIjK", "57S0Rw9L_hw"]  # deduped
     assert data["videos"][-1]["explainer"] is True
     assert all(s["ok"] for s in data["sources"])
-    assert len(data["sources"]) == 1 + len(news.GOOGLE_NEWS_EDITIONS) + len(news.YOUTUBE_CHANNELS)
+    assert len(data["sources"]) == (1 + len(news.GOOGLE_NEWS_EDITIONS) + len(news.THEME_QUERIES)
+                                    + len(news.YOUTUBE_CHANNELS))
 
 
 def test_get_news_survives_some_sources_failing(monkeypatch):
@@ -158,3 +159,34 @@ def test_gdelt_gives_up_after_retries(monkeypatch):
     monkeypatch.setattr(news.time, "sleep", lambda s: None)
     with pytest.raises(services.UpstreamError):
         news.fetch_gdelt()
+
+
+def test_articles_are_tagged_with_themes_and_countries():
+    merged = news.merge_articles([[
+        {"title": "El Nino may weaken India's monsoon, hurting rice crops", "url": "https://a.example/1",
+         "source": "a", "country": "India", "language": "English", "published": "2026-10-10T00:00:00+00:00",
+         "image": None, "via": "Google News", "edition": "india"},
+        {"title": "Dengue cases rise in Peru as El Niño floods the coast", "url": "https://b.example/2",
+         "source": "b", "country": None, "language": "English", "published": "2026-10-09T00:00:00+00:00",
+         "image": None, "via": "Google News", "theme_hint": "health"},
+        {"title": "Panama Canal limits ships as El Niño drought drains lakes", "url": "https://c.example/3",
+         "source": "c", "country": "United States", "language": "English", "published": "2026-10-08T00:00:00+00:00",
+         "image": None, "via": "Google News", "edition": "united-states"},
+    ]])
+    india, peru, panama = merged
+    assert india["countries"] == ["india"] and "food" in india["themes"]
+    assert peru["countries"] == ["peru"] and {"health", "floods"} <= set(peru["themes"])
+    assert set(panama["countries"]) == {"panama", "united-states"}
+    assert {"drought", "economy"} <= set(panama["themes"])
+    assert "edition" not in india and "theme_hint" not in peru
+
+
+def test_duplicate_articles_merge_their_tags():
+    a = {"title": "El Niño drought hits crops", "url": "https://a.example/1", "source": "a", "country": "India",
+         "language": "English", "published": "2026-10-10T00:00:00+00:00", "image": None, "via": "Google News",
+         "edition": "india"}
+    b = {**a, "url": "https://b.example/1", "edition": "pakistan", "theme_hint": "forecast"}
+    merged = news.merge_articles([[a], [b]])
+    assert len(merged) == 1
+    assert merged[0]["countries"] == ["india", "pakistan"]
+    assert "forecast" in merged[0]["themes"]

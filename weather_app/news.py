@@ -1,7 +1,8 @@
 """El Niño news and videos from free sources (no API keys).
 
 * GDELT DOC 2.0 API  - news articles from around the world, many languages
-* Google News RSS    - El Niño searches in several country/language editions
+* Google News RSS    - El Niño searches in ~35 country/language editions and
+                       worldwide searches per impact theme
 * YouTube RSS feeds  - latest videos of weather and climate agencies, filtered
                        to El Niño / ENSO topics (YouTube search needs a key, so
                        a few known explainers are also listed)
@@ -15,10 +16,11 @@ import logging
 import re
 import time
 import xml.etree.ElementTree as ET
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 from urllib.parse import quote_plus, urlparse
 
-from . import services
+from . import impacts, services
 
 log = logging.getLogger(__name__)
 
@@ -30,21 +32,70 @@ YOUTUBE_HANDLE_URL = "https://www.youtube.com/@{handle}"
 YOUTUBE_SEARCH_URL = "https://www.youtube.com/results?search_query=El+Ni%C3%B1o"
 
 NEWS_TTL = 30 * 60
-MAX_ARTICLES = 150
+MAX_ARTICLES = 500
+FETCH_WORKERS = 6
 
-# Google News editions: (country, language, hl, gl, ceid, query)
+# Search terms. Google News supports OR; local-language spellings are added per edition.
+EN = '"El Niño" OR "El Nino"'
+ES = '"El Niño" OR "fenómeno de El Niño"'
+PT = '"El Niño" OR "fenômeno El Niño"'
+
+# Google News editions: country, language, hl, gl, ceid, query, impacts slug
 GOOGLE_NEWS_EDITIONS = [
-    ("India", "English", "en-IN", "IN", "IN:en", "El Niño"),
-    ("India", "Hindi", "hi", "IN", "IN:hi", "अल नीनो"),
-    ("United States", "English", "en-US", "US", "US:en", "El Niño"),
-    ("United Kingdom", "English", "en-GB", "GB", "GB:en", "El Niño"),
-    ("Australia", "English", "en-AU", "AU", "AU:en", "El Niño"),
-    ("Philippines", "English", "en-PH", "PH", "PH:en", "El Niño"),
-    ("Peru", "Spanish", "es-419", "PE", "PE:es-419", "El Niño"),
-    ("Brazil", "Portuguese", "pt-BR", "BR", "BR:pt-419", "El Niño"),
-    ("France", "French", "fr", "FR", "FR:fr", "El Niño"),
-    ("Indonesia", "Indonesian", "id", "ID", "ID:id", "El Nino"),
-    ("Japan", "Japanese", "ja", "JP", "JP:ja", "エルニーニョ"),
+    # South Asia
+    ("India", "English", "en-IN", "IN", "IN:en", EN, "india"),
+    ("India", "Hindi", "hi", "IN", "IN:hi", '"अल नीनो" OR "El Nino"', "india"),
+    ("Pakistan", "English", "en-PK", "PK", "PK:en", EN, "pakistan"),
+    ("Bangladesh", "Bengali", "bn", "BD", "BD:bn", '"এল নিনো" OR "El Nino"', "bangladesh"),
+    # Southeast & East Asia
+    ("Indonesia", "Indonesian", "id", "ID", "ID:id", '"El Nino" OR "El Niño"', "indonesia"),
+    ("Malaysia", "English", "en-MY", "MY", "MY:en", EN, "malaysia"),
+    ("Philippines", "English", "en-PH", "PH", "PH:en", EN, "philippines"),
+    ("Singapore", "English", "en-SG", "SG", "SG:en", EN, None),
+    ("Thailand", "Thai", "th", "TH", "TH:th", '"เอลนีโญ" OR "El Nino"', "thailand"),
+    ("Vietnam", "Vietnamese", "vi", "VN", "VN:vi", '"El Nino" OR "El Niño"', "vietnam"),
+    ("Japan", "Japanese", "ja", "JP", "JP:ja", "エルニーニョ", "japan"),
+    ("South Korea", "Korean", "ko", "KR", "KR:ko", '"엘니뇨" OR "El Nino"', "south-korea"),
+    ("Taiwan", "Chinese", "zh-TW", "TW", "TW:zh-Hant", '"聖嬰" OR "厄爾尼諾" OR "El Niño"', "taiwan"),
+    ("Hong Kong", "Chinese", "zh-HK", "HK", "HK:zh-Hant", '"厄爾尼諾" OR "聖嬰" OR "El Niño"', "china"),
+    # Oceania
+    ("Australia", "English", "en-AU", "AU", "AU:en", EN, "australia"),
+    ("New Zealand", "English", "en-NZ", "NZ", "NZ:en", EN, "new-zealand"),
+    # Americas
+    ("United States", "English", "en-US", "US", "US:en", EN, "united-states"),
+    ("United States", "Spanish", "es-419", "US", "US:es-419", ES, "united-states"),
+    ("Canada", "English", "en-CA", "CA", "CA:en", EN, "canada"),
+    ("Mexico", "Spanish", "es-419", "MX", "MX:es-419", ES, "mexico"),
+    ("Peru", "Spanish", "es-419", "PE", "PE:es-419", ES + ' OR "Niño costero"', "peru"),
+    ("Colombia", "Spanish", "es-419", "CO", "CO:es-419", ES, "colombia"),
+    ("Chile", "Spanish", "es-419", "CL", "CL:es-419", ES, "chile"),
+    ("Argentina", "Spanish", "es-419", "AR", "AR:es-419", ES, "argentina"),
+    ("Brazil", "Portuguese", "pt-BR", "BR", "BR:pt-419", PT, "brazil"),
+    # Africa & Middle East
+    ("South Africa", "English", "en-ZA", "ZA", "ZA:en", EN, "south-africa"),
+    ("Kenya", "English", "en-KE", "KE", "KE:en", EN, "kenya"),
+    ("Nigeria", "English", "en-NG", "NG", "NG:en", EN, None),
+    ("Zimbabwe", "English", "en-ZW", "ZW", "ZW:en", EN, "zimbabwe"),
+    ("Egypt", "Arabic", "ar", "EG", "EG:ar", '"النينيو" OR "El Nino"', None),
+    # Europe
+    ("United Kingdom", "English", "en-GB", "GB", "GB:en", EN, None),
+    ("France", "French", "fr", "FR", "FR:fr", '"El Niño" OR "El Nino"', None),
+    ("Germany", "German", "de", "DE", "DE:de", '"El Niño" OR "El Nino"', None),
+    ("Spain", "Spanish", "es", "ES", "ES:es", ES, None),
+    ("Italy", "Italian", "it", "IT", "IT:it", '"El Niño" OR "El Nino"', None),
+]
+
+# Worldwide searches for each impact theme (English, global edition).
+THEME_QUERIES = [
+    ("drought", '"El Niño" (drought OR wildfire OR haze)'),
+    ("floods", '"El Niño" (flood OR floods OR landslide OR "heavy rain")'),
+    ("heat", '"El Niño" ("global temperature" OR heatwave OR "hottest year" OR record heat)'),
+    ("food", '"El Niño" (crop OR harvest OR rice OR wheat OR cocoa OR coffee OR "palm oil" OR "food prices")'),
+    ("health", '"El Niño" (dengue OR malaria OR cholera OR disease OR hunger)'),
+    ("oceans", '"El Niño" (coral OR bleaching OR fisheries OR anchovy OR "marine heatwave")'),
+    ("economy", '"El Niño" (economy OR inflation OR hydropower OR electricity OR shipping OR "Panama Canal")'),
+    ("storms", '"El Niño" (hurricane OR typhoon OR cyclone)'),
+    ("forecast", '"El Niño" (forecast OR outlook OR NOAA OR WMO OR advisory)'),
 ]
 
 # YouTube channels of weather/climate agencies. The channel ID is looked up
@@ -173,9 +224,20 @@ def parse_google_news(xml: str, country: str, language: str) -> list[dict[str, A
 
 
 def fetch_google_news(edition: tuple) -> list[dict[str, Any]]:
-    country, language, hl, gl, ceid, query = edition
-    url = GOOGLE_NEWS_URL.format(q=quote_plus(f'"{query}"'), hl=hl, gl=gl, ceid=ceid)
-    return parse_google_news(services._get_text(url), country, language)
+    country, language, hl, gl, ceid, query, slug = edition
+    url = GOOGLE_NEWS_URL.format(q=quote_plus(query), hl=hl, gl=gl, ceid=ceid)
+    articles = parse_google_news(services._get_text(url), country, language)
+    for a in articles:
+        a["edition"] = slug
+    return articles
+
+
+def fetch_theme_news(theme_id: str, query: str) -> list[dict[str, Any]]:
+    url = GOOGLE_NEWS_URL.format(q=quote_plus(query), hl="en-US", gl="US", ceid="US:en")
+    articles = parse_google_news(services._get_text(url), None, "English")
+    for a in articles:
+        a["theme_hint"] = theme_id
+    return articles
 
 
 # --------------------------------------------------------------------------
@@ -234,22 +296,47 @@ def _title_key(title: str) -> str:
     return re.sub(r"\W+", "", title.lower())[:80]
 
 
+def tag_article(article: dict[str, Any]) -> dict[str, Any]:
+    """Add impact themes and the countries the headline is about."""
+    text = article["title"]
+    themes = impacts.classify_themes(text)
+    hint = article.pop("theme_hint", None)
+    if hint and hint not in themes:
+        themes.append(hint)
+    countries = impacts.detect_countries(text)
+    edition = article.pop("edition", None)
+    if edition and edition not in countries:
+        countries.append(edition)
+    article["themes"] = themes
+    article["countries"] = countries
+    return article
+
+
 def merge_articles(groups: list[list[dict[str, Any]]]) -> list[dict[str, Any]]:
     seen: dict[str, dict[str, Any]] = {}
     for group in groups:
         for article in group:
+            article = tag_article(dict(article))
             key = _title_key(article["title"])
-            if key and key not in seen:
+            if not key:
+                continue
+            if key not in seen:
                 seen[key] = article
-            elif key and not seen[key].get("image") and article.get("image"):
-                seen[key]["image"] = article["image"]
+                continue
+            kept = seen[key]
+            if not kept.get("image") and article.get("image"):
+                kept["image"] = article["image"]
+            kept["themes"] = list(dict.fromkeys(kept["themes"] + article["themes"]))
+            kept["countries"] = list(dict.fromkeys(kept["countries"] + article["countries"]))
+            if not kept.get("country") and article.get("country"):
+                kept["country"] = article["country"]
     articles = sorted(seen.values(), key=lambda a: a["published"] or "", reverse=True)
     return articles[:MAX_ARTICLES]
 
 
 def get_news() -> dict[str, Any]:
     def build() -> dict[str, Any]:
-        sources, groups, videos = [], [], []
+        sources, videos = [], []
 
         def run(name: str, kind: str, url: str, fn):
             try:
@@ -261,14 +348,23 @@ def get_news() -> dict[str, Any]:
                 sources.append({"name": name, "kind": kind, "url": url, "ok": False, "count": 0})
                 return []
 
-        groups.append(run("GDELT global news", "news", "https://www.gdeltproject.org/", fetch_gdelt))
-        for edition in GOOGLE_NEWS_EDITIONS:
-            groups.append(run(f"Google News {edition[0]} ({edition[1]})", "news", "https://news.google.com/",
-                              lambda e=edition: fetch_google_news(e)))
-        for channel in YOUTUBE_CHANNELS:
-            videos += run(f"YouTube: {channel['name']}", "video",
-                          YOUTUBE_HANDLE_URL.format(handle=channel["handle"]),
-                          lambda c=channel: fetch_channel_videos(c))
+        jobs = [("GDELT global news", "news", "https://www.gdeltproject.org/", fetch_gdelt)]
+        for e in GOOGLE_NEWS_EDITIONS:
+            jobs.append((f"Google News {e[0]} ({e[1]})", "news", "https://news.google.com/",
+                         lambda e=e: fetch_google_news(e)))
+        for theme_id, query in THEME_QUERIES:
+            jobs.append((f"Google News worldwide: {theme_id}", "news", "https://news.google.com/",
+                         lambda t=theme_id, q=query: fetch_theme_news(t, q)))
+        video_jobs = [(f"YouTube: {c['name']}", "video", YOUTUBE_HANDLE_URL.format(handle=c["handle"]),
+                       lambda c=c: fetch_channel_videos(c)) for c in YOUTUBE_CHANNELS]
+
+        # Fetch in parallel (GDELT retries with pauses, so it runs alongside the rest).
+        with ThreadPoolExecutor(max_workers=FETCH_WORKERS) as pool:
+            news_results = list(pool.map(lambda j: run(*j), jobs))
+            video_results = list(pool.map(lambda j: run(*j), video_jobs))
+        groups = news_results
+        for items in video_results:
+            videos += items
 
         articles = merge_articles(groups)
         if not articles and not any(s["ok"] for s in sources if s["kind"] == "news"):

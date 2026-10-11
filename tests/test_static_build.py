@@ -18,7 +18,8 @@ def offline(monkeypatch):
     services.cache.clear()
     monkeypatch.setattr(satellites, "_catalogue", lambda source: None)
     monkeypatch.setattr(services, "_get_text", lambda url: WEEKLY if url == enso.WEEKLY_URL else ONI)
-    monkeypatch.setattr(news, "get_news", lambda: {"articles": [{"title": "El Niño", "url": "https://n.example/1", "source": "n.example"}],
+    monkeypatch.setattr(news, "get_news", lambda: {"articles": [{"title": "El Niño", "url": "https://n.example/1", "source": "n.example",
+                                                              "countries": ["india"]}],
                                                "videos": [], "sources": []})
     yield
     services.cache.clear()
@@ -51,6 +52,11 @@ def test_build_static_site(tmp_path):
     assert '<link rel="canonical" href="https://demo.example/weather/">' in html
     assert "strengthening" in html  # El Niño headline pre-rendered
     assert ">El Niño</div>" in html  # news headline pre-rendered
+    india = (out / "impacts" / "india" / "index.html").read_text()
+    assert "<h1>El Niño impact on India</h1>" in india
+    assert 'href="../../static/css/style.css"' in india
+    assert '<link rel="canonical" href="https://demo.example/weather/impacts/india/">' in india
+    assert "<loc>https://demo.example/weather/impacts/peru/</loc>" in (out / "sitemap.xml").read_text()
     assert 'content="noindex"' in (out / "404.html").read_text()
     assert "Sitemap: https://demo.example/weather/sitemap.xml" in (out / "robots.txt").read_text()
     assert "<loc>https://demo.example/weather/</loc>" in (out / "sitemap.xml").read_text()

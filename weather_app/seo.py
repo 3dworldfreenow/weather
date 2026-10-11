@@ -150,14 +150,51 @@ def json_ld(base_url: str, enso: dict[str, Any] | None = None) -> str:
     return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False)
 
 
-def sitemap(base_url: str, lastmod: dt.date | None = None) -> str:
+def impact_path(slug: str) -> str:
+    return f"impacts/{slug}/"
+
+
+def impact_meta(base_url: str, c: dict[str, Any]) -> dict[str, Any]:
+    url = base_url + impact_path(c["slug"])
+    return {
+        **page_meta(base_url),
+        "title": f"El Niño impact on {c['name']}: what to expect and latest news | {SITE_NAME}",
+        "description": f"How El Niño affects {c['name']}: {c['summary']} Typical season: {c['season']}. "
+                       "Live El Niño status and the latest news.",
+        "url": url,
+    }
+
+
+def impact_json_ld(base_url: str, c: dict[str, Any]) -> str:
+    url = base_url + impact_path(c["slug"])
+    answer = " ".join([c["summary"], *c["details"]])
+    graph = [
+        {"@type": "WebPage", "@id": url, "url": url, "name": f"El Niño impact on {c['name']}",
+         "description": c["summary"], "inLanguage": "en", "isPartOf": {"@id": base_url + "#website"},
+         "about": {"@type": "Country", "name": c["name"]}},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": SITE_NAME, "item": base_url},
+            {"@type": "ListItem", "position": 2, "name": "World impacts", "item": base_url + "#tab=impacts"},
+            {"@type": "ListItem", "position": 3, "name": c["name"], "item": url},
+        ]},
+        {"@type": "FAQPage", "mainEntity": [
+            {"@type": "Question", "name": f"How does El Niño affect {c['name']}?",
+             "acceptedAnswer": {"@type": "Answer", "text": answer}},
+        ]},
+    ]
+    return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False)
+
+
+def sitemap(base_url: str, lastmod: dt.date | None = None, paths: list[str] | None = None) -> str:
     day = (lastmod or dt.datetime.now(dt.timezone.utc).date()).isoformat()
+    urls = [f"  <url><loc>{base_url}</loc><lastmod>{day}</lastmod>"
+            "<changefreq>hourly</changefreq><priority>1.0</priority></url>"]
+    urls += [f"  <url><loc>{base_url}{p}</loc><lastmod>{day}</lastmod>"
+             "<changefreq>daily</changefreq><priority>0.8</priority></url>" for p in paths or []]
     return (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-        f"  <url><loc>{base_url}</loc><lastmod>{day}</lastmod>"
-        "<changefreq>hourly</changefreq><priority>1.0</priority></url>\n"
-        "</urlset>\n"
+        + "\n".join(urls) + "\n</urlset>\n"
     )
 
 

@@ -6,14 +6,14 @@ A live El Niño tracker on a 3D globe and map, in the style of [zoom.earth](http
 
 ## Features
 
-- 🌊 **El Niño status:** current phase (El Niño / La Niña / neutral) and strength from the latest weekly Niño 3.4 anomaly, the 4-week trend, and NOAA's official Oceanic Niño Index
-- 🎯 **Where it is building:** the four official Niño regions (1+2, 3, 3.4, 4), each with its latest anomaly, a 12-week trend line and its 4-week change; the warmest region is highlighted. Click a region to zoom to it
-- 🌡️ **Sea temperature map:** daily sea surface temperature anomaly (how much warmer or colder than normal), switchable with the *Sea temp* button
-- 🌐 **3D globe and flat map:** the site opens on a round Earth centred on the equatorial Pacific; switch to the flat map any time
-- 🛰️ **Live Earth backdrop:** near-real-time imagery from five geostationary weather satellites (GOES-West, GOES-East, Meteosat 0°, Meteosat IODC, Himawari), stitched by longitude band, in true colour or infrared, plus live day/night shading
-- 📰 **World news:** El Niño articles from around the world, in many languages, filterable by country and language, from GDELT and Google News editions (India in English and Hindi, US, UK, Australia, Philippines, Peru, Brazil, France, Indonesia, Japan)
-- ▶️ **Videos:** the latest El Niño / ENSO videos from NOAA, NASA, WMO, the Met Office and Australia's Bureau of Meteorology (YouTube channel feeds), known explainers, and a one-click YouTube search; videos play inside the site
-- 📘 **Learn:** plain-language answers to common questions (what El Niño and La Niña are, how they are measured, the Niño regions, effects on India's monsoon and the world)
+- 📱 **Built for phones first:** the map or 3D globe fills the screen and everything else lives in a bottom sheet (drag or tap the handle: peek, half, full) with five tabs. Wide screens get a side panel; phones in landscape get a side sheet
+- 📊 **Status:** current phase (El Niño / La Niña / neutral) and strength from the latest weekly Niño 3.4 anomaly, the 4-week trend, the four Niño regions with 12-week trend lines, NOAA's official Oceanic Niño Index, and where warming is strongest
+- 🌍 **Impacts:** 57 countries coloured on the map and globe by their typical El Niño effect (drier, wetter, warmer winter, mixed). Tap a country for its season, what El Niño usually means there (rain, crops, water, energy, health), notable past events, its national weather service and the latest news about it. Plus worldwide themes: drought and fires, floods, heat, food and farming, health, oceans and coral, economy and energy, storms, forecasts
+- 📰 **News:** El Niño news from GDELT and 35 Google News editions in 20 languages (Asia, Oceania, the Americas, Africa, the Middle East and Europe), plus worldwide searches per impact theme. Every headline is tagged by topic and by the countries it mentions; filter by topic, country, language or a search word. Videos from weather agencies play inside the site
+- 📈 **History:** NOAA's Oceanic Niño Index since 1950 as an interactive chart (all, 30 or 10 years) and a table of every El Niño and La Niña episode with its peak and strength, found with NOAA's own rule
+- 📘 **Learn:** plain-language answers to common questions
+- 🔎 **A page per country** (`/impacts/<country>/`, such as "El Niño impact on India") for search engines and sharing
+- 🛰️ **Live Earth backdrop:** near-real-time imagery from five geostationary satellites (GOES-West, GOES-East, Meteosat 0°, Meteosat IODC, Himawari) in true colour or infrared, the daily sea surface temperature anomaly map, and live day/night shading
 - 📚 **Sources panel** listing every data source, satellite, product and image time
 
 All data sources are free and need **no API keys**:
@@ -24,7 +24,9 @@ All data sources are free and need **no API keys**:
 | Oceanic Niño Index (official, 3-month) | [NOAA CPC ONI](https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt) |
 | Sea surface temperature anomaly map | [GHRSST MUR](https://podaac.jpl.nasa.gov/MEaSUREs-MUR) via [NASA GIBS](https://earthdata.nasa.gov/gibs) |
 | Live satellites | GOES & Himawari via NASA GIBS, Meteosat via [EUMETView](https://view.eumetsat.int/) |
-| World news | [GDELT](https://www.gdeltproject.org/) DOC API, [Google News](https://news.google.com/) RSS |
+| World news | [GDELT](https://www.gdeltproject.org/) DOC API, [Google News](https://news.google.com/) RSS (35 editions + theme searches) |
+| Typical impacts by country | Summarised from [NOAA Climate.gov](https://www.climate.gov/enso), [WMO](https://wmo.int/topics/el-nino-la-nina), [IRI](https://iri.columbia.edu/our-expertise/climate/enso/) and national weather services |
+| Country shapes | [Natural Earth](https://www.naturalearthdata.com/) via world-atlas (public domain) |
 | Videos | YouTube channel RSS feeds (no API key); YouTube search links out |
 | Base imagery and labels | Esri, NASA GIBS |
 
@@ -97,16 +99,20 @@ weather_app/
   __init__.py              # Flask app factory
   routes.py                # page + JSON API
   enso.py                  # El Niño / La Niña status from NOAA CPC data
-  news.py                  # El Niño news (GDELT, Google News) and videos (YouTube feeds)
+  news.py                  # El Niño news (GDELT, Google News) and videos (YouTube feeds), tagging
+  impacts.py               # typical El Niño impacts by country and theme; topic/country tagging rules
   seo.py                   # page text, FAQ, structured data, sitemap, robots, manifest
   satellites.py            # live satellite layer discovery and stitching
   services.py              # HTTP helper and in-memory cache
-  templates/index.html     # page markup
+  templates/index.html     # the app (pre-rendered content for search engines)
+  templates/impact.html    # "El Niño impact on <country>" pages
+  static/data/countries.geojson  # country shapes (scripts/make_countries.py)
   static/css/style.css     # UI styles
   static/js/app.js         # map, globe, El Niño panel and overlays, live satellites
   static/js/static-api.js  # browser-only API used by the GitHub Pages demo
 scripts/build_static.py    # builds the static demo into dist/
 scripts/make_images.py     # draws the share image and app icons
+scripts/make_countries.py  # converts world-atlas TopoJSON into countries.geojson
 .github/workflows/pages.yml  # tests, builds and deploys the demo
 tests/                     # tests (upstream calls are mocked)
 ```
@@ -115,9 +121,10 @@ tests/                     # tests (upstream calls are mocked)
 
 | Endpoint | Description |
 | --- | --- |
-| `GET /api/enso` | El Niño status, Niño region anomalies and the SST anomaly map layer |
+| `GET /api/enso` | El Niño status, Niño region anomalies, the full ONI history and episodes, and the SST anomaly map layer |
 | `GET /api/satellites?style=truecolor\|infrared` | Live satellite layers, each with its longitude band, product and image time |
-| `GET /api/news` | El Niño news articles and videos, with the status of each source |
+| `GET /api/news` | El Niño news articles (tagged with `themes` and `countries`) and videos, with the status of each source |
+| `GET /impacts/<country>/` | Country page: typical El Niño impacts, past events, current status and latest news |
 | `GET /robots.txt`, `/sitemap.xml`, `/manifest.webmanifest` | Search engine and app files |
 | `GET /healthz` | Health check |
 

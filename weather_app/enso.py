@@ -89,6 +89,49 @@ def classify(anomaly: float) -> tuple[str, str]:
     return "neutral", ""
 
 
+SEASONS = ["DJF", "JFM", "FMA", "MAM", "AMJ", "MJJ", "JJA", "JAS", "ASO", "SON", "OND", "NDJ"]
+EPISODE_MIN_SEASONS = 5  # NOAA: at least 5 consecutive overlapping 3-month seasons
+
+
+def _strength(peak: float) -> str:
+    size = abs(peak)
+    return ("very strong" if size >= 2.0 else "strong" if size >= 1.5
+            else "moderate" if size >= 1.0 else "weak")
+
+
+def find_episodes(oni: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """El Niño and La Niña episodes using NOAA's ONI definition."""
+    episodes: list[dict[str, Any]] = []
+    run: list[dict[str, Any]] = []
+    phase = None
+
+    def close(ongoing: bool) -> None:
+        if phase and (len(run) >= EPISODE_MIN_SEASONS or ongoing):
+            peak = max(run, key=lambda r: abs(r["anomaly"]))
+            episodes.append({
+                "phase": phase,
+                "start": f"{run[0]['season']} {run[0]['year']}",
+                "end": f"{run[-1]['season']} {run[-1]['year']}",
+                "start_year": run[0]["year"],
+                "seasons": len(run),
+                "peak": peak["anomaly"],
+                "peak_season": f"{peak['season']} {peak['year']}",
+                "strength": _strength(peak["anomaly"]),
+                "ongoing": ongoing,
+                "confirmed": len(run) >= EPISODE_MIN_SEASONS,
+            })
+
+    for row in oni:
+        p = "el_nino" if row["anomaly"] >= 0.5 else "la_nina" if row["anomaly"] <= -0.5 else None
+        if p != phase:
+            close(False)
+            run, phase = [], p
+        if p:
+            run.append(row)
+    close(True)
+    return episodes
+
+
 def summarise(weekly: list[dict[str, Any]], oni: list[dict[str, Any]]) -> dict[str, Any]:
     if not weekly:
         raise services.UpstreamError("No weekly Niño data")
@@ -141,6 +184,9 @@ def summarise(weekly: list[dict[str, Any]], oni: list[dict[str, Any]]) -> dict[s
         "regions": regions,
         "weeks": [row["week"] for row in weekly[-12:]],
         "oni": oni[-6:],
+        # Full ONI record as compact [year, season index 0-11, anomaly] rows.
+        "oni_history": [[r["year"], SEASONS.index(r["season"]), r["anomaly"]] for r in oni if r["season"] in SEASONS],
+        "episodes": find_episodes(oni),
         "note": ("Based on the latest weekly Niño 3.4 anomaly. NOAA officially declares El Niño "
                  "using the 3-month ONI together with atmospheric signs."),
     }

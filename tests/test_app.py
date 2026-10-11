@@ -20,7 +20,7 @@ def test_index_page(client):
     assert resp.status_code == 200
     html = resp.get_data(as_text=True)
     assert 'id="map"' in html and 'id="globe"' in html
-    assert 'id="enso-panel"' in html
+    assert 'id="sheet"' in html and 'id="tab-impacts"' in html
     assert "js/app.js" in html
 
 

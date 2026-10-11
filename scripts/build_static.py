@@ -22,7 +22,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from weather_app import create_app, enso, news, satellites, seo  # noqa: E402
+from weather_app import create_app, enso, impacts, news, satellites, seo  # noqa: E402
 
 log = logging.getLogger("build_static")
 
@@ -88,10 +88,11 @@ def build(out: Path, site_url: str | None = None) -> None:
         "SITE_URL": site_url,
         "PAGE_DATA": {
             "enso": built.get("enso.json"),
-            "headlines": (built.get("news.json") or {}).get("articles", [])[:12],
+            "articles": (built.get("news.json") or {}).get("articles", []),
         },
     })
-    html = app.test_client().get("/").get_data(as_text=True)
+    client = app.test_client()
+    html = client.get("/").get_data(as_text=True)
     # GitHub Pages serves the site from /<repo>/, so use relative asset paths.
     html = html.replace('"/static/', '"static/')
     (out / "index.html").write_text(html, encoding="utf-8")
@@ -102,12 +103,20 @@ def build(out: Path, site_url: str | None = None) -> None:
     (out / ".nojekyll").write_text("", encoding="utf-8")
     shutil.copytree(ROOT / "weather_app" / "static", out / "static")
 
+    # One page per country: "El Niño impact on <country>" (two folders deep).
+    for c in impacts.COUNTRIES:
+        page = client.get(f"/impacts/{c['slug']}/").get_data(as_text=True).replace('"/static/', '"../../static/')
+        target = out / seo.impact_path(c["slug"]) / "index.html"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(page, encoding="utf-8")
+
     # 3. Search engine and app files.
     (out / "robots.txt").write_text(seo.robots(site_url), encoding="utf-8")
-    (out / "sitemap.xml").write_text(seo.sitemap(site_url, now.date()), encoding="utf-8")
+    paths = [seo.impact_path(c["slug"]) for c in impacts.COUNTRIES]
+    (out / "sitemap.xml").write_text(seo.sitemap(site_url, now.date(), paths), encoding="utf-8")
     (out / "manifest.webmanifest").write_text(json.dumps(seo.manifest(), ensure_ascii=False), encoding="utf-8")
 
-    print(f"Built static site for {site_url} in {out}" + (f" (missing: {', '.join(failed)})" if failed else ""))
+    print(f"Built static site for {site_url} with {len(impacts.COUNTRIES)} country pages in {out}" + (f" (missing: {', '.join(failed)})" if failed else ""))
     if "satellites.json" in failed:
         sys.exit(1)  # the globe and live layers need this one
 
