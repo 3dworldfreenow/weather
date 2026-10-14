@@ -504,8 +504,8 @@
     const pts = values.map((v, i) => `${(i / Math.max(1, values.length - 1)) * w},${y(v).toFixed(1)}`).join(" ");
     const last = values[values.length - 1];
     return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">
-      <line x1="0" x2="${w}" y1="${h / 2}" y2="${h / 2}" stroke="rgba(255,255,255,.2)" />
-      <polyline points="${pts}" fill="none" stroke="${last >= 0 ? "#ff8a7a" : "#7fb2ff"}" stroke-width="1.6" /></svg>`;
+      <line x1="0" x2="${w}" y1="${h / 2}" y2="${h / 2}" stroke="rgba(60,64,67,.25)" />
+      <polyline points="${pts}" fill="none" stroke="${last >= 0 ? "#d93025" : "#1a73e8"}" stroke-width="1.6" /></svg>`;
   }
 
   function renderEnso(d) {
@@ -1257,7 +1257,7 @@
         // Hidden "anchor" layers keep the stacking order stable as layers come and go:
         // imagery < satellites < impacts < sea temperature < night < labels < Niño boxes.
         layers: [
-          { id: "space", type: "background", paint: { "background-color": "#02040a" } },
+          { id: "space", type: "background", paint: { "background-color": "#a9c4e6" } },
           { id: "imagery", type: "raster", source: "imagery" },
           { id: "anchor-impacts", type: "background", layout: { visibility: "none" } },
           { id: "anchor-sst", type: "background", layout: { visibility: "none" } },

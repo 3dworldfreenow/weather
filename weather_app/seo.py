@@ -18,7 +18,7 @@ KEYWORDS = (
     "sea surface temperature anomaly, Pacific Ocean temperature, El Niño news, El Niño monsoon India, "
     "El Niño tracker, NOAA ENSO"
 )
-THEME_COLOR = "#12161e"
+THEME_COLOR = "#ffffff"
 
 # Plain-language answers shown in the Learn panel and published as FAQ structured data.
 FAQ = [

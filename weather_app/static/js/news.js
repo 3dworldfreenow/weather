@@ -115,12 +115,17 @@
       ...(a.crops || []).filter((c) => INFO.crops[c]).map((c) => `<span class="tag">${INFO.crops[c].icon} ${escapeHtml(INFO.crops[c].name)}</span>`),
       ...(a.countries || []).filter((c) => INFO.countries[c]).slice(0, 3).map((c) => `<span class="tag">📍 ${escapeHtml(INFO.countries[c].name)}</span>`),
     ].join("");
-    return `<a class="news-item" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">
-      ${img ? `<img src="${escapeHtml(img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}
-      <div><div class="news-title">${escapeHtml(a.title)}</div>
+    const host = new URL(url).hostname;
+    return `<a class="news-item gn" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">
+      <div class="gn-body">
+        <div class="news-src"><img class="favicon" src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=32" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.visibility='hidden'">
+          <span>${escapeHtml(a.source)}</span>${kind !== "news" ? `<span class="kind-badge k-${kind}">${KINDS[kind].icon} ${KINDS[kind].label}</span>` : ""}</div>
+        <div class="news-title">${escapeHtml(a.title)}</div>
         ${a.summary && kind !== "news" ? `<div class="news-summary">${escapeHtml(a.summary)}</div>` : ""}
-        <div class="news-meta">${kind !== "news" ? `<span class="kind-badge k-${kind}">${KINDS[kind].icon} ${KINDS[kind].label}</span>` : ""}${a.country ? `<span class="flag">${escapeHtml(a.country)}</span>` : ""}${escapeHtml(a.source)}${a.language ? ` · ${escapeHtml(a.language)}` : ""}${a.published ? ` · ${escapeHtml(timeAgo(a.published))}` : ""}</div>
-        ${tags ? `<div class="news-tags">${tags}</div>` : ""}</div>
+        <div class="news-meta">${[a.published && timeAgo(a.published), a.country, a.language].filter(Boolean).map(escapeHtml).join(" · ")}</div>
+        ${tags ? `<div class="news-tags">${tags}</div>` : ""}
+      </div>
+      ${img ? `<img class="gn-thumb" src="${escapeHtml(img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}
     </a>`;
   }
 
