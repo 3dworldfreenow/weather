@@ -67,6 +67,14 @@ def test_build_static_site(tmp_path):
     assert json.loads((out / "manifest.webmanifest").read_text())["name"] == "El Niño Tracker"
     assert 'href="static/img/apple-touch-icon.png"' in html
 
+    # News page
+    page = (out / "news" / "index.html").read_text()
+    assert "<h1>📰 El Niño news from around the world</h1>" in page
+    assert 'src="../static/js/news.js"' in page and '"/static/' not in page
+    assert '<link rel="canonical" href="https://demo.example/weather/news/">' in page
+    assert "<loc>https://demo.example/weather/news/</loc>" in (out / "sitemap.xml").read_text()
+    assert 'href="news/"' in html
+
     # Crops page
     page = (out / "crops" / "index.html").read_text()
     assert "<h1>🌾 El Niño and crops</h1>" in page

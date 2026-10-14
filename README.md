@@ -12,6 +12,7 @@ A live El Niño tracker on a 3D globe and map, in the style of [zoom.earth](http
 - 📰 **News:** El Niño news from GDELT and 35 Google News editions in 20 languages (Asia, Oceania, the Americas, Africa, the Middle East and Europe), plus worldwide searches per impact theme. Every headline is tagged by topic and by the countries it mentions; filter by topic, country, language or a search word. Videos from weather agencies play inside the site
 - 📈 **History:** NOAA's Oceanic Niño Index since 1950 as an interactive chart (all, 30 or 10 years) and a table of every El Niño and La Niña episode with its peak and strength, found with NOAA's own rule
 - 📘 **Learn:** plain-language answers to common questions
+- 📰 **News page** (`/news/`): every El Niño item from 80+ free sources in one place: news (GDELT, 35 Google News editions, 13 Bing News markets), humanitarian reports (ReliefWeb), agency and science updates (NOAA Climate.gov, NASA Earth Observatory, UN News, Carbon Brief, Phys.org, ScienceDaily), new research papers (arXiv, Crossref), discussions (Hacker News), podcast episodes (Apple Podcasts) and videos. Filter by type, country, topic, crop, language or search; filters are kept in the link; a list shows which sources are working
 - 🌾 **Crops page** (`/crops/`): how El Niño affects rice, wheat, maize, sugar, soybeans, coffee, cocoa, palm oil and cotton in 41 main growing regions. Pick a country and a crop or search: see the typical El Niño effect and crop calendar, the last 12 months of rain in the growing region against the long-term average (chart), the world price since 1990 with past El Niño periods shaded (chart), shown in each country's own currency per kg (or US$), and, and crop news (sugar, rice, coffee…) from around the world
 - 🔎 **A page per country** (`/impacts/<country>/`, such as "El Niño impact on India") for search engines and sharing
 - 🛰️ **Live Earth backdrop:** near-real-time imagery from five geostationary satellites (GOES-West, GOES-East, Meteosat 0°, Meteosat IODC, Himawari) in true colour or infrared, the daily sea surface temperature anomaly map, and live day/night shading
@@ -25,7 +26,11 @@ All data sources are free and need **no API keys**:
 | Oceanic Niño Index (official, 3-month) | [NOAA CPC ONI](https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt) |
 | Sea surface temperature anomaly map | [GHRSST MUR](https://podaac.jpl.nasa.gov/MEaSUREs-MUR) via [NASA GIBS](https://earthdata.nasa.gov/gibs) |
 | Live satellites | GOES & Himawari via NASA GIBS, Meteosat via [EUMETView](https://view.eumetsat.int/) |
-| World news | [GDELT](https://www.gdeltproject.org/) DOC API, [Google News](https://news.google.com/) RSS (35 editions + theme searches) |
+| World news | [GDELT](https://www.gdeltproject.org/) DOC API, [Google News](https://news.google.com/) RSS (35 editions + theme and crop searches), [Bing News](https://www.bing.com/news) RSS (13 markets) |
+| Humanitarian reports | [ReliefWeb](https://reliefweb.int/) RSS (UN OCHA) |
+| Agency and science updates | RSS feeds of [NOAA Climate.gov](https://www.climate.gov/enso), [NASA Earth Observatory](https://earthobservatory.nasa.gov/), [UN News](https://news.un.org/), [Carbon Brief](https://www.carbonbrief.org/), [Phys.org](https://phys.org/), [ScienceDaily](https://www.sciencedaily.com/) (El Niño items only) |
+| Research papers | [arXiv](https://arxiv.org/) API, [Crossref](https://www.crossref.org/) API |
+| Discussions and podcasts | [Hacker News](https://news.ycombinator.com/) (Algolia search API), [Apple Podcasts](https://podcasts.apple.com/) search API |
 | Typical impacts by country | Summarised from [NOAA Climate.gov](https://www.climate.gov/enso), [WMO](https://wmo.int/topics/el-nino-la-nina), [IRI](https://iri.columbia.edu/our-expertise/climate/enso/) and national weather services |
 | Country shapes | [Natural Earth](https://www.naturalearthdata.com/) via world-atlas (public domain) |
 | Rainfall in growing regions | [NASA POWER](https://power.larc.nasa.gov/) (daily and long-term average) |
@@ -111,10 +116,12 @@ weather_app/
   services.py              # HTTP helper and in-memory cache
   templates/index.html     # the app (pre-rendered content for search engines)
   templates/impact.html    # "El Niño impact on <country>" pages
+  templates/news.html      # news page (all sources, filters)
   templates/crops.html     # El Niño and crops page
   static/data/countries.geojson  # country shapes (scripts/make_countries.py)
   static/css/style.css     # UI styles
   static/js/app.js         # map, globe, El Niño panel and overlays, live satellites
+  static/js/news.js        # News page: filters, video player, source list
   static/js/crops.js       # Crops page: selection, search, rain and price charts, crop news
   static/js/static-api.js  # browser-only API used by the GitHub Pages demo
 scripts/build_static.py    # builds the static demo into dist/
@@ -130,8 +137,9 @@ tests/                     # tests (upstream calls are mocked)
 | --- | --- |
 | `GET /api/enso` | El Niño status, Niño region anomalies, the full ONI history and episodes, and the SST anomaly map layer |
 | `GET /api/satellites?style=truecolor\|infrared` | Live satellite layers, each with its longitude band, product and image time |
-| `GET /api/news` | El Niño news articles (tagged with `themes` and `countries`) and videos, with the status of each source |
+| `GET /api/news` | El Niño news, reports, science, papers, discussions and podcasts (each with a `kind`, tagged with `themes`, `countries` and `crops`) and videos, with the status of each source |
 | `GET /impacts/<country>/` | Country page: typical El Niño impacts, past events, current status and latest news |
+| `GET /news/` | News page |
 | `GET /crops/` | Crops page |
 | `GET /api/crops` | World crop prices (monthly since 1990) and today's exchange rates |
 | `GET /api/crops/rain?region=<country>-<crop>` | Last 12 months of rain in a growing region against the long-term average |

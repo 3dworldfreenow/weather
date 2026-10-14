@@ -214,6 +214,35 @@ def crops_json_ld(base_url: str) -> str:
     return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False)
 
 
+NEWS_TITLE = "El Niño news today: world headlines, reports, research, podcasts & videos | El Niño Tracker"
+NEWS_DESCRIPTION = (
+    "Live El Niño news from around the world in many languages: headlines from Google News, Bing News and GDELT, "
+    "UN humanitarian reports, NOAA and NASA updates, new research papers, podcasts and videos. "
+    "Filter by country, topic, crop and language. Free, updated every 30 minutes."
+)
+
+
+def news_meta(base_url: str) -> dict[str, Any]:
+    return {**page_meta(base_url), "title": NEWS_TITLE, "description": NEWS_DESCRIPTION, "url": base_url + "news/"}
+
+
+def news_json_ld(base_url: str, articles: list[dict[str, Any]] | None = None) -> str:
+    url = base_url + "news/"
+    graph: list[dict[str, Any]] = [
+        {"@type": "CollectionPage", "@id": url, "url": url, "name": "El Niño news from around the world",
+         "description": NEWS_DESCRIPTION, "inLanguage": "en", "isPartOf": {"@id": base_url + "#website"}},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": SITE_NAME, "item": base_url},
+            {"@type": "ListItem", "position": 2, "name": "News", "item": url},
+        ]},
+    ]
+    if articles:
+        graph.append({"@type": "ItemList", "name": "Latest El Niño headlines", "itemListElement": [
+            {"@type": "ListItem", "position": i + 1, "url": a["url"], "name": a["title"]}
+            for i, a in enumerate(articles[:10])]})
+    return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False)
+
+
 def sitemap(base_url: str, lastmod: dt.date | None = None, paths: list[str] | None = None) -> str:
     day = (lastmod or dt.datetime.now(dt.timezone.utc).date()).isoformat()
     urls = [f"  <url><loc>{base_url}</loc><lastmod>{day}</lastmod>"

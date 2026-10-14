@@ -116,10 +116,11 @@ def build(out: Path, site_url: str | None = None) -> None:
     (out / ".nojekyll").write_text("", encoding="utf-8")
     shutil.copytree(ROOT / "weather_app" / "static", out / "static")
 
-    # The Crops page lives one folder deep.
-    page = client.get("/crops/").get_data(as_text=True).replace('"/static/', '"../static/')
-    (out / "crops").mkdir(exist_ok=True)
-    (out / "crops" / "index.html").write_text(page, encoding="utf-8")
+    # The Crops and News pages live one folder deep.
+    for name in ("crops", "news"):
+        page = client.get(f"/{name}/").get_data(as_text=True).replace('"/static/', '"../static/')
+        (out / name).mkdir(exist_ok=True)
+        (out / name / "index.html").write_text(page, encoding="utf-8")
 
     # One page per country: "El Niño impact on <country>" (two folders deep).
     for c in impacts.COUNTRIES:
@@ -130,7 +131,7 @@ def build(out: Path, site_url: str | None = None) -> None:
 
     # 3. Search engine and app files.
     (out / "robots.txt").write_text(seo.robots(site_url), encoding="utf-8")
-    paths = ["crops/"] + [seo.impact_path(c["slug"]) for c in impacts.COUNTRIES]
+    paths = ["news/", "crops/"] + [seo.impact_path(c["slug"]) for c in impacts.COUNTRIES]
     (out / "sitemap.xml").write_text(seo.sitemap(site_url, now.date(), paths), encoding="utf-8")
     (out / "manifest.webmanifest").write_text(json.dumps(seo.manifest(), ensure_ascii=False), encoding="utf-8")
 

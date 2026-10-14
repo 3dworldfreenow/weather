@@ -29,7 +29,7 @@
   <div class="page-wrap">
     <nav class="page-nav" aria-label="Site">
       <a href="../../">🌊 <b>El Niño Tracker</b></a>
-      <span><a href="../../crops/">🌾 Crops</a> · <a href="../../#impact={{ c.slug }}">Live map →</a></span>
+      <span><a href="../../news/">📰 News</a> · <a href="../../crops/">🌾 Crops</a> · <a href="../../#impact={{ c.slug }}">Live map →</a></span>
     </nav>
     <p class="crumbs"><a href="../../">Home</a> › <a href="../../#tab=impacts">World impacts</a> › {{ c.name }}</p>
 
@@ -67,8 +67,9 @@
             <div class="news-meta">{{ a.source }}{% if a.language %} · {{ a.language }}{% endif %}{% if a.published %} · {{ a.published[:10] }}{% endif %}</div></div>
         </a>
         {% endfor %}
+        <p><a href="../../news/#country=slug:{{ c.slug }}">All El Niño news about {{ c.name }} →</a></p>
       {% else %}
-      <p class="muted">No recent headlines mention {{ c.name }}. The <a href="../../#tab=news">news page</a> shows El Niño news from around the world.</p>
+      <p class="muted">No recent headlines mention {{ c.name }}. The <a href="../../news/">news page</a> shows El Niño news from around the world.</p>
       {% endif %}
 
       {% if crop_regions %}

@@ -3,9 +3,18 @@
 * GDELT DOC 2.0 API  - news articles from around the world, many languages
 * Google News RSS    - El Niño searches in ~35 country/language editions and
                        worldwide searches per impact theme
+* Bing News RSS      - El Niño searches in several markets
+* ReliefWeb RSS      - humanitarian reports and appeals (UN OCHA)
+* Science & agency RSS feeds (NOAA Climate.gov, NASA Earth Observatory, UN News,
+  Carbon Brief, Phys.org, ScienceDaily), filtered to El Niño / ENSO
+* arXiv and Crossref - new research papers
+* Hacker News (Algolia API) - discussions
+* Apple Podcasts search - podcast episodes
 * YouTube RSS feeds  - latest videos of weather and climate agencies, filtered
                        to El Niño / ENSO topics (YouTube search needs a key, so
                        a few known explainers are also listed)
+
+Every item has a `kind`: news, report, science, paper, discussion or podcast.
 """
 
 from __future__ import annotations
@@ -18,7 +27,7 @@ import time
 import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any
-from urllib.parse import quote_plus, urlparse
+from urllib.parse import parse_qs, quote_plus, urlparse
 
 from . import crops, impacts, services
 
@@ -31,8 +40,18 @@ YOUTUBE_FEED_URL = "https://www.youtube.com/feeds/videos.xml?channel_id={id}"
 YOUTUBE_HANDLE_URL = "https://www.youtube.com/@{handle}"
 YOUTUBE_SEARCH_URL = "https://www.youtube.com/results?search_query=El+Ni%C3%B1o"
 
+BING_NEWS_URL = "https://www.bing.com/news/search?q={q}&format=rss&mkt={mkt}"
+RELIEFWEB_RSS_URL = "https://reliefweb.int/updates/rss.xml?search=%22El%20Ni%C3%B1o%22%20OR%20%22El%20Nino%22"
+ARXIV_URL = ("https://export.arxiv.org/api/query?search_query=all:%22El%20Nino%22%20OR%20all:ENSO"
+             "&sortBy=submittedDate&sortOrder=descending&max_results=30")
+CROSSREF_URL = "https://api.crossref.org/works"
+HN_URL = "https://hn.algolia.com/api/v1/search_by_date"
+ITUNES_URL = "https://itunes.apple.com/search"
+
 NEWS_TTL = 30 * 60
-MAX_ARTICLES = 500
+MAX_ARTICLES = 500  # news; other kinds keep up to MAX_PER_KIND each
+MAX_PER_KIND = 80
+KINDS = ["news", "report", "science", "paper", "discussion", "podcast"]
 FETCH_WORKERS = 6
 
 # Search terms. Google News supports OR; local-language spellings are added per edition.
@@ -114,6 +133,36 @@ CROP_QUERIES_HI = '("अल नीनो" OR "El Nino") (फसल OR गन्�
 
 # YouTube channels of weather/climate agencies. The channel ID is looked up
 # from the handle; the fallback ID is used if that lookup fails.
+# Bing News markets: (market, country, language, impacts slug or None, query)
+BING_MARKETS = [
+    ("en-US", None, "English", None, '"El Nino" OR "El Niño"'),
+    ("en-GB", "United Kingdom", "English", None, '"El Nino" OR "El Niño"'),
+    ("en-IN", "India", "English", "india", '"El Nino" monsoon OR farmers OR rain'),
+    ("en-AU", "Australia", "English", "australia", '"El Nino" BOM OR drought OR rain'),
+    ("en-PH", "Philippines", "English", "philippines", '"El Nino" PAGASA OR drought'),
+    ("en-ZA", "South Africa", "English", "south-africa", '"El Nino" drought OR rain'),
+    ("es-MX", "Mexico", "Spanish", "mexico", '"El Niño" lluvias OR sequía'),
+    ("es-ES", None, "Spanish", None, '"El Niño" fenómeno'),
+    ("pt-BR", "Brazil", "Portuguese", "brazil", '"El Niño" chuva OR seca'),
+    ("fr-FR", None, "French", None, '"El Niño" climat'),
+    ("de-DE", None, "German", None, '"El Niño" Klima'),
+    ("ja-JP", "Japan", "Japanese", "japan", "エルニーニョ"),
+    ("zh-CN", "China", "Chinese", "china", "厄尔尼诺"),
+]
+
+# Agency and science feeds (RSS/Atom). Only El Niño / ENSO items are kept.
+# (name, url, kind, home page)
+FEEDS = [
+    ("NOAA Climate.gov ENSO blog", "https://www.climate.gov/feeds/news-features/enso.rss", "science", "https://www.climate.gov/enso"),
+    ("NOAA Climate.gov news", "https://www.climate.gov/feeds/news-features/featured-articles.rss", "science", "https://www.climate.gov/"),
+    ("NASA Earth Observatory", "https://earthobservatory.nasa.gov/feeds/earth-observatory.rss", "science", "https://earthobservatory.nasa.gov/"),
+    ("UN News: climate", "https://news.un.org/feed/subscribe/en/news/topic/climate-change/feed/rss.xml", "news", "https://news.un.org/"),
+    ("Carbon Brief", "https://www.carbonbrief.org/feed/", "science", "https://www.carbonbrief.org/"),
+    ("Phys.org Earth", "https://phys.org/rss-feed/earth-news/", "science", "https://phys.org/earth-news/"),
+    ("ScienceDaily: climate", "https://www.sciencedaily.com/rss/earth_climate/climate.xml", "science", "https://www.sciencedaily.com/"),
+    ("ScienceDaily: weather", "https://www.sciencedaily.com/rss/earth_climate/weather.xml", "science", "https://www.sciencedaily.com/"),
+]
+
 YOUTUBE_CHANNELS = [
     {"name": "NOAA", "handle": "NOAA", "fallback": None},
     {"name": "NOAA Research", "handle": "NOAAResearch", "fallback": "UCRRxIPuwYd7eCvlA1f5wc6g"},
@@ -268,6 +317,179 @@ def fetch_theme_news(theme_id: str, query: str) -> list[dict[str, Any]]:
 
 
 # --------------------------------------------------------------------------
+# Generic RSS / Atom feeds (Bing News, ReliefWeb, agencies, arXiv)
+# --------------------------------------------------------------------------
+
+_TAG = re.compile(r"<[^>]+>")
+
+
+def _text(value: str | None, limit: int = 300) -> str:
+    text = re.sub(r"\s+", " ", _TAG.sub(" ", value or "")).strip()
+    return text if len(text) <= limit else text[: limit - 1].rsplit(" ", 1)[0] + "…"
+
+
+def _local(tag: str) -> str:
+    return tag.rsplit("}", 1)[-1]
+
+
+def _child(el: ET.Element, *names: str) -> ET.Element | None:
+    for child in el:
+        if _local(child.tag) in names:
+            return child
+    return None
+
+
+def _date(value: str | None) -> dt.datetime | None:
+    value = (value or "").strip()
+    if not value:
+        return None
+    try:
+        return email.utils.parsedate_to_datetime(value)
+    except (TypeError, ValueError):
+        pass
+    try:
+        return dt.datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
+def parse_feed(xml: str, source: str, kind: str, via: str, topic_only: bool = True,
+               country: str | None = None, language: str | None = "English") -> list[dict[str, Any]]:
+    """Items from an RSS 2.0 or Atom feed. With topic_only, keep El Niño / ENSO items."""
+    root = ET.fromstring(xml)
+    items = [el for el in root.iter() if _local(el.tag) in ("item", "entry")]
+    out = []
+    for item in items:
+        title_el = _child(item, "title")
+        title = _text(title_el.text if title_el is not None else "", 400)
+        link_el = _child(item, "link")
+        link = None
+        if link_el is not None:
+            link = link_el.get("href") or link_el.text
+        if not link:
+            id_el = _child(item, "id", "guid")
+            link = id_el.text if id_el is not None else None
+        url = _safe_url(link)
+        summary_el = _child(item, "description", "summary", "content")
+        summary = _text(summary_el.text if summary_el is not None else "")
+        if not url or not title or (topic_only and not TOPIC.search(f"{title} {summary}")):
+            continue
+        # Bing wraps links: .../apiclick.aspx?...&url=<real link>
+        if "bing.com" in urlparse(url).netloc:
+            real = parse_qs(urlparse(url).query).get("url")
+            url = _safe_url(real[0]) if real else url
+            if not url:
+                continue
+        date_el = _child(item, "pubDate", "published", "updated", "date")
+        src_el = _child(item, "Source", "source")
+        image_el = _child(item, "Image")
+        image = _safe_url(image_el.text if image_el is not None else None)
+        out.append({
+            "title": title,
+            "url": url,
+            "source": _text(src_el.text, 80) if src_el is not None and src_el.text else source,
+            "country": country,
+            "language": language,
+            "published": _iso(_date(date_el.text if date_el is not None else None)),
+            "image": image if image and image.startswith("https://") else None,
+            "via": via,
+            "kind": kind,
+            "summary": summary or None,
+        })
+    return out
+
+
+def fetch_bing_news(market: tuple) -> list[dict[str, Any]]:
+    mkt, country, language, slug, query = market
+    items = parse_feed(services._get_text(BING_NEWS_URL.format(q=quote_plus(query), mkt=mkt)), "Bing News",
+                       "news", "Bing News", topic_only=False, country=country, language=language)
+    for a in items:
+        if slug:
+            a["edition"] = slug
+    return items
+
+
+def fetch_reliefweb() -> list[dict[str, Any]]:
+    return parse_feed(services._get_text(RELIEFWEB_RSS_URL), "ReliefWeb", "report", "ReliefWeb", topic_only=False)
+
+
+def fetch_feed(feed: tuple) -> list[dict[str, Any]]:
+    name, url, kind, _home = feed
+    return parse_feed(services._get_text(url), name, kind, name)
+
+
+def fetch_arxiv() -> list[dict[str, Any]]:
+    items = parse_feed(services._get_text(ARXIV_URL), "arXiv", "paper", "arXiv")
+    for a in items:
+        a["image"] = None
+    return items
+
+
+def parse_crossref(data: dict[str, Any]) -> list[dict[str, Any]]:
+    out = []
+    for w in (data.get("message") or {}).get("items") or []:
+        title = _text(" ".join(w.get("title") or []), 400)
+        url = _safe_url(w.get("URL"))
+        if not title or not url or not TOPIC.search(title):
+            continue
+        parts = ((w.get("published") or w.get("issued") or {}).get("date-parts") or [[None]])[0]
+        published = None
+        if parts and parts[0]:
+            published = dt.datetime(parts[0], (parts[1] if len(parts) > 1 else 1) or 1,
+                                    (parts[2] if len(parts) > 2 else 1) or 1, tzinfo=dt.timezone.utc)
+        journal = " ".join(w.get("container-title") or []) or w.get("publisher") or "Crossref"
+        out.append({"title": title, "url": url, "source": _text(journal, 80), "country": None, "language": "English",
+                    "published": _iso(published), "image": None, "via": "Crossref", "kind": "paper", "summary": None})
+    return out
+
+
+def fetch_crossref(today: dt.date | None = None) -> list[dict[str, Any]]:
+    today = today or dt.datetime.now(dt.timezone.utc).date()
+    params = {"query.bibliographic": "El Nino ENSO", "sort": "published", "order": "desc", "rows": 40,
+              "filter": f"from-pub-date:{today - dt.timedelta(days=365)},until-pub-date:{today},type:journal-article",
+              "select": "title,URL,published,issued,container-title,publisher"}
+    return parse_crossref(services._get_json(CROSSREF_URL, params))
+
+
+def parse_hn(data: dict[str, Any]) -> list[dict[str, Any]]:
+    out = []
+    for h in data.get("hits") or []:
+        title = _text(h.get("title"), 300)
+        if not title or not TOPIC.search(title):
+            continue
+        discussion = f"https://news.ycombinator.com/item?id={h.get('objectID')}"
+        comments = h.get("num_comments") or 0
+        out.append({"title": title, "url": _safe_url(h.get("url")) or discussion, "source": f"Hacker News · {comments} comments",
+                    "country": None, "language": "English", "published": _iso(_date(h.get("created_at"))),
+                    "image": None, "via": "Hacker News", "kind": "discussion", "summary": None, "discussion": discussion})
+    return out
+
+
+def fetch_hn() -> list[dict[str, Any]]:
+    return parse_hn(services._get_json(HN_URL, {"query": "El Nino", "tags": "story", "hitsPerPage": 40}))
+
+
+def parse_podcasts(data: dict[str, Any]) -> list[dict[str, Any]]:
+    out = []
+    for r in data.get("results") or []:
+        title = _text(r.get("trackName"), 300)
+        url = _safe_url(r.get("trackViewUrl"))
+        if not title or not url or not TOPIC.search(f"{title} {r.get('description') or ''}"):
+            continue
+        image = _safe_url(r.get("artworkUrl160") or r.get("artworkUrl600"))
+        out.append({"title": title, "url": url, "source": _text(r.get("collectionName"), 80) or "Podcast",
+                    "country": None, "language": None, "published": _iso(_date(r.get("releaseDate"))),
+                    "image": image if image and image.startswith("https://") else None,
+                    "via": "Apple Podcasts", "kind": "podcast", "summary": _text(r.get("description"), 240) or None})
+    return out
+
+
+def fetch_podcasts() -> list[dict[str, Any]]:
+    return parse_podcasts(services._get_json(ITUNES_URL, {"term": "El Nino", "media": "podcast",
+                                                          "entity": "podcastEpisode", "limit": 50}))
+
+
+# --------------------------------------------------------------------------
 # YouTube
 # --------------------------------------------------------------------------
 
@@ -340,6 +562,7 @@ def tag_article(article: dict[str, Any]) -> dict[str, Any]:
         found_crops.append(crop_hint)
     if found_crops and "food" not in themes:
         themes.append("food")
+    article.setdefault("kind", "news")
     article["themes"] = themes
     article["countries"] = countries
     article["crops"] = found_crops
@@ -366,7 +589,13 @@ def merge_articles(groups: list[list[dict[str, Any]]]) -> list[dict[str, Any]]:
             if not kept.get("country") and article.get("country"):
                 kept["country"] = article["country"]
     articles = sorted(seen.values(), key=lambda a: a["published"] or "", reverse=True)
-    return articles[:MAX_ARTICLES]
+    counts: dict[str, int] = {}
+    kept_articles = []
+    for a in articles:
+        n = counts[a["kind"]] = counts.get(a["kind"], 0) + 1
+        if n <= (MAX_ARTICLES if a["kind"] == "news" else MAX_PER_KIND):
+            kept_articles.append(a)
+    return kept_articles
 
 
 def get_news() -> dict[str, Any]:
@@ -378,7 +607,7 @@ def get_news() -> dict[str, Any]:
                 items = fn()
                 sources.append({"name": name, "kind": kind, "url": url, "ok": True, "count": len(items)})
                 return items
-            except (services.UpstreamError, ET.ParseError, KeyError, TypeError) as exc:
+            except (services.UpstreamError, ET.ParseError, KeyError, TypeError, ValueError, AttributeError) as exc:
                 log.warning("News source %s failed: %s", name, exc)
                 sources.append({"name": name, "kind": kind, "url": url, "ok": False, "count": 0})
                 return []
@@ -395,6 +624,16 @@ def get_news() -> dict[str, Any]:
                          lambda c=crop_id, q=query: fetch_crop_news(c, q)))
         jobs.append(("Google News crops: India (Hindi)", "news", "https://news.google.com/",
                      lambda: fetch_crop_news(None, CROP_QUERIES_HI, "hi", "IN", "IN:hi", "India", "Hindi", "india")))
+        for m in BING_MARKETS:
+            jobs.append((f"Bing News {m[1] or m[0]} ({m[2]})", "news", "https://www.bing.com/news",
+                         lambda m=m: fetch_bing_news(m)))
+        jobs.append(("ReliefWeb humanitarian reports", "report", "https://reliefweb.int/", fetch_reliefweb))
+        for f in FEEDS:
+            jobs.append((f[0], f[2], f[3], lambda f=f: fetch_feed(f)))
+        jobs.append(("arXiv research papers", "paper", "https://arxiv.org/", fetch_arxiv))
+        jobs.append(("Crossref journal articles", "paper", "https://www.crossref.org/", fetch_crossref))
+        jobs.append(("Hacker News discussions", "discussion", "https://news.ycombinator.com/", fetch_hn))
+        jobs.append(("Apple Podcasts episodes", "podcast", "https://podcasts.apple.com/", fetch_podcasts))
         video_jobs = [(f"YouTube: {c['name']}", "video", YOUTUBE_HANDLE_URL.format(handle=c["handle"]),
                        lambda c=c: fetch_channel_videos(c)) for c in YOUTUBE_CHANNELS]
 
@@ -407,7 +646,7 @@ def get_news() -> dict[str, Any]:
             videos += items
 
         articles = merge_articles(groups)
-        if not articles and not any(s["ok"] for s in sources if s["kind"] == "news"):
+        if not articles and not any(s["ok"] for s in sources if s["kind"] != "video"):
             raise services.UpstreamError("All news sources failed")
         videos = list({v["id"]: v for v in videos}.values())  # a video can appear on two channels
         videos.sort(key=lambda v: v["published"] or "", reverse=True)

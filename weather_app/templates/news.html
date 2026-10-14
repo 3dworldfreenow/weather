@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en" class="page-root">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{ meta.title }}</title>
+  <meta name="description" content="{{ meta.description }}">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="{{ meta.url }}">
+  <meta name="theme-color" content="{{ meta.theme_color }}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ meta.site_name }}">
+  <meta property="og:title" content="{{ meta.title }}">
+  <meta property="og:description" content="{{ meta.description }}">
+  <meta property="og:url" content="{{ meta.url }}">
+  <meta property="og:image" content="{{ meta.image }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ meta.title }}">
+  <meta name="twitter:description" content="{{ meta.description }}">
+  <meta name="twitter:image" content="{{ meta.image }}">
+  {% if meta.google_verification %}<meta name="google-site-verification" content="{{ meta.google_verification }}">{% endif %}
+  {% if meta.bing_verification %}<meta name="msvalidate.01" content="{{ meta.bing_verification }}">{% endif %}
+  <link rel="icon" type="image/png" sizes="48x48" href="{{ url_for('static', filename='img/favicon-48.png') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/apple-touch-icon.png') }}">
+  <script type="application/ld+json">{{ json_ld | safe }}</script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="page news-page">
+  <header class="crops-top">
+    <a href="../" class="crops-home">🌊 <b>El Niño Tracker</b></a>
+    <nav class="crops-links" aria-label="Site">
+      <a href="../">Live map</a>
+      <a href="./" aria-current="page">News</a>
+      <a href="../crops/">Crops</a>
+    </nav>
+  </header>
+
+  <main class="page-wrap crops-wrap">
+    <p class="crumbs"><a href="../">Home</a> › News</p>
+    <h1>📰 El Niño news from around the world</h1>
+    <p class="lead">Headlines in many languages, humanitarian reports, agency updates, new research, discussions,
+      podcasts and videos about El Niño, all from free public sources.</p>
+    {% if enso %}
+    <p class="status-pill"><span class="enso-phase {{ enso.phase }}">{{ {"el_nino": "El Niño", "la_nina": "La Niña"}.get(enso.phase, "Neutral") }}</span>
+      {{ enso.headline }} · Niño 3.4 {{ enso.nino34_anomaly | signed }} °C (week of {{ enso.week }})</p>
+    {% endif %}
+    <p class="muted" id="news-stats" aria-live="polite"></p>
+
+    <section class="card crop-controls" aria-label="Filter news">
+      <div class="chips" id="news-kinds" role="group" aria-label="Type">
+        <button class="chip active" data-kind="">All</button>
+        <button class="chip" data-kind="news">📰 News</button>
+        <button class="chip" data-kind="report">🆘 Reports</button>
+        <button class="chip" data-kind="science">🔬 Science</button>
+        <button class="chip" data-kind="paper">📄 Research</button>
+        <button class="chip" data-kind="discussion">💬 Discussions</button>
+        <button class="chip" data-kind="podcast">🎧 Podcasts</button>
+        <button class="chip" data-kind="video">▶️ Videos</button>
+      </div>
+      <div class="news-controls">
+        <label class="field news-search-field">Search
+          <input type="search" id="news-q" class="search" placeholder="Word, place, source…" autocomplete="off">
+        </label>
+        <label class="field">Country
+          <select id="news-country"><option value="">All countries</option></select>
+        </label>
+        <label class="field">Topic
+          <select id="news-theme"><option value="">All topics</option>
+            {% for t in themes %}<option value="{{ t.id }}">{{ t.icon }} {{ t.title }}</option>{% endfor %}</select>
+        </label>
+        <label class="field">Crop
+          <select id="news-crop"><option value="">All crops</option>
+            {% for cid, c in crop_names.items() %}<option value="{{ cid }}">{{ c.icon }} {{ c.name }}</option>{% endfor %}</select>
+        </label>
+        <label class="field">Language
+          <select id="news-lang"><option value="">All languages</option></select>
+        </label>
+      </div>
+      <button class="link-btn" id="news-reset" hidden>✕ Clear filters</button>
+    </section>
+
+    <section id="news-list" aria-live="polite">
+      {% for a in headlines %}
+      <a class="news-item" href="{{ a.url }}" target="_blank" rel="noopener noreferrer">
+        <div><div class="news-title">{{ a.title }}</div>
+          <div class="news-meta">{% if a.country %}<span class="flag">{{ a.country }}</span>{% endif %}{{ a.source }}{% if a.language %} · {{ a.language }}{% endif %}</div></div>
+      </a>
+      {% else %}<p class="muted">Loading El Niño news…</p>{% endfor %}
+    </section>
+
+    <section>
+      <h2>Where this comes from</h2>
+      <p class="muted">Everything is collected automatically every 30 minutes from free sources that need no account.
+        Links open the original publisher. Topics, countries and crops are tagged from the headline, so a few tags can be wrong.</p>
+      <div id="news-sources" class="source-groups"></div>
+    </section>
+
+    <footer>
+      <p>Sources include <a href="https://news.google.com/" target="_blank" rel="noopener">Google News</a>,
+        <a href="https://www.bing.com/news" target="_blank" rel="noopener">Bing News</a>,
+        <a href="https://www.gdeltproject.org/" target="_blank" rel="noopener">GDELT</a>,
+        <a href="https://reliefweb.int/" target="_blank" rel="noopener">ReliefWeb</a>,
+        <a href="https://www.climate.gov/enso" target="_blank" rel="noopener">NOAA Climate.gov</a>,
+        <a href="https://earthobservatory.nasa.gov/" target="_blank" rel="noopener">NASA Earth Observatory</a>,
+        <a href="https://news.un.org/" target="_blank" rel="noopener">UN News</a>,
+        <a href="https://arxiv.org/" target="_blank" rel="noopener">arXiv</a>,
+        <a href="https://www.crossref.org/" target="_blank" rel="noopener">Crossref</a>,
+        <a href="https://news.ycombinator.com/" target="_blank" rel="noopener">Hacker News</a>,
+        <a href="https://podcasts.apple.com/" target="_blank" rel="noopener">Apple Podcasts</a> and YouTube channels of
+        weather agencies. <a href="../">Back to the El Niño Tracker</a>.</p>
+    </footer>
+  </main>
+
+  <div class="video-modal" id="video-modal" hidden role="dialog" aria-modal="true" aria-label="Video">
+    <div class="video-box panel">
+      <button class="close-btn" id="video-close" aria-label="Close">✕</button>
+      <div class="video-frame" id="video-frame"></div>
+      <div class="video-title" id="video-title"></div>
+    </div>
+  </div>
+  <div class="toast" id="toast" hidden></div>
+  <script type="application/json" id="news-info">{{ {"themes": themes, "countries": countries, "crops": crop_names} | tojson }}</script>
+  <script>window.APP_CONFIG = {{ app_config | tojson }};</script>
+  <script src="{{ url_for('static', filename='js/news.js') }}"></script>
+</body>
+</html>

@@ -109,6 +109,23 @@ def crops_page():
     )
 
 
+@bp.get("/news/")
+def news_page():
+    url = base_url()
+    enso_data, articles = page_data()
+    return render_template(
+        "news.html",
+        app_config={"static": bool(current_app.config.get("STATIC_SITE"))},
+        meta={**seo.news_meta(url), **verification()},
+        json_ld=seo.news_json_ld(url, articles),
+        themes=[{k: v for k, v in t.items() if k != "keywords"} for t in impacts.THEMES],
+        countries={c["slug"]: {"name": c["name"]} for c in impacts.COUNTRIES},
+        crop_names={cid: {"name": c["name"], "icon": c["icon"]} for cid, c in crops.CROPS.items()},
+        enso=enso_data,
+        headlines=articles[:40],
+    )
+
+
 @bp.get("/api/crops")
 def crops_data():
     """Crop info and world prices. Rainfall comes per region from /api/crops/rain."""
@@ -147,7 +164,7 @@ def robots_txt():
 
 @bp.get("/sitemap.xml")
 def sitemap_xml():
-    paths = ["crops/"] + [seo.impact_path(c["slug"]) for c in impacts.COUNTRIES]
+    paths = ["news/", "crops/"] + [seo.impact_path(c["slug"]) for c in impacts.COUNTRIES]
     return Response(seo.sitemap(base_url(), paths=paths), mimetype="application/xml")
 
 

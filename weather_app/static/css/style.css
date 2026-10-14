@@ -438,3 +438,33 @@ body.page { overflow: visible; height: auto; overscroll-behavior: auto; backgrou
   .crop-table { font-size: 13px; }
   .crop-table th:nth-child(4), .crop-table td:nth-child(4) { white-space: nowrap; }
 }
+
+/* ---------- News page (news/) ---------- */
+.news-controls { display: grid; grid-template-columns: 2fr repeat(4, 1fr); gap: 10px; margin-top: 10px; }
+.news-controls select, .news-controls .search { width: 100%; min-height: 44px; }
+#news-kinds .chip small { opacity: .7; margin-left: 2px; }
+#news-reset { margin-top: 6px; }
+.news-summary { font-size: 13px; color: var(--text-2); margin-top: 3px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.kind-badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 0 6px; border-radius: 6px; margin-right: 6px; background: var(--bg-hover); color: var(--text); }
+.kind-badge.k-report { background: rgba(217, 75, 75, .25); }
+.kind-badge.k-science { background: rgba(47, 158, 110, .25); }
+.kind-badge.k-paper { background: rgba(155, 106, 214, .25); }
+.kind-badge.k-discussion { background: rgba(217, 130, 43, .25); }
+.kind-badge.k-podcast { background: rgba(74, 139, 232, .25); }
+.news-page .video-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.source-groups { display: flex; flex-direction: column; gap: 6px; }
+.source-group { background: var(--bg-raised); border: 1px solid var(--border); border-radius: 12px; padding: 4px 12px; }
+.source-group summary { cursor: pointer; min-height: 44px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.source-group ul { list-style: none; padding: 0; margin: 4px 0 10px; font-size: 14px; }
+.source-group li { padding: 4px 0; }
+.src-ok { color: #4cc38a; font-weight: 800; }
+.src-bad { color: var(--warm); font-weight: 800; }
+.news-tab-link { display: block; margin: 12px 0 4px; text-align: center; padding: 12px; border-radius: 10px; background: var(--bg-raised); border: 1px solid var(--border); color: var(--accent); text-decoration: none; font-weight: 700; }
+@media (max-width: 599px) {
+  .news-controls { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .news-controls .news-search-field { grid-column: 1 / -1; }
+  .news-controls .field { margin-top: 0; }
+  .news-controls select { min-height: 40px; font-size: 14px; }
+  .news-page .lead, .crops-page .lead { font-size: 16px; }
+  .news-page .status-pill { font-size: 13px; }
+}

@@ -86,11 +86,53 @@ def test_resolve_channel_id_from_handle_and_fallback(monkeypatch):
     assert news.resolve_channel_id({"handle": "metoffice", "fallback": "UCbbbbbbbbbbbbbbbbbbbbbb"}) == "UCbbbbbbbbbbbbbbbbbbbbbb"
 
 
-def fake_sources(monkeypatch, google_ok=True, gdelt_ok=True):
+BING_RSS = """<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:News="https://www.bing.com/news/search?q=El+Nino&amp;format=rss" version="2.0"><channel>
+<item><title>Monsoon deficit grows as El Nino takes hold</title>
+<link>http://www.bing.com/news/apiclick.aspx?ref=FexRss&amp;aid=&amp;url=https%3a%2f%2fpaper.example%2fmonsoon&amp;c=1</link>
+<description>Rain is 12% below normal.</description><pubDate>Tue, 13 Oct 2026 08:00:00 GMT</pubDate>
+<News:Source>The Paper</News:Source><News:Image>https://img.example/a.jpg</News:Image></item>
+</channel></rss>"""
+
+RELIEFWEB_RSS = """<rss version="2.0"><channel>
+<item><title>Southern Africa: El Niño drought response plan 2026</title><link>https://reliefweb.int/report/1</link>
+<description>&lt;p&gt;Appeal for USD 300 million.&lt;/p&gt;</description><pubDate>Mon, 12 Oct 2026 10:00:00 +0000</pubDate></item>
+</channel></rss>"""
+
+SCIENCE_RSS = """<rss version="2.0"><channel>
+<item><title>Warm Pacific waters signal a strengthening El Niño</title><link>https://science.example/enso</link>
+<pubDate>Sun, 11 Oct 2026 10:00:00 +0000</pubDate></item>
+<item><title>New beetle species found</title><link>https://science.example/beetle</link></item>
+</channel></rss>"""
+
+ARXIV_ATOM = """<feed xmlns="http://www.w3.org/2005/Atom">
+<entry><id>http://arxiv.org/abs/2610.00001v1</id><published>2026-10-10T00:00:00Z</published>
+<title>Deep learning forecasts of ENSO
+  at long lead times</title><summary>We predict El Nino.</summary>
+<link href="http://arxiv.org/abs/2610.00001v1" rel="alternate" type="text/html"/></entry>
+</feed>"""
+
+CROSSREF = {"message": {"items": [
+    {"title": ["El Niño impacts on maize yields in Zambia"], "URL": "https://doi.org/10.1/x",
+     "published": {"date-parts": [[2026, 9]]}, "container-title": ["Agricultural Systems"]},
+    {"title": ["Unrelated chemistry"], "URL": "https://doi.org/10.1/y"},
+]}}
+HN = {"hits": [{"title": "El Niño is back, what it means", "url": "https://blog.example/enso", "objectID": "42",
+                "num_comments": 17, "created_at": "2026-10-09T10:00:00Z"}]}
+ITUNES = {"results": [{"trackName": "Episode 12: El Niño and your coffee", "trackViewUrl": "https://podcasts.apple.com/ep12",
+                       "collectionName": "Climate Talk", "releaseDate": "2026-10-08T05:00:00Z",
+                       "artworkUrl160": "https://img.example/p.jpg", "description": "Why prices rise."}]}
+
+
+def fake_sources(monkeypatch, google_ok=True, gdelt_ok=True, others_ok=True):
     def get_json(url, params=None):
-        if not gdelt_ok:
-            raise services.UpstreamError("gdelt down")
-        return GDELT
+        if url == news.GDELT_URL:
+            if not gdelt_ok:
+                raise services.UpstreamError("gdelt down")
+            return GDELT
+        if not others_ok:
+            raise services.UpstreamError("down")
+        return {news.CROSSREF_URL: CROSSREF, news.HN_URL: HN, news.ITUNES_URL: ITUNES}[url]
 
     def get_text(url):
         if url.startswith("https://news.google.com"):
@@ -99,7 +141,17 @@ def fake_sources(monkeypatch, google_ok=True, gdelt_ok=True):
             return GOOGLE_RSS
         if "/@" in url:
             return CHANNEL_PAGE
-        return YOUTUBE_FEED
+        if "youtube.com" in url:
+            return YOUTUBE_FEED
+        if not others_ok:
+            raise services.UpstreamError("down")
+        if "bing.com" in url:
+            return BING_RSS
+        if "reliefweb" in url:
+            return RELIEFWEB_RSS
+        if "arxiv" in url:
+            return ARXIV_ATOM
+        return SCIENCE_RSS
 
     monkeypatch.setattr(services, "_get_json", get_json)
     monkeypatch.setattr(services, "_get_text", get_text)
@@ -108,23 +160,27 @@ def fake_sources(monkeypatch, google_ok=True, gdelt_ok=True):
 def test_get_news_combines_everything(monkeypatch):
     fake_sources(monkeypatch)
     data = news.get_news()
-    assert len(data["articles"]) == 3
+    kinds = {}
+    for a in data["articles"]:
+        kinds[a["kind"]] = kinds.get(a["kind"], 0) + 1
+    assert kinds == {"news": 4, "report": 1, "science": 1, "paper": 2, "discussion": 1, "podcast": 1}
     assert [v["id"] for v in data["videos"]] == ["AbCdEfGhIjK", "57S0Rw9L_hw"]  # deduped
     assert data["videos"][-1]["explainer"] is True
     assert all(s["ok"] for s in data["sources"])
     assert len(data["sources"]) == (1 + len(news.GOOGLE_NEWS_EDITIONS) + len(news.THEME_QUERIES)
-                                    + len(news.CROP_QUERIES) + 1 + len(news.YOUTUBE_CHANNELS))
+                                    + len(news.CROP_QUERIES) + 1 + len(news.BING_MARKETS) + 1 + len(news.FEEDS)
+                                    + 4 + len(news.YOUTUBE_CHANNELS))
 
 
 def test_get_news_survives_some_sources_failing(monkeypatch):
-    fake_sources(monkeypatch, google_ok=False)
+    fake_sources(monkeypatch, google_ok=False, others_ok=False)
     data = news.get_news()
     assert len(data["articles"]) == 2
     assert not [s for s in data["sources"] if s["name"].startswith("Google") and s["ok"]]
 
 
 def test_get_news_fails_when_all_news_sources_fail(monkeypatch):
-    fake_sources(monkeypatch, google_ok=False, gdelt_ok=False)
+    fake_sources(monkeypatch, google_ok=False, gdelt_ok=False, others_ok=False)
     with pytest.raises(services.UpstreamError):
         news.get_news()
 
@@ -201,3 +257,48 @@ def test_duplicate_articles_merge_their_tags():
     assert len(merged) == 1
     assert merged[0]["countries"] == ["india", "pakistan"]
     assert "forecast" in merged[0]["themes"]
+
+
+def test_new_sources_are_parsed():
+    bing = news.parse_feed(BING_RSS, "Bing News", "news", "Bing News", topic_only=False)
+    assert bing[0]["url"] == "https://paper.example/monsoon"  # Bing redirect unwrapped
+    assert bing[0]["source"] == "The Paper" and bing[0]["image"] == "https://img.example/a.jpg"
+    assert bing[0]["published"] == "2026-10-13T08:00:00+00:00"
+
+    relief = news.parse_feed(RELIEFWEB_RSS, "ReliefWeb", "report", "ReliefWeb", topic_only=False)
+    assert relief[0]["summary"] == "Appeal for USD 300 million." and relief[0]["kind"] == "report"
+
+    science = news.parse_feed(SCIENCE_RSS, "Phys.org", "science", "Phys.org")
+    assert [a["url"] for a in science] == ["https://science.example/enso"]  # off-topic items dropped
+
+    paper = news.parse_feed(ARXIV_ATOM, "arXiv", "paper", "arXiv")[0]
+    assert paper["title"] == "Deep learning forecasts of ENSO at long lead times"
+    assert paper["url"] == "http://arxiv.org/abs/2610.00001v1" and paper["published"].startswith("2026-10-10")
+
+    crossref = news.parse_crossref(CROSSREF)
+    assert len(crossref) == 1 and crossref[0]["source"] == "Agricultural Systems"
+    assert crossref[0]["published"].startswith("2026-09-01")
+
+    hn = news.parse_hn(HN)[0]
+    assert hn["discussion"] == "https://news.ycombinator.com/item?id=42" and hn["kind"] == "discussion"
+    pod = news.parse_podcasts(ITUNES)[0]
+    assert pod["source"] == "Climate Talk" and pod["kind"] == "podcast"
+
+
+def test_other_kinds_are_capped_separately():
+    many = [{"title": f"El Niño paper {i}", "url": f"https://p.example/{i}", "source": "j", "country": None,
+             "language": "English", "published": None, "image": None, "via": "x", "kind": "paper"} for i in range(200)]
+    merged = news.merge_articles([many, [{**many[0], "title": "El Niño news", "kind": "news"}]])
+    assert sum(a["kind"] == "paper" for a in merged) == news.MAX_PER_KIND
+    assert sum(a["kind"] == "news" for a in merged) == 1
+
+
+def test_news_page(monkeypatch):
+    fake_sources(monkeypatch)
+    app = create_app({"TESTING": True})
+    news.get_news()  # fills the cache the page pre-renders from
+    html = app.test_client().get("/news/").get_data(as_text=True)
+    assert "<h1>📰 El Niño news from around the world</h1>" in html
+    assert 'id="news-kinds"' in html and "js/news.js" in html
+    assert '"@type": "CollectionPage"' in html and '"ItemList"' in html
+    assert "Monsoon deficit grows as El Nino takes hold" in html  # headlines pre-rendered
