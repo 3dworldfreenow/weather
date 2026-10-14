@@ -24,22 +24,16 @@ India,india,English,Business Standard,https://www.business-standard.com/rss/home
 India,india,English,The Economic Times,https://economictimes.indiatimes.com/rssfeedstopstories.cms,feed
 India,india,Hindi,Dainik Bhaskar,https://www.bhaskar.com/rss,page
 India,india,Hindi,Amar Ujala,https://www.amarujala.com/rss/breaking-news.xml,feed
-India,india,Hindi,Dainik Jagran,https://www.jagran.com/rss,page
-India,india,Hindi,Live Hindustan,https://www.livehindustan.com/rss,page
 India,india,Hindi,NDTV India,https://ndtv.in/rss,page
-India,india,Marathi,Lokmat,https://www.lokmat.com/rss,page
-India,india,Bengali,Anandabazar Patrika,https://www.anandabazar.com/rss,page
 Pakistan,pakistan,English,Dawn,https://www.dawn.com/feeds/home,feed
 Pakistan,pakistan,English,The Express Tribune,https://tribune.com.pk/feed/home,feed
 Pakistan,pakistan,English,Geo News,https://www.geo.tv/rss/1/1,feed
-Sri Lanka,sri-lanka,English,EconomyNext,https://economynext.com/feed/,feed
 Bangladesh,bangladesh,English,The Daily Star,https://www.thedailystar.net/frontpage/rss.xml,feed
 Bangladesh,bangladesh,English,Dhaka Tribune,https://www.dhakatribune.com/feed,feed
 Bangladesh,bangladesh,Bengali,Prothom Alo,https://www.prothomalo.com/feed/,feed
 Nepal,nepal,English,The Kathmandu Post,https://kathmandupost.com/rss,feed
 Indonesia,indonesia,English,Antara News (English),https://en.antaranews.com/rss/news.xml,feed
 Indonesia,indonesia,Indonesian,Antara News,https://www.antaranews.com/rss/terkini.xml,feed
-Indonesia,indonesia,Indonesian,CNN Indonesia,https://www.cnnindonesia.com/nasional/rss,feed
 Malaysia,malaysia,English,Malay Mail,https://www.malaymail.com/feed/rss/malaysia,feed
 Philippines,philippines,English,Philippine Daily Inquirer,https://newsinfo.inquirer.net/feed,feed
 Philippines,philippines,English,Rappler,https://www.rappler.com/feed/,feed
@@ -49,7 +43,6 @@ Thailand,thailand,English,Bangkok Post,https://www.bangkokpost.com/rss/data/tops
 Vietnam,vietnam,English,VnExpress International,https://e.vnexpress.net/rss/news.rss,feed
 Vietnam,vietnam,Vietnamese,VnExpress,https://vnexpress.net/rss/thoi-su.rss,feed
 Vietnam,vietnam,Vietnamese,Tuoi Tre,https://tuoitre.vn/rss/tin-moi-nhat.rss,feed
-Cambodia,cambodia,English,Khmer Times,https://www.khmertimeskh.com/feed/,feed
 Myanmar,myanmar,English,The Irrawaddy,https://www.irrawaddy.com/feed,feed
 Myanmar,myanmar,English,Myanmar Now,https://myanmar-now.org/en/feed/,feed
 Papua New Guinea,papua-new-guinea,English,Post-Courier,https://www.postcourier.com.pg/feed/,feed
@@ -68,7 +61,6 @@ Australia,australia,English,The Guardian Australia,https://www.theguardian.com/a
 New Zealand,new-zealand,English,RNZ,https://www.rnz.co.nz/rss/national.xml,feed
 New Zealand,new-zealand,English,Stuff,https://www.stuff.co.nz/rss,feed
 Fiji,fiji,English,FBC News,https://www.fbcnews.com.fj/feed/,feed
-Solomon Islands,solomon-islands,English,Solomon Star,https://www.solomonstarnews.com/feed/,feed
 Peru,peru,Spanish,El Comercio,https://elcomercio.pe/arcio/rss/,feed
 Peru,peru,Spanish,RPP Noticias,https://rpp.pe/feed,feed
 Peru,peru,Spanish,Andina,https://andina.pe/agencia/rss.aspx,page
@@ -87,14 +79,10 @@ Brazil,brazil,Portuguese,Agência Brasil,https://agenciabrasil.ebc.com.br/rss/ul
 Argentina,argentina,Spanish,Clarín,https://www.clarin.com/rss/lo-ultimo/,feed
 Argentina,argentina,Spanish,La Nación,https://www.lanacion.com.ar/arc/outboundfeeds/rss/?outputType=xml,feed
 Argentina,argentina,Spanish,Infobae,https://www.infobae.com/arc/outboundfeeds/rss/,feed
-Uruguay,uruguay,Spanish,El País (Uruguay),https://www.elpais.com.uy/rss/,feed
 Paraguay,paraguay,Spanish,ABC Color,https://www.abc.com.py/arc/outboundfeeds/rss/?outputType=xml,feed
-Bolivia,bolivia,Spanish,El Deber,https://eldeber.com.bo/rss,page
 Panama,panama,Spanish,La Prensa (Panamá),https://www.prensa.com/arc/outboundfeeds/rss/?outputType=xml,feed
 Costa Rica,costa-rica,Spanish,La Nación (Costa Rica),https://www.nacion.com/arc/outboundfeeds/rss/?outputType=xml,feed
 Nicaragua,nicaragua,Spanish,Confidencial,https://confidencial.digital/feed/,feed
-Nicaragua,nicaragua,Spanish,La Prensa (Nicaragua),https://www.laprensani.com/feed,feed
-El Salvador,el-salvador,Spanish,La Prensa Gráfica,https://www.laprensagrafica.com/rss,page
 Guatemala,guatemala,Spanish,Prensa Libre,https://www.prensalibre.com/feed/,feed
 Mexico,mexico,Spanish,El Universal,https://www.eluniversal.com.mx/arc/outboundfeeds/rss/?outputType=xml,feed
 Mexico,mexico,Spanish,La Jornada,https://www.jornada.com.mx/rss/edicion.xml,feed
@@ -105,24 +93,14 @@ Canada,canada,English,CBC News,https://www.cbc.ca/webfeed/rss/rss-topstories,fee
 Canada,canada,English,The Globe and Mail,https://www.theglobeandmail.com/arc/outboundfeeds/rss/category/canada/,feed
 South Africa,south-africa,English,Daily Maverick,https://www.dailymaverick.co.za/dmrss/,feed
 South Africa,south-africa,English,Farmer's Weekly,https://www.farmersweekly.co.za/feed/,feed
-Zimbabwe,zimbabwe,English,The Herald (Zimbabwe),https://www.herald.co.zw/feed/,feed
-Zimbabwe,zimbabwe,English,NewsDay,https://www.newsday.co.zw/feed/,feed
 Zambia,zambia,English,Lusaka Times,https://www.lusakatimes.com/feed/,feed
 Zambia,zambia,English,News Diggers,https://diggers.news/feed/,feed
 Malawi,malawi,English,Nyasa Times,https://www.nyasatimes.com/feed/,feed
 Malawi,malawi,English,Malawi24,https://malawi24.com/feed/,feed
-Mozambique,mozambique,English,Club of Mozambique,https://clubofmozambique.com/feed/,feed
 Namibia,namibia,English,The Namibian,https://www.namibian.com.na/feed/,feed
 Namibia,namibia,English,New Era,https://neweralive.na/feed/,feed
 Kenya,kenya,English,The Standard,https://www.standardmedia.co.ke/rss/headlines.php,feed
 Kenya,kenya,English,Capital FM,https://www.capitalfm.co.ke/news/feed/,feed
-Kenya,kenya,English,Nation,https://nation.africa/kenya/rss,page
-Ethiopia,ethiopia,English,Addis Standard,https://addisstandard.com/feed/,feed
-Ethiopia,ethiopia,English,The Reporter (Ethiopia),https://www.thereporterethiopia.com/feed/,feed
 Tanzania,tanzania,English,Daily News (Tanzania),https://dailynews.co.tz/feed/,feed
-Uganda,uganda,English,Nile Post,https://nilepost.co.ug/feed/,feed
-Uganda,uganda,English,Daily Monitor,https://www.monitor.co.ug/uganda/rss,page
 Botswana,botswana,English,Sunday Standard,https://www.sundaystandard.info/feed/,feed
-Lesotho,lesotho,English,The Post (Lesotho),https://www.thepost.co.ls/feed/,feed
 Somalia,somalia,English,Somali Guardian,https://somaliguardian.com/feed/,feed
-Fiji,fiji,English,Fiji Village,https://www.fijivillage.com/feed,page

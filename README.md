@@ -27,7 +27,7 @@ All data sources are free and need **no API keys**:
 | Sea surface temperature anomaly map | [GHRSST MUR](https://podaac.jpl.nasa.gov/MEaSUREs-MUR) via [NASA GIBS](https://earthdata.nasa.gov/gibs) |
 | Live satellites | GOES & Himawari via NASA GIBS, Meteosat via [EUMETView](https://view.eumetsat.int/) |
 | World news | [GDELT](https://www.gdeltproject.org/) DOC API, [Google News](https://news.google.com/) RSS (35 editions + theme and crop searches), [Bing News](https://www.bing.com/news) RSS (12 markets) |
-| Newspapers by country | RSS feeds of 150+ newspapers in `weather_app/data/news_feeds.csv` (El Niño stories only; headline, source and link) |
+| Newspapers by country | RSS feeds of 100+ newspapers in `weather_app/data/news_feeds.csv` (El Niño stories only; headline, source and link) |
 | Humanitarian reports | [ReliefWeb](https://reliefweb.int/), FAO, WFP, OCHA, IFRC, UNICEF and FEWS NET, searched through Google News RSS |
 | Agency and science updates | RSS feeds of [NOAA Climate.gov](https://www.climate.gov/enso), [UN News](https://news.un.org/), [Carbon Brief](https://www.carbonbrief.org/), [Phys.org](https://phys.org/), [ScienceDaily](https://www.sciencedaily.com/) (El Niño items only) |
 | Research papers | [arXiv](https://arxiv.org/) API, [Crossref](https://www.crossref.org/) API |
