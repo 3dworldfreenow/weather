@@ -18,7 +18,7 @@ def offline(monkeypatch):
     services.cache.clear()
     monkeypatch.setattr(satellites, "_catalogue", lambda source: None)
     monkeypatch.setattr(services, "_get_text", lambda url: WEEKLY if url == enso.WEEKLY_URL else ONI)
-    monkeypatch.setattr(news, "get_news", lambda: {"articles": [{"title": "El Niño", "url": "https://n.example/1", "source": "n.example",
+    monkeypatch.setattr(news, "get_news", lambda previous=None: {"articles": [{"title": "El Niño", "url": "https://n.example/1", "source": "n.example",
                                                               "countries": ["india"]}],
                                                "videos": [], "sources": []})
     monkeypatch.setattr(build_static, "previous_data", lambda site_url, name: None)

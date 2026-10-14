@@ -76,7 +76,8 @@ def build(out: Path, site_url: str | None = None) -> None:
     builders = {
         "satellites.json": satellites_data,
         "enso.json": enso.get_enso,
-        "news.json": news.get_news,
+        # Imported feeds are read in rotation; keep their recent items from the published copy.
+        "news.json": lambda: news.get_news(previous_data(site_url, "news.json")),
         # Rainfall and monthly prices change slowly: reuse the published copy if recent.
         "crops.json": lambda: crops.get_crops(previous_data(site_url, "crops.json")),
     }

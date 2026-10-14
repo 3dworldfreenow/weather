@@ -203,7 +203,9 @@
   function renderStats() {
     const d = state.data;
     const ok = d.sources.filter((s) => s.ok).length;
-    $("news-stats").textContent = `${d.articles.length} articles and ${d.videos.length} videos from ${ok} of ${d.sources.length} free sources · updated ${timeAgo(d.updated)}`;
+    const fs = d.feed_stats || {};
+    const more = fs.imported_feeds ? ` · plus ${fs.imported_feeds.toLocaleString()} more newspapers, channels, universities and agencies read in rotation` : "";
+    $("news-stats").textContent = `${d.articles.length} articles and ${d.videos.length} videos from ${ok} free sources${more} · updated ${timeAgo(d.updated)}`;
   }
 
   function renderSources() {

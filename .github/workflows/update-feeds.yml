@@ -1,0 +1,44 @@
+name: Update news feed list
+
+# Imports news feeds from open data (Wikidata, awesome-rss-feeds), keeps the ones
+# that work and commits weather_app/data/news_feeds.csv. The next site build uses them.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * 1"   # every Monday
+  push:
+    paths:
+      - scripts/import_feeds.py
+      - .github/workflows/update-feeds.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-feeds
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python scripts/import_feeds.py --max 10000
+      - run: pytest -q tests/test_news.py
+      - name: Commit the updated feed list
+        run: |
+          if git diff --quiet -- weather_app/data/news_feeds.csv; then
+            echo "Feed list unchanged"; exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add weather_app/data/news_feeds.csv
+          git commit -m "Update news feed list from open data"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

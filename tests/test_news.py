@@ -347,7 +347,7 @@ def test_feed_list_is_valid():
     for f in feeds:
         assert f["url"].startswith(("http://", "https://")) and f["type"] in ("feed", "page")
         assert f["category"] in news.FEED_CATEGORIES and f["filter"] in ("topic", "all")
-        assert f["language"]
+        assert f["language"] or f["origin"] != "curated"  # imported rows may not know their language
         assert not f["slug"] or f["slug"] in impacts.BY_SLUG, f
     covered = {f["slug"] for f in feeds if f["slug"]}
     assert len(covered) >= 40  # most countries we cover have their own papers (others: Google News, AllAfrica, RNZ Pacific)
@@ -395,3 +395,75 @@ def test_weather_service_feeds_keep_every_item(monkeypatch):
     # A newspaper with the default "topic" filter keeps only the El Niño / weather story.
     paper = {**service, "category": "newspaper", "filter": "topic"}
     assert [a["url"] for a in news.fetch_publisher(paper)] == ["https://met.example/w/1"]
+
+
+def test_import_feeds_classifies_and_writes_csv(tmp_path, monkeypatch):
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
+    import import_feeds
+
+    assert import_feeds.classify(["daily newspaper"]) == "newspaper"
+    assert import_feeds.classify(["public broadcaster", "company"]) == "tv"
+    assert import_feeds.classify(["public university"]) == "university"
+    assert import_feeds.classify(["national meteorological service", "government agency"]) == "weather"
+    assert import_feeds.classify(["video game", "company"]) is None
+
+    csv_path = tmp_path / "feeds.csv"
+    csv_path.write_text("country,slug,language,publisher,url,type,category,filter,origin\n"
+                        "India,india,Hindi,Hand Picked,https://hand.example/rss,feed,newspaper,topic,curated\n",
+                        encoding="utf-8")
+    monkeypatch.setattr(import_feeds, "CSV_PATH", csv_path)
+    monkeypatch.setattr(import_feeds, "from_wikidata", lambda s: [
+        {"country": "Peru", "language": "Spanish", "publisher": "Diario, Uno", "url": "https://uno.example/feed",
+         "category": "newspaper", "origin": "wikidata"},
+        {"country": "Peru", "language": "", "publisher": "Dead", "url": "https://dead.example/feed",
+         "category": "newspaper", "origin": "wikidata"},
+        {"country": "India", "language": "", "publisher": "Dup", "url": "http://www.hand.example/rss/",
+         "category": "newspaper", "origin": "wikidata"},
+        {"country": "Kenya", "language": "", "publisher": "Kenya Met", "url": "https://met.example/rss",
+         "category": "weather", "origin": "wikidata"},
+    ])
+    monkeypatch.setattr(import_feeds, "from_awesome", lambda s: [])
+    monkeypatch.setattr(import_feeds, "check_feed", lambda s, c, now: None if "dead" in c["url"] else c)
+    monkeypatch.setattr(sys, "argv", ["import_feeds.py"])
+    import_feeds.main()
+
+    text = csv_path.read_text(encoding="utf-8")
+    assert import_feeds.IMPORT_MARKER in text and "Hand Picked" in text
+    feeds = news.load_feeds(csv_path)
+    assert [f["publisher"] for f in feeds] == ["Hand Picked", "Diario, Uno", "Kenya Met"]  # dead and duplicate dropped
+    assert feeds[1]["slug"] == "peru" and feeds[1]["origin"] == "wikidata"
+    assert feeds[2]["filter"] == "all" and feeds[2]["slug"] == "kenya"
+    import_feeds.main()  # running again replaces the imported part instead of appending
+    assert len(news.load_feeds(csv_path)) == 3
+
+
+def test_imported_feeds_are_read_in_rotation_and_carried_over(monkeypatch):
+    feeds = [{"country": "", "slug": "", "language": "English", "publisher": f"Paper {i}", "url": f"https://p{i}.example/rss",
+              "type": "feed", "category": "newspaper", "filter": "topic", "origin": "wikidata"} for i in range(60)]
+    read = []
+
+    def fake_fetch(feed):
+        read.append(feed["url"])
+        return [{"title": f"El Niño story from {feed['publisher']}", "url": feed["url"] + "/1", "source": feed["publisher"],
+                 "country": None, "language": "English", "published": "2026-10-14T00:00:00+00:00", "image": None,
+                 "via": "x", "kind": "news", "scope_hint": "feed"}]
+
+    fake_sources(monkeypatch)
+    monkeypatch.setattr(news, "load_feeds", lambda: feeds)
+    monkeypatch.setattr(news, "fetch_publisher", fake_fetch)
+    now = news.dt.datetime(2026, 10, 14, 6, 0, tzinfo=news.dt.timezone.utc)
+    previous = {"articles": [
+        {"title": "El Niño older story", "url": "https://old.example/1", "source": "Old", "country": None, "language": "English",
+         "published": "2026-10-13T00:00:00+00:00", "image": None, "via": "x", "kind": "news", "rotating": True},
+        {"title": "El Niño stale story", "url": "https://old.example/2", "source": "Old", "country": None, "language": "English",
+         "published": "2026-09-01T00:00:00+00:00", "image": None, "via": "x", "kind": "news", "rotating": True},
+    ]}
+    data = news.get_news(previous, now=now)
+    slot = news.rotation_slot(now)
+    assert read and all(news.in_rotation(u, slot) for u in read) and len(read) < len(feeds)
+    assert data["feed_stats"]["imported_feeds"] == 60 and data["feed_stats"]["imported_read"] == len(read)
+    urls = {a["url"] for a in data["articles"]}
+    assert "https://old.example/1" in urls and "https://old.example/2" not in urls  # recent ones carried over
+    assert all(a.get("rotating") for a in data["articles"] if a["url"].endswith("example/rss/1"))

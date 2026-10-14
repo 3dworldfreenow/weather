@@ -1,4 +1,4 @@
-country,slug,language,publisher,url,type,category,filter
+country,slug,language,publisher,url,type,category,filter,origin
 ,,English,BBC News: World,https://feeds.bbci.co.uk/news/world/rss.xml,feed
 ,,English,BBC News: Science & Environment,https://feeds.bbci.co.uk/news/science_and_environment/rss.xml,feed
 ,,English,The Guardian: Environment,https://www.theguardian.com/environment/rss,feed

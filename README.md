@@ -151,6 +151,8 @@ Australia,australia,English,Bureau of Meteorology warnings (NSW),http://www.bom.
 - `type` is `feed` for an RSS/Atom URL, or `page` for a page that lists a site's feeds (the site finds up to 3 of them, main sections first)
 - only the headline, source and link are shown
 
+**Thousands more, automatically:** `scripts/import_feeds.py` (run weekly by `.github/workflows/update-feeds.yml`, or by hand with *Actions → Update news feed list → Run workflow*) imports feeds from open data: [Wikidata](https://www.wikidata.org/) (every newspaper, broadcaster, university, government body and weather service that lists a web feed, CC0) and [awesome-rss-feeds](https://github.com/plenaryapp/awesome-rss-feeds) (feeds by country). Each candidate is downloaded and kept only if it is a working feed with an item from the last year; up to 10,000 are written below the "imported" line of the CSV (hand-picked rows above it are never touched). To go easy on publishers, imported feeds are read in rotation (each one every 3 hours) and their recent stories are carried over between builds; hand-picked feeds are read on every build.
+
 Every build logs feeds that fail ("News source … failed"), and the News page lists which sources are working.
 
 ## API

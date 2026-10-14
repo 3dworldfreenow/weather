@@ -30,6 +30,7 @@ import logging
 import re
 import time
 import xml.etree.ElementTree as ET
+import zlib
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
@@ -61,9 +62,14 @@ NEWS_TTL = 30 * 60
 MAX_ARTICLES = 500  # news; other kinds keep up to MAX_PER_KIND each
 MAX_PER_KIND = 80
 KINDS = ["news", "official", "report", "science", "paper", "discussion", "podcast"]
-FETCH_WORKERS = 16
+FETCH_WORKERS = 32
 FEEDS_CSV = Path(__file__).parent / "data" / "news_feeds.csv"
 FEEDS_PER_PAGE = 3  # feeds to follow from a page that lists a site's feeds
+# Imported feeds (thousands, see scripts/import_feeds.py) are read in rotation: each
+# build reads one slot, so each imported feed is read every ROTATION_SLOTS builds
+# (every 3 hours with a build every 30 minutes). Their recent items are carried over.
+ROTATION_SLOTS = 6
+CARRY_OVER_DAYS = 4
 
 # Search terms. Google News supports OR; local-language spellings are added per edition.
 EN = '"El Niño" OR "El Nino"'
@@ -605,6 +611,7 @@ def load_feeds(path: Path = FEEDS_CSV) -> list[dict[str, str]]:
     for r in rows:
         r["category"] = r.get("category") or "newspaper"
         r["filter"] = r.get("filter") or "topic"
+        r["origin"] = r.get("origin") or "curated"
     return [r for r in rows if r.get("url") and r.get("publisher") and r["category"] in FEED_CATEGORIES]
 
 
@@ -639,6 +646,18 @@ def discover_feeds(html: str, page_url: str, limit: int = FEEDS_PER_PAGE) -> lis
     unique = list(dict.fromkeys(found))
     unique.sort(key=lambda u: 0 if _PREFERRED.search(u) else 1)  # stable: keeps page order within groups
     return unique[:limit]
+
+
+def feed_home(feed: dict[str, str]) -> str:
+    u = urlparse(feed["url"])
+    return f"{u.scheme}://{u.netloc}/"
+
+
+def feed_label(feed: dict[str, str]) -> str:
+    label = feed["publisher"]
+    if feed.get("country") and feed["country"] not in label:
+        label += f" ({feed['country']})"
+    return label
 
 
 def fetch_publisher(feed: dict[str, str]) -> list[dict[str, Any]]:
@@ -795,9 +814,28 @@ def merge_articles(groups: list[list[dict[str, Any]]]) -> list[dict[str, Any]]:
     return kept_articles
 
 
-def get_news() -> dict[str, Any]:
+def rotation_slot(now: dt.datetime | None = None) -> int:
+    now = now or dt.datetime.now(dt.timezone.utc)
+    return (now.hour * 2 + now.minute // 30) % ROTATION_SLOTS
+
+
+def in_rotation(url: str, slot: int) -> bool:
+    return zlib.crc32(url.encode("utf-8")) % ROTATION_SLOTS == slot
+
+
+def carried_over(previous: dict[str, Any] | None, now: dt.datetime) -> list[dict[str, Any]]:
+    """Recent items from imported feeds in the previously published news (not re-read this build)."""
+    cutoff = (now - dt.timedelta(days=CARRY_OVER_DAYS)).isoformat(timespec="seconds")
+    return [dict(a) for a in (previous or {}).get("articles") or []
+            if a.get("rotating") and (a.get("published") or "") >= cutoff]
+
+
+def get_news(previous: dict[str, Any] | None = None, now: dt.datetime | None = None) -> dict[str, Any]:
     def build() -> dict[str, Any]:
         sources, videos = [], []
+        stats = {"imported_feeds": 0, "imported_read": 0, "imported_ok": 0, "imported_items": 0}
+        when = now or dt.datetime.now(dt.timezone.utc)
+        slot = rotation_slot(when)
 
         def run(name: str, kind: str, url: str, fn):
             try:
@@ -835,21 +873,39 @@ def get_news() -> dict[str, Any]:
         jobs.append(("Crossref journal articles", "paper", "https://www.crossref.org/", fetch_crossref))
         jobs.append(("Hacker News discussions", "discussion", "https://news.ycombinator.com/", fetch_hn))
         jobs.append(("Apple Podcasts episodes", "podcast", "https://podcasts.apple.com/", fetch_podcasts))
+        def run_imported(feed: dict[str, str]) -> list[dict[str, Any]]:
+            # Imported feeds: only listed when they found something, to keep the source list readable.
+            try:
+                items = fetch_publisher(feed)
+            except (services.UpstreamError, ET.ParseError, KeyError, TypeError, ValueError, AttributeError) as exc:
+                log.debug("Imported feed %s failed: %s", feed["url"], exc)
+                return []
+            stats["imported_ok"] += 1
+            stats["imported_items"] += len(items)
+            for a in items:
+                a["rotating"] = True
+            if items:
+                sources.append({"name": feed_label(feed), "kind": FEED_CATEGORIES[feed["category"]][1],
+                                "url": feed_home(feed), "ok": True, "count": len(items)})
+            return items
+
         for feed in load_feeds():
-            home = f"{urlparse(feed['url']).scheme}://{urlparse(feed['url']).netloc}/"
-            label = feed["publisher"]
-            if feed.get("country") and feed["country"] not in label:
-                label += f" ({feed['country']})"
             group = FEED_CATEGORIES[feed.get("category") or "newspaper"][1]
-            jobs.append((label, group, home, lambda feed=feed: fetch_publisher(feed)))
+            if feed.get("origin", "curated") == "curated":
+                jobs.append((feed_label(feed), group, feed_home(feed), lambda feed=feed: fetch_publisher(feed)))
+                continue
+            stats["imported_feeds"] += 1
+            if in_rotation(feed["url"], slot):
+                stats["imported_read"] += 1
+                jobs.append((None, None, None, lambda feed=feed: run_imported(feed)))
         video_jobs = [(f"YouTube: {c['name']}", "video", YOUTUBE_HANDLE_URL.format(handle=c["handle"]),
                        lambda c=c: fetch_channel_videos(c)) for c in YOUTUBE_CHANNELS]
 
         # Fetch in parallel (GDELT retries with pauses, so it runs alongside the rest).
         with ThreadPoolExecutor(max_workers=FETCH_WORKERS) as pool:
-            news_results = list(pool.map(lambda j: run(*j), jobs))
+            news_results = list(pool.map(lambda j: j[3]() if j[0] is None else run(*j), jobs))
             video_results = list(pool.map(lambda j: run(*j), video_jobs))
-        groups = news_results
+        groups = news_results + [carried_over(previous, when)]
         for items in video_results:
             videos += items
 
@@ -859,6 +915,9 @@ def get_news() -> dict[str, Any]:
             if feeds:
                 log.info("%s feeds: %d of %d working, %d items", label, sum(f["ok"] for f in feeds),
                          len(feeds), sum(f["count"] for f in feeds))
+        if stats["imported_feeds"]:
+            log.info("Imported feeds: %d in the list, %d read this build (slot %d), %d worked, %d items",
+                     stats["imported_feeds"], stats["imported_read"], slot, stats["imported_ok"], stats["imported_items"])
         articles = merge_articles(groups)
         if not articles and not any(s["ok"] for s in sources if s["kind"] != "video"):
             raise services.UpstreamError("All news sources failed")
@@ -871,6 +930,7 @@ def get_news() -> dict[str, Any]:
             "videos": videos + explainers,
             "youtube_search": YOUTUBE_SEARCH_URL,
             "sources": sources,
+            "feed_stats": stats,
         }
 
     return services.cache.get_or_set("news", NEWS_TTL, build)
