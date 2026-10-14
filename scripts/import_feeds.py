@@ -163,6 +163,15 @@ def from_awesome(session: requests.Session) -> list[dict[str, str]]:
 # --------------------------------------------------------------------------
 
 def check_feed(session: requests.Session, cand: dict[str, str], now: dt.datetime) -> dict[str, str] | None:
+    """The candidate (with its language filled in when known) if it is a working, recent feed."""
+    try:
+        return _check_feed(session, cand, now)
+    except Exception as exc:  # noqa: BLE001 - thousands of foreign servers: any failure just means "not working"
+        log.debug("Feed %s: %s", cand["url"], exc)
+        return None
+
+
+def _check_feed(session: requests.Session, cand: dict[str, str], now: dt.datetime) -> dict[str, str] | None:
     try:
         resp = session.get(cand["url"], timeout=12, stream=True)
         if not resp.ok:
@@ -171,6 +180,9 @@ def check_feed(session: requests.Session, cand: dict[str, str], now: dt.datetime
         text = body.decode(resp.encoding or "utf-8", errors="replace")
     except (requests.RequestException, OSError, ValueError):
         return None
+    finally:
+        if "resp" in locals():
+            resp.close()
     if not news._looks_like_feed(text):
         return None
     try:
