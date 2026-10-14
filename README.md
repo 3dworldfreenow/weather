@@ -6,6 +6,13 @@ A live El Niño tracker on a 3D globe and map, in the style of [zoom.earth](http
 
 ## Features
 
+- 🌍 **Weather globe (home page)**, in the style of zoom.earth: a full-screen 3D globe with
+  - **Live maps:** satellite (true colour or infrared, stitched from five geostationary satellites, refreshed every 5 minutes, with a **24-hour replay in 30-minute steps**) and rain radar ([RainViewer](https://www.rainviewer.com/), last 2 hours)
+  - **Forecast maps** for the next 48 hours in 3-hour steps: precipitation, wind, temperature, humidity and pressure (drawn in the browser from a global [Open-Meteo](https://open-meteo.com/) grid), plus the El Niño sea temperature anomaly
+  - **Overlays:** wind animation, city temperatures, labels, border lines, night boundary, coordinate grid, Niño regions
+  - a time bar with play, a click-anywhere forecast popup, and links that keep your choice (`#map=wind&ov=windanim,temps`)
+- 🌊 **El Niño tracker** (`/el-nino/`): the El Niño status, impacts, news, history and learn panels below
+
 - 📱 **Built for phones first:** the map or 3D globe fills the screen and everything else lives in a bottom sheet (drag or tap the handle: peek, half, full) with five tabs. Wide screens get a side panel; phones in landscape get a side sheet
 - 📊 **Status:** current phase (El Niño / La Niña / neutral) and strength from the latest weekly Niño 3.4 anomaly, the 4-week trend, the four Niño regions with 12-week trend lines, NOAA's official Oceanic Niño Index, and where warming is strongest
 - 🌍 **Impacts:** 57 countries coloured on the map and globe by their typical El Niño effect (drier, wetter, warmer winter, mixed). Tap a country for its season, what El Niño usually means there (rain, crops, water, energy, health), notable past events, its national weather service and the latest news about it. Plus worldwide themes: drought and fires, floods, heat, food and farming, health, oceans and coral, economy and energy, storms, forecasts
@@ -25,6 +32,8 @@ All data sources are free and need **no API keys**:
 | Niño region indices (weekly) | [NOAA CPC weekly Niño SSTs](https://www.cpc.ncep.noaa.gov/data/indices/wksst9120.for) |
 | Oceanic Niño Index (official, 3-month) | [NOAA CPC ONI](https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt) |
 | Sea surface temperature anomaly map | [GHRSST MUR](https://podaac.jpl.nasa.gov/MEaSUREs-MUR) via [NASA GIBS](https://earthdata.nasa.gov/gibs) |
+| Forecast maps and city temperatures | [Open-Meteo](https://open-meteo.com/) forecast API (CC BY 4.0), a 6° global grid refreshed every 6 hours |
+| Rain radar | [RainViewer](https://www.rainviewer.com/api.html) public API |
 | Live satellites | GOES & Himawari via NASA GIBS, Meteosat via [EUMETView](https://view.eumetsat.int/) |
 | World news | [GDELT](https://www.gdeltproject.org/) DOC API, [Google News](https://news.google.com/) RSS (35 editions + theme and crop searches), [Bing News](https://www.bing.com/news) RSS (12 markets) |
 | Newspapers by country | RSS feeds of 100+ newspapers in `weather_app/data/news_feeds.csv` (El Niño stories only; headline, source and link) |
@@ -115,12 +124,16 @@ weather_app/
   seo.py                   # page text, FAQ, structured data, sitemap, robots, manifest
   satellites.py            # live satellite layer discovery and stitching
   services.py              # HTTP helper and in-memory cache
-  templates/index.html     # the app (pre-rendered content for search engines)
+  forecast.py              # global forecast grid and city temperatures (Open-Meteo)
+  templates/index.html     # the weather globe (home page)
+  templates/elnino.html    # the El Niño tracker (pre-rendered content for search engines)
   templates/impact.html    # "El Niño impact on <country>" pages
   templates/news.html      # news page (all sources, filters)
   templates/crops.html     # El Niño and crops page
   static/data/countries.geojson  # country shapes (scripts/make_countries.py)
   static/css/style.css     # UI styles
+  static/js/globe.js       # weather globe: maps, overlays, wind animation, time bar
+  static/css/globe.css     # weather globe styles
   static/js/app.js         # map, globe, El Niño panel and overlays, live satellites
   static/js/news.js        # News page: filters, video player, source list
   static/js/crops.js       # Crops page: selection, search, rain and price charts, crop news
@@ -159,6 +172,8 @@ Every build logs feeds that fail ("News source … failed"), and the News page l
 
 | Endpoint | Description |
 | --- | --- |
+| `GET /el-nino/` | El Niño tracker |
+| `GET /api/forecast` | Forecast grid (temperature, precipitation, wind, humidity, pressure; 48 h in 3 h steps) and city temperatures |
 | `GET /api/enso` | El Niño status, Niño region anomalies, the full ONI history and episodes, and the SST anomaly map layer |
 | `GET /api/satellites?style=truecolor\|infrared` | Live satellite layers, each with its longitude band, product and image time |
 | `GET /api/news` | El Niño news, reports, science, papers, discussions and podcasts (each with a `kind`, tagged with `themes`, `countries` and `crops`) and videos, with the status of each source |

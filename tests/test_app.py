@@ -15,8 +15,17 @@ def client():
     return create_app({"TESTING": True}).test_client()
 
 
+def test_weather_globe_home(client):
+    html = client.get("/").get_data(as_text=True)
+    assert 'id="wx-globe"' in html and "js/globe.js" in html
+    for item in ('data-map="satellite"', 'data-map="radar"', 'data-map="rain"', 'data-map="wind"', 'data-map="temp"',
+                 'data-map="humidity"', 'data-map="pressure"', 'data-overlay="windanim"', 'id="wx-slider"'):
+        assert item in html
+    assert "tab-news" not in html  # no news or El Niño panels on the globe
+
+
 def test_index_page(client):
-    resp = client.get("/")
+    resp = client.get("/el-nino/")
     assert resp.status_code == 200
     html = resp.get_data(as_text=True)
     assert 'id="map"' in html and 'id="globe"' in html

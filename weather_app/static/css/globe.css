@@ -1,0 +1,100 @@
+/* Weather globe (home page): full-screen globe with glass panels, like zoom.earth. */
+.globe-page { --glass: rgba(32, 36, 44, 0.84); --glass-hi: rgba(255, 255, 255, 0.12); --g-text: #f1f3f4; --g-muted: #aab2bd;
+  margin: 0; height: 100%; overflow: hidden; background: #0b1d36; color: var(--g-text); }
+.globe-page .panel { background: var(--glass); border: 1px solid rgba(255, 255, 255, 0.08); color: var(--g-text);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35); border-radius: 14px; }
+#wx-globe { position: fixed; inset: 0; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Brand */
+.wx-brand { position: fixed; z-index: 10; top: calc(10px + var(--safe-top)); left: 10px; display: flex; align-items: center; gap: 14px; padding: 8px 14px; }
+.wx-logo { color: #fff; text-decoration: none; font-size: 16px; white-space: nowrap; }
+.wx-logo b { font-weight: 800; letter-spacing: .3px; }
+.wx-site { display: flex; gap: 2px; }
+.wx-site a { color: var(--g-muted); text-decoration: none; font-size: 13px; padding: 4px 8px; border-radius: 8px; }
+.wx-site a:hover { color: #fff; background: var(--glass-hi); }
+
+/* Side panels */
+.wx-panel { position: fixed; z-index: 10; width: 210px; padding: 6px; max-height: calc(100vh - 170px); overflow-y: auto; }
+.wx-maps { top: calc(64px + var(--safe-top)); left: 10px; }
+.wx-overlays { top: calc(64px + var(--safe-top)); right: 10px; }
+.wx-panel-head { display: flex; justify-content: space-between; align-items: center; width: 100%; border: 0; background: none;
+  color: var(--g-muted); font: 700 11px/1 var(--font); letter-spacing: .8px; text-transform: uppercase; padding: 10px 10px 8px; cursor: pointer; }
+.wx-panel-head span { transition: transform .2s; }
+.wx-panel.collapsed .wx-panel-body { display: none; }
+.wx-panel.collapsed .wx-panel-head span { transform: rotate(180deg); }
+.wx-group { margin: 10px 10px 4px; color: var(--g-muted); font: 700 11px/1 var(--font); letter-spacing: .8px; text-transform: uppercase; }
+.wx-item { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 40px; padding: 6px 10px; border: 0; border-radius: 10px;
+  background: none; color: var(--g-text); font: 500 14.5px/1.2 var(--font); text-align: left; cursor: pointer; }
+.wx-item span { width: 22px; text-align: center; font-size: 16px; }
+.wx-item:hover { background: var(--glass-hi); }
+.wx-item.on { background: rgba(255, 255, 255, 0.2); font-weight: 700; }
+.wx-overlays .wx-item { color: var(--g-muted); }
+.wx-overlays .wx-item.on { color: #fff; background: none; }
+.wx-overlays .wx-item.on::after { content: "✓"; margin-left: auto; color: #8ab4f8; }
+.wx-sub { display: flex; gap: 4px; padding: 2px 8px 6px 42px; }
+.wx-subitem { border: 1px solid rgba(255, 255, 255, 0.18); background: none; color: var(--g-muted); border-radius: 12px; padding: 3px 9px; font-size: 12px; cursor: pointer; }
+.wx-subitem.on { background: #8ab4f8; border-color: #8ab4f8; color: #10213d; font-weight: 700; }
+
+/* Time bar */
+.wx-time { position: fixed; z-index: 10; left: 50%; bottom: calc(16px + var(--safe-bottom)); transform: translateX(-50%);
+  display: grid; grid-template-columns: auto auto 1fr auto auto; grid-template-rows: auto auto; align-items: center; gap: 4px 6px;
+  padding: 8px 12px; width: min(560px, calc(100vw - 24px)); }
+.wx-time button { border: 0; background: none; color: #fff; cursor: pointer; border-radius: 8px; min-width: 36px; min-height: 36px; font-size: 18px; }
+.wx-time button:hover:not(:disabled) { background: var(--glass-hi); }
+.wx-time button:disabled { opacity: .35; cursor: default; }
+.wx-play { font-size: 16px !important; }
+.wx-when { text-align: center; line-height: 1.2; }
+.wx-when b { display: block; font-size: 15px; font-variant-numeric: tabular-nums; }
+.wx-when small { color: var(--g-muted); font-size: 12px; }
+.wx-live { font-size: 12px !important; font-weight: 700; padding: 0 10px; border: 1px solid rgba(255, 255, 255, 0.25) !important; }
+.wx-live.on { background: #d93025 !important; border-color: #d93025 !important; }
+#wx-slider { grid-column: 1 / -1; width: 100%; accent-color: #8ab4f8; margin: 0; }
+
+/* Legend */
+.wx-legend { position: fixed; z-index: 9; left: 10px; bottom: calc(16px + var(--safe-bottom)); width: 230px; padding: 8px 12px 18px; }
+.wx-leg-title { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.wx-leg-title small { color: var(--g-muted); font-weight: 400; }
+.wx-leg-bar { height: 8px; border-radius: 4px; }
+.wx-leg-ticks { position: relative; height: 10px; font-size: 10.5px; color: var(--g-muted); }
+.wx-leg-ticks span { position: absolute; top: 3px; transform: translateX(-50%); }
+
+/* City temperatures */
+.wx-city { visibility: hidden; display: flex; flex-direction: column; align-items: center; pointer-events: none; text-shadow: 0 1px 3px rgba(0, 0, 0, .9); }
+.wx-city-name { font-size: 11.5px; font-weight: 600; color: #fff; white-space: nowrap; }
+.wx-city-temp { font-size: 11.5px; font-weight: 800; padding: 1px 6px; border-radius: 9px; text-shadow: none; box-shadow: 0 1px 3px rgba(0, 0, 0, .4); }
+
+/* Popup, status, map controls */
+.globe-page .maplibregl-popup-content { color: #202124; border-radius: 12px; padding: 12px 14px; }
+.wx-pop b { display: block; font-size: 13px; color: #202124; }
+.wx-pop small { display: block; color: #5f6368; font-size: 11.5px; }
+.wx-pop ul { list-style: none; padding: 0; margin: 6px 0; font-size: 13.5px; color: #202124; }
+.wx-pop li { padding: 2px 0; }
+.wx-status { position: fixed; z-index: 20; top: calc(64px + var(--safe-top)); left: 50%; transform: translateX(-50%); background: #d93025; color: #fff;
+  padding: 8px 14px; border-radius: 10px; font-size: 13px; max-width: calc(100vw - 24px); }
+.globe-page .maplibregl-ctrl-bottom-right { bottom: calc(96px + var(--safe-bottom)); }
+.globe-page .maplibregl-ctrl-group { background: var(--glass); }
+.globe-page .maplibregl-ctrl-group button .maplibregl-ctrl-icon { filter: invert(1); }
+.wx-mobile-bar { display: none; }
+
+/* Phones */
+@media (max-width: 899px) {
+  .wx-brand { padding: 6px 10px; gap: 8px; }
+  .wx-logo { font-size: 14px; }
+  .wx-site a { font-size: 12px; padding: 4px 6px; }
+  .wx-panel { display: none; top: auto; bottom: calc(150px + var(--safe-bottom)); max-height: 60vh; width: min(280px, calc(100vw - 20px)); }
+  .wx-panel.open { display: block; }
+  .wx-panel.open .wx-panel-body { display: block; }
+  .wx-panel-head span { display: none; }
+  .wx-mobile-bar { display: flex; justify-content: space-between; position: fixed; z-index: 10; left: 10px; right: 10px; bottom: calc(102px + var(--safe-bottom)); pointer-events: none; }
+  .wx-fab { pointer-events: auto; border: 0; border-radius: 22px; min-height: 40px; padding: 0 14px; background: var(--glass); color: #fff;
+    font: 600 14px var(--font); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 4px 16px rgba(0, 0, 0, .35); }
+  .wx-time { bottom: calc(10px + var(--safe-bottom)); padding: 6px 8px; }
+  .wx-legend { left: 50%; transform: translateX(-50%); bottom: auto; top: calc(56px + var(--safe-top)); width: min(300px, calc(100vw - 20px)); padding: 6px 10px 16px; }
+  .globe-page .maplibregl-ctrl-bottom-right { bottom: calc(150px + var(--safe-bottom)); }
+  .globe-page .maplibregl-ctrl-group { display: none; }
+  .wx-city-name { font-size: 10.5px; }
+}
+@media (max-width: 380px) {
+  .wx-site a:nth-child(3) { display: none; }
+}

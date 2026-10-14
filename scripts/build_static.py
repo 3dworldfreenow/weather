@@ -24,7 +24,7 @@ import requests
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from weather_app import create_app, crops, enso, impacts, news, satellites, seo  # noqa: E402
+from weather_app import create_app, crops, enso, forecast, impacts, news, satellites, seo  # noqa: E402
 
 log = logging.getLogger("build_static")
 
@@ -78,6 +78,8 @@ def build(out: Path, site_url: str | None = None) -> None:
         "enso.json": enso.get_enso,
         # Imported feeds are read in rotation; keep their recent items from the published copy.
         "news.json": lambda: news.get_news(previous_data(site_url, "news.json")),
+        # Forecast maps: refreshed every few hours, the published copy is reused in between.
+        "forecast.json": lambda: forecast.get_forecast(previous_data(site_url, "forecast.json")),
         # Rainfall and monthly prices change slowly: reuse the published copy if recent.
         "crops.json": lambda: crops.get_crops(previous_data(site_url, "crops.json")),
     }
@@ -118,7 +120,7 @@ def build(out: Path, site_url: str | None = None) -> None:
     shutil.copytree(ROOT / "weather_app" / "static", out / "static")
 
     # The Crops and News pages live one folder deep.
-    for name in ("crops", "news"):
+    for name in ("el-nino", "crops", "news"):
         page = client.get(f"/{name}/").get_data(as_text=True).replace('"/static/', '"../static/')
         (out / name).mkdir(exist_ok=True)
         (out / name / "index.html").write_text(page, encoding="utf-8")
@@ -132,7 +134,7 @@ def build(out: Path, site_url: str | None = None) -> None:
 
     # 3. Search engine and app files.
     (out / "robots.txt").write_text(seo.robots(site_url), encoding="utf-8")
-    paths = ["news/", "crops/"] + [seo.impact_path(c["slug"]) for c in impacts.COUNTRIES]
+    paths = ["el-nino/", "news/", "crops/"] + [seo.impact_path(c["slug"]) for c in impacts.COUNTRIES]
     (out / "sitemap.xml").write_text(seo.sitemap(site_url, now.date(), paths), encoding="utf-8")
     (out / "manifest.webmanifest").write_text(json.dumps(seo.manifest(), ensure_ascii=False), encoding="utf-8")
 

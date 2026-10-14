@@ -6,7 +6,7 @@ import json
 
 from flask import Blueprint, Response, abort, current_app, jsonify, render_template, request
 
-from . import crops, enso, impacts, news, satellites, seo, services
+from . import crops, enso, forecast, impacts, news, satellites, seo, services
 
 bp = Blueprint("main", __name__)
 
@@ -53,12 +53,26 @@ def verification() -> dict:
 
 @bp.get("/")
 def index():
+    """The live weather globe."""
     url = base_url()
-    enso_data, articles = page_data()
     return render_template(
         "index.html",
         app_config={"static": bool(current_app.config.get("STATIC_SITE"))},
-        meta={**seo.page_meta(url), **verification()},
+        meta={**seo.globe_meta(url), **verification()},
+        json_ld=seo.globe_json_ld(url),
+    )
+
+
+@bp.get("/el-nino/")
+def elnino():
+    """The El Niño tracker: status, impacts, news, history and learn."""
+    url = base_url()
+    enso_data, articles = page_data()
+    static = bool(current_app.config.get("STATIC_SITE"))
+    return render_template(
+        "elnino.html",
+        app_config={"static": static, "root": "../" if static else ""},
+        meta={**seo.elnino_meta(url), **verification()},
         json_ld=seo.json_ld(url, enso_data),
         faq=seo.FAQ,
         impacts=impacts.public_data(),
@@ -126,6 +140,11 @@ def news_page():
     )
 
 
+@bp.get("/api/forecast")
+def forecast_data():
+    return jsonify(services.cache.get_or_set("forecast", 3 * 3600, forecast.get_forecast))
+
+
 @bp.get("/api/crops")
 def crops_data():
     """Crop info and world prices. Rainfall comes per region from /api/crops/rain."""
@@ -164,7 +183,7 @@ def robots_txt():
 
 @bp.get("/sitemap.xml")
 def sitemap_xml():
-    paths = ["news/", "crops/"] + [seo.impact_path(c["slug"]) for c in impacts.COUNTRIES]
+    paths = ["el-nino/", "news/", "crops/"] + [seo.impact_path(c["slug"]) for c in impacts.COUNTRIES]
     return Response(seo.sitemap(base_url(), paths=paths), mimetype="application/xml")
 
 

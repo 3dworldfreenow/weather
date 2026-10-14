@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import build_static  # noqa: E402
-from weather_app import crops, enso, news, satellites, services  # noqa: E402
+from weather_app import crops, enso, forecast, news, satellites, services  # noqa: E402
 
 from test_enso import ONI, WEEKLY  # noqa: E402
 
@@ -22,6 +22,8 @@ def offline(monkeypatch):
                                                               "countries": ["india"]}],
                                                "videos": [], "sources": []})
     monkeypatch.setattr(build_static, "previous_data", lambda site_url, name: None)
+    monkeypatch.setattr(forecast, "get_forecast", lambda previous=None: {"built_at": "2026-10-14T00:00:00+00:00", "times": [],
+                                                                         "grid": {}, "fields": {}, "cities": []})
     monkeypatch.setattr(crops, "get_crops", lambda previous=None: {
         "built_at": "2026-10-01T00:00:00+00:00", "rain": {},
         "prices": {"sugar": {"series": [["2026-08", 400.0]], "latest": 400.0}}})
@@ -33,10 +35,18 @@ def test_build_static_site(tmp_path):
     out = tmp_path / "site"
     build_static.build(out, "https://demo.example/weather")
 
-    html = (out / "index.html").read_text()
-    assert 'window.APP_CONFIG = {"static": true}' in html
-    assert 'src="static/js/static-api.js"' in html
-    assert '"/static/' not in html  # relative paths for /<repo>/ hosting
+    home = (out / "index.html").read_text()  # the weather globe
+    assert 'window.APP_CONFIG = {"static": true}' in home
+    assert 'src="static/js/globe.js"' in home and 'href="static/css/globe.css"' in home
+    assert '"/static/' not in home  # relative paths for /<repo>/ hosting
+    assert '<link rel="canonical" href="https://demo.example/weather/">' in home
+    assert 'href="el-nino/"' in home and 'href="news/"' in home
+    assert json.loads((out / "data" / "forecast.json").read_text())["built_at"].startswith("2026")
+
+    html = (out / "el-nino" / "index.html").read_text()  # the El Niño tracker
+    assert 'window.APP_CONFIG = {"root": "../", "static": true}' in html
+    assert 'src="../static/js/static-api.js"' in html and 'src="../static/js/app.js"' in html
+    assert '"/static/' not in html
     assert (out / "static" / "js" / "app.js").exists()
     assert (out / ".nojekyll").exists()
 
@@ -53,7 +63,7 @@ def test_build_static_site(tmp_path):
     assert json.loads((out / "data" / "build.json").read_text())["failed"] == []
 
     # SEO: canonical URL, pre-rendered El Niño status and headline, search files
-    assert '<link rel="canonical" href="https://demo.example/weather/">' in html
+    assert '<link rel="canonical" href="https://demo.example/weather/el-nino/">' in html
     assert "strengthening" in html  # El Niño headline pre-rendered
     assert ">El Niño</div>" in html  # news headline pre-rendered
     india = (out / "impacts" / "india" / "index.html").read_text()
@@ -65,7 +75,8 @@ def test_build_static_site(tmp_path):
     assert "Sitemap: https://demo.example/weather/sitemap.xml" in (out / "robots.txt").read_text()
     assert "<loc>https://demo.example/weather/</loc>" in (out / "sitemap.xml").read_text()
     assert json.loads((out / "manifest.webmanifest").read_text())["name"] == "El Niño Tracker"
-    assert 'href="static/img/apple-touch-icon.png"' in html
+    assert 'href="../static/img/apple-touch-icon.png"' in html
+    assert "<loc>https://demo.example/weather/el-nino/</loc>" in (out / "sitemap.xml").read_text()
 
     # News page
     page = (out / "news" / "index.html").read_text()
@@ -73,7 +84,7 @@ def test_build_static_site(tmp_path):
     assert 'src="../static/js/news.js"' in page and '"/static/' not in page
     assert '<link rel="canonical" href="https://demo.example/weather/news/">' in page
     assert "<loc>https://demo.example/weather/news/</loc>" in (out / "sitemap.xml").read_text()
-    assert 'href="news/"' in html
+    assert 'href="../news/"' in html
 
     # Crops page
     page = (out / "crops" / "index.html").read_text()
@@ -82,7 +93,7 @@ def test_build_static_site(tmp_path):
     assert '<link rel="canonical" href="https://demo.example/weather/crops/">' in page
     assert json.loads((out / "data" / "crops.json").read_text())["prices"]["sugar"]["latest"] == 400.0
     assert "<loc>https://demo.example/weather/crops/</loc>" in (out / "sitemap.xml").read_text()
-    assert 'href="crops/"' in html
+    assert 'href="../crops/"' in html
 
 
 def test_build_survives_missing_optional_data(tmp_path, monkeypatch):
@@ -96,6 +107,6 @@ def test_build_survives_missing_optional_data(tmp_path, monkeypatch):
 
 def test_flask_page_is_not_static():
     from weather_app import create_app
-    html = create_app({"TESTING": True}).test_client().get("/").get_data(as_text=True)
-    assert 'window.APP_CONFIG = {"static": false}' in html
+    html = create_app({"TESTING": True}).test_client().get("/el-nino/").get_data(as_text=True)
+    assert '"static": false' in html
     assert "static-api.js" not in html

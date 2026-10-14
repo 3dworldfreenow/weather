@@ -21,7 +21,7 @@ def clear_cache():
 
 
 def get_page(config=None):
-    return create_app({"TESTING": True, **(config or {})}).test_client().get("/").get_data(as_text=True)
+    return create_app({"TESTING": True, **(config or {})}).test_client().get("/el-nino/").get_data(as_text=True)
 
 
 def json_ld(html):
@@ -33,11 +33,11 @@ def test_meta_tags_and_canonical():
     html = get_page({"SITE_URL": "https://example.org/el-nino"})
     assert f"<title>{seo.TITLE.replace('&', '&amp;')}</title>" in html
     assert '<meta name="description"' in html
-    assert '<link rel="canonical" href="https://example.org/el-nino/">' in html
+    assert '<link rel="canonical" href="https://example.org/el-nino/el-nino/">' in html  # site under /el-nino/
     assert '<meta property="og:image" content="https://example.org/el-nino/static/img/og-image.png">' in html
     assert 'name="twitter:card" content="summary_large_image"' in html
     assert '<h1 class="brand">' in html
-    assert '<link rel="manifest" href="manifest.webmanifest">' in html
+    assert '<link rel="manifest" href="../manifest.webmanifest">' in html
 
 
 def test_structured_data_has_app_faq_and_dataset():

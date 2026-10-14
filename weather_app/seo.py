@@ -150,6 +150,33 @@ def json_ld(base_url: str, enso: dict[str, Any] | None = None) -> str:
     return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False)
 
 
+GLOBE_TITLE = "Live Weather Globe: satellite, radar, rain, wind & temperature maps | El Niño Tracker"
+GLOBE_DESCRIPTION = (
+    "A live 3D weather globe: real-time satellite images from five geostationary satellites (updated every "
+    "10 minutes, with a 24-hour replay), rain radar, and forecast maps of precipitation, wind, temperature, "
+    "humidity and pressure for the next 48 hours, plus El Niño sea temperatures. Free, no sign-up."
+)
+
+
+def globe_meta(base_url: str) -> dict[str, Any]:
+    return {**page_meta(base_url), "title": GLOBE_TITLE, "description": GLOBE_DESCRIPTION}
+
+
+def globe_json_ld(base_url: str) -> str:
+    graph = [
+        {"@type": "WebSite", "@id": base_url + "#website", "url": base_url, "name": SITE_NAME,
+         "description": GLOBE_DESCRIPTION, "inLanguage": "en"},
+        {"@type": "WebApplication", "name": "Live Weather Globe", "url": base_url, "applicationCategory": "WeatherApplication",
+         "operatingSystem": "Any", "isAccessibleForFree": True, "description": GLOBE_DESCRIPTION,
+         "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}},
+    ]
+    return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False)
+
+
+def elnino_meta(base_url: str) -> dict[str, Any]:
+    return {**page_meta(base_url), "url": base_url + "el-nino/"}
+
+
 def impact_path(slug: str) -> str:
     return f"impacts/{slug}/"
 

@@ -26,8 +26,10 @@
   }
 
   // Bust the browser cache every 5 minutes so new builds are picked up.
+  // Pages in a sub-folder (el-nino/) set APP_CONFIG.root to "../".
+  const ROOT = (window.APP_CONFIG && window.APP_CONFIG.root) || "";
   const dataFile = (name) => cached(`file:${name}`, 300e3,
-    () => getJson(`data/${name}`, { v: Math.floor(Date.now() / 300e3) }));
+    () => getJson(`${ROOT}data/${name}`, { v: Math.floor(Date.now() / 300e3) }));
 
   // Same rule as satellites.latest_image_time(): newest 10-minute slot, 40 min ago.
   function latestImageTime() {

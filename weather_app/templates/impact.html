@@ -29,9 +29,9 @@
   <div class="page-wrap">
     <nav class="page-nav" aria-label="Site">
       <a href="../../">🌊 <b>El Niño Tracker</b></a>
-      <span><a href="../../news/">📰 News</a> · <a href="../../crops/">🌾 Crops</a> · <a href="../../#impact={{ c.slug }}">Live map →</a></span>
+      <span><a href="../../news/">📰 News</a> · <a href="../../crops/">🌾 Crops</a> · <a href="../../el-nino/#impact={{ c.slug }}">El Niño map →</a></span>
     </nav>
-    <p class="crumbs"><a href="../../">Home</a> › <a href="../../#tab=impacts">World impacts</a> › {{ c.name }}</p>
+    <p class="crumbs"><a href="../../">Home</a> › <a href="../../el-nino/#tab=impacts">World impacts</a> › {{ c.name }}</p>
 
     <article>
       <h1>El Niño impact on {{ c.name }}</h1>
@@ -57,7 +57,7 @@
       {% else %}
       <p>See the live tracker for the latest weekly NOAA reading.</p>
       {% endif %}
-      <a class="cta" href="../../#impact={{ c.slug }}">Open the live El Niño map</a>
+      <a class="cta" href="../../el-nino/#impact={{ c.slug }}">Open the live El Niño map</a>
 
       <h2>Latest El Niño news about {{ c.name }}</h2>
       {% if news %}
