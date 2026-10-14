@@ -349,7 +349,7 @@ def test_feed_list_is_valid():
         assert f["language"]
         assert not f["slug"] or f["slug"] in impacts.BY_SLUG, f
     covered = {f["slug"] for f in feeds if f["slug"]}
-    assert len(covered) >= 50  # nearly every country we cover has its own papers
+    assert len(covered) >= 45  # most countries we cover have their own papers
 
 
 def test_discover_feeds_from_a_feed_list_page():

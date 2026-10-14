@@ -9,7 +9,8 @@ from typing import Any, Callable
 import requests
 
 HTTP_TIMEOUT = 15
-USER_AGENT = "el-nino-tracker/1.0 (+https://github.com/3dworldfreenow/weather)"
+# Feed-reader style: says who we are and where to find us.
+USER_AGENT = "Mozilla/5.0 (compatible; ElNinoTracker/1.0; +https://github.com/3dworldfreenow/weather)"
 
 
 class UpstreamError(RuntimeError):
@@ -65,6 +66,10 @@ class TTLCache:
 cache = TTLCache()
 _session = requests.Session()
 _session.headers["User-Agent"] = USER_AGENT
+_session.headers["Accept"] = "application/rss+xml, application/atom+xml, application/xml, application/json, text/xml, text/html;q=0.8, */*;q=0.5"
+# Many requests run in parallel (news feeds), so keep enough connections per host.
+_session.mount("https://", requests.adapters.HTTPAdapter(pool_connections=32, pool_maxsize=32))
+_session.mount("http://", requests.adapters.HTTPAdapter(pool_connections=32, pool_maxsize=32))
 
 
 def _get_json(url: str, params: dict[str, Any] | None = None) -> Any:

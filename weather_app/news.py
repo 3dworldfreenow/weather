@@ -380,9 +380,10 @@ def parse_feed(xml: str, source: str, kind: str, via: str, topic_only: bool = Tr
     try:
         root = ET.fromstring(xml)
     except ET.ParseError:
-        # Some feeds have bare "&" or HTML entities; fix those and try once more.
+        # Some feeds have bare "&" or HTML entities, or junk after the closing tag; fix and retry.
         fixed = re.sub(r"&(?!(?:amp|lt|gt|quot|apos|#\d+|#x[0-9a-fA-F]+);)", "&amp;", xml)
-        root = ET.fromstring(fixed)
+        end = re.search(r"</(?:rss|feed|rdf:RDF)\s*>", fixed)
+        root = ET.fromstring(fixed[: end.end()] if end else fixed)
     items = [el for el in root.iter() if _local(el.tag) in ("item", "entry")]
     out = []
     for item in items:
@@ -744,7 +745,9 @@ def get_news() -> dict[str, Any]:
         jobs.append(("Apple Podcasts episodes", "podcast", "https://podcasts.apple.com/", fetch_podcasts))
         for feed in load_feeds():
             home = f"{urlparse(feed['url']).scheme}://{urlparse(feed['url']).netloc}/"
-            label = f"{feed['publisher']} ({feed['country']})" if feed.get("country") else feed["publisher"]
+            label = feed["publisher"]
+            if feed.get("country") and feed["country"] not in label:
+                label += f" ({feed['country']})"
             jobs.append((label, "publisher", home, lambda feed=feed: fetch_publisher(feed)))
         video_jobs = [(f"YouTube: {c['name']}", "video", YOUTUBE_HANDLE_URL.format(handle=c["handle"]),
                        lambda c=c: fetch_channel_videos(c)) for c in YOUTUBE_CHANNELS]
@@ -757,6 +760,10 @@ def get_news() -> dict[str, Any]:
         for items in video_results:
             videos += items
 
+        papers = [src for src in sources if src["kind"] == "publisher"]
+        if papers:
+            log.info("Newspaper feeds: %d of %d working, %d El Niño items", sum(p["ok"] for p in papers),
+                     len(papers), sum(p["count"] for p in papers))
         articles = merge_articles(groups)
         if not articles and not any(s["ok"] for s in sources if s["kind"] != "video"):
             raise services.UpstreamError("All news sources failed")
