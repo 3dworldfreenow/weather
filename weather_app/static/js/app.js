@@ -319,8 +319,12 @@
       <h3>Other layers</h3>
       <ul>${STATIC_SOURCES.map(([what, who, url]) => `<li>${escapeHtml(what)}: ${link(url, who)}</li>`).join("")}
       <li>Day/night line: calculated from the sun's position (no download)</li></ul>
-      ${newsState.data ? `<h3>News &amp; videos</h3><ul>${newsState.data.sources.map((src) =>
-        `<li><span class="dot ${src.ok ? "ok" : "guess"}"></span>${link(src.url, src.name)}${src.ok ? ` (${src.count})` : " (unavailable)"}</li>`).join("")}</ul>` : ""}
+      ${newsState.data ? `<h3>News &amp; videos</h3>
+        <p>${newsState.data.sources.filter((src) => src.ok).length} of ${newsState.data.sources.length} free sources working:
+          Google News, Bing News, GDELT, newspapers in ${new Set(newsState.data.sources.filter((src) => src.kind === "publisher" && src.ok)
+            .map((src) => (src.name.match(/\(([^)]+)\)$/) || [])[1]).filter(Boolean)).size} countries, UN and NGO reports,
+          science feeds, research papers, podcasts and agency video channels.
+          <a href="news/#sources">See every source on the News page</a>.</p>` : ""}
       <h3>Country impacts</h3>
       <ul>${IMPACTS.sources.map((src) => `<li>${link(src.url, src.name)}</li>`).join("")}
         <li>National weather services, linked on each country's card</li></ul>

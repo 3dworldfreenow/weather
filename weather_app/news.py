@@ -15,11 +15,15 @@
                        to El Niño / ENSO topics (YouTube search needs a key, so
                        a few known explainers are also listed)
 
+* Newspapers by country - the RSS feeds listed in data/news_feeds.csv (a feed URL,
+  or a page that lists a site's feeds, such as https://www.bhaskar.com/rss)
+
 Every item has a `kind`: news, report, science, paper, discussion or podcast.
 """
 
 from __future__ import annotations
 
+import csv
 import datetime as dt
 import email.utils
 import logging
@@ -27,8 +31,9 @@ import re
 import time
 import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 from typing import Any
-from urllib.parse import parse_qs, quote_plus, urlparse
+from urllib.parse import parse_qs, quote_plus, urljoin, urlparse
 
 from . import crops, impacts, services
 
@@ -56,7 +61,9 @@ NEWS_TTL = 30 * 60
 MAX_ARTICLES = 500  # news; other kinds keep up to MAX_PER_KIND each
 MAX_PER_KIND = 80
 KINDS = ["news", "report", "science", "paper", "discussion", "podcast"]
-FETCH_WORKERS = 6
+FETCH_WORKERS = 16
+FEEDS_CSV = Path(__file__).parent / "data" / "news_feeds.csv"
+FEEDS_PER_PAGE = 3  # feeds to follow from a page that lists a site's feeds
 
 # Search terms. Google News supports OR; local-language spellings are added per edition.
 EN = '"El Niño" OR "El Nino"'
@@ -179,7 +186,20 @@ EXPLAINER_VIDEOS = [
      "page": "https://www.nesdis.noaa.gov/about/k-12-education/oceans-coasts/what-el-nino"},
 ]
 
-TOPIC = re.compile(r"el\s+ni[ñn]o|la\s+ni[ñn]a|\benso\b|エルニーニョ|अल\s*नीनो", re.IGNORECASE)
+# El Niño / La Niña / ENSO in the languages of the feeds we read. Case matters for the
+# Latin-script names: in Spanish "el niño" / "la niña" also mean "the boy" / "the girl".
+TOPIC = re.compile(
+    r"\b[Ee]l[\s-]+Ni[ñn]o\b|\bEL[\s-]+NI[ÑN]O\b|\b[Ll]a[\s-]+Ni[ñn]a\b|\bLA[\s-]+NI[ÑN]A\b|\bENSO\b"
+    r"|エルニーニョ|ラニーニャ"                       # Japanese
+    r"|厄尔尼诺|拉尼娜|聖嬰|反聖嬰"                    # Chinese
+    r"|엘니뇨|라니냐"                                # Korean
+    r"|(?:अल|एल)[\s-]*नी[नण]ो|ला[\s-]*नी[नण]ा"       # Hindi, Marathi
+    r"|(?:এল|আল)[\s-]*নি[নণ]ো|লা[\s-]*নি[নণ]া"       # Bengali
+    r"|எல்[\s-]*நினோ|லா[\s-]*நினா"                  # Tamil
+    r"|ال[\s-]*نینو|النينيو|النينو"                   # Urdu, Arabic
+    r"|เอลนีโญ|ลานีญา"                               # Thai
+    r"|[Ээ]ль[\s-]*[Нн]иньо|[Лл]а[\s-]*[Нн]инья"       # Russian
+)
 VIDEO_ID = re.compile(r"^[A-Za-z0-9_-]{11}$")
 CHANNEL_ID = re.compile(r"^UC[A-Za-z0-9_-]{22}$")
 
@@ -500,6 +520,83 @@ def fetch_podcasts() -> list[dict[str, Any]]:
 
 
 # --------------------------------------------------------------------------
+# Newspapers by country (data/news_feeds.csv)
+# --------------------------------------------------------------------------
+
+def load_feeds(path: Path = FEEDS_CSV) -> list[dict[str, str]]:
+    """Rows: country, slug (impacts country or empty), language, publisher, url, type (feed|page)."""
+    with path.open(encoding="utf-8") as f:
+        rows = [{k: (v or "").strip() for k, v in row.items()} for row in csv.DictReader(f)]
+    return [r for r in rows if r.get("url") and r.get("publisher")]
+
+
+_FEED_LINK = re.compile(r"<link\b[^>]*>", re.IGNORECASE)
+_HREF = re.compile(r"""href\s*=\s*["']([^"'#]+)["']""", re.IGNORECASE)
+_PREFERRED = re.compile(r"top|home|latest|main|national|nation|india|desh|world|news|breaking|ताज|देश", re.IGNORECASE)
+
+
+def _looks_like_feed(text: str) -> bool:
+    head = text.lstrip()[:500].lower()
+    return head.startswith("<?xml") or "<rss" in head or "<feed" in head or "<rdf:rdf" in head
+
+
+def discover_feeds(html: str, page_url: str, limit: int = FEEDS_PER_PAGE) -> list[str]:
+    """Feed links on a page that lists a site's RSS feeds (or any page with <link rel=alternate>)."""
+    found: list[str] = []
+    for tag in _FEED_LINK.findall(html):
+        if re.search(r"application/(rss|atom|rdf)\+xml", tag, re.IGNORECASE):
+            m = _HREF.search(tag)
+            if m:
+                found.append(urljoin(page_url, m.group(1)))
+    host = urlparse(page_url).netloc.split(":")[0].removeprefix("www.")
+    for href in _HREF.findall(html):
+        url = urljoin(page_url, href.strip())
+        low = url.lower()
+        if url.rstrip("/") == page_url.rstrip("/") or not _safe_url(url):
+            continue
+        if not urlparse(url).netloc.removeprefix("www.").endswith(host):
+            continue  # stay on the publisher's own site
+        if re.search(r"\.(xml|rss|rdf|atom)(\?|$)|/feeds?/|/rss/|rss\.|feed=|/rss$|/feed$|outboundfeeds", low):
+            found.append(url)
+    unique = list(dict.fromkeys(found))
+    unique.sort(key=lambda u: 0 if _PREFERRED.search(u) else 1)  # stable: keeps page order within groups
+    return unique[:limit]
+
+
+def fetch_publisher(feed: dict[str, str]) -> list[dict[str, Any]]:
+    country = feed.get("country") or None
+    text = services._get_text(feed["url"])
+    urls = [feed["url"]]
+    texts = [text]
+    if feed.get("type") == "page" or not _looks_like_feed(text):
+        urls = discover_feeds(text, feed["url"])
+        if not urls:
+            raise services.UpstreamError(f"No RSS feeds found on {feed['url']}")
+        texts = []
+        for url in urls:
+            try:
+                texts.append(services._get_text(url))
+            except services.UpstreamError as exc:
+                log.info("Feed %s from %s failed: %s", url, feed["publisher"], exc)
+        if not texts:
+            raise services.UpstreamError(f"None of the feeds listed on {feed['url']} could be read")
+    items = []
+    for t in texts:
+        try:
+            items += parse_feed(t, feed["publisher"], "news", feed["publisher"], country=country,
+                                language=feed.get("language") or None)
+        except ET.ParseError as exc:
+            if len(texts) == 1:
+                raise
+            log.info("Feed from %s is not valid XML: %s", feed["publisher"], exc)
+    for a in items:
+        a["source"] = feed["publisher"]  # feeds name the section, not the paper
+        if feed.get("slug"):
+            a["edition"] = feed["slug"]
+    return items
+
+
+# --------------------------------------------------------------------------
 # YouTube
 # --------------------------------------------------------------------------
 
@@ -645,6 +742,10 @@ def get_news() -> dict[str, Any]:
         jobs.append(("Crossref journal articles", "paper", "https://www.crossref.org/", fetch_crossref))
         jobs.append(("Hacker News discussions", "discussion", "https://news.ycombinator.com/", fetch_hn))
         jobs.append(("Apple Podcasts episodes", "podcast", "https://podcasts.apple.com/", fetch_podcasts))
+        for feed in load_feeds():
+            home = f"{urlparse(feed['url']).scheme}://{urlparse(feed['url']).netloc}/"
+            label = f"{feed['publisher']} ({feed['country']})" if feed.get("country") else feed["publisher"]
+            jobs.append((label, "publisher", home, lambda feed=feed: fetch_publisher(feed)))
         video_jobs = [(f"YouTube: {c['name']}", "video", YOUTUBE_HANDLE_URL.format(handle=c["handle"]),
                        lambda c=c: fetch_channel_videos(c)) for c in YOUTUBE_CHANNELS]
 

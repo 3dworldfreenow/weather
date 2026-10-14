@@ -27,6 +27,7 @@ All data sources are free and need **no API keys**:
 | Sea surface temperature anomaly map | [GHRSST MUR](https://podaac.jpl.nasa.gov/MEaSUREs-MUR) via [NASA GIBS](https://earthdata.nasa.gov/gibs) |
 | Live satellites | GOES & Himawari via NASA GIBS, Meteosat via [EUMETView](https://view.eumetsat.int/) |
 | World news | [GDELT](https://www.gdeltproject.org/) DOC API, [Google News](https://news.google.com/) RSS (35 editions + theme and crop searches), [Bing News](https://www.bing.com/news) RSS (12 markets) |
+| Newspapers by country | RSS feeds of 150+ newspapers in `weather_app/data/news_feeds.csv` (El Niño stories only; headline, source and link) |
 | Humanitarian reports | [ReliefWeb](https://reliefweb.int/), FAO, WFP, OCHA, IFRC, UNICEF and FEWS NET, searched through Google News RSS |
 | Agency and science updates | RSS feeds of [NOAA Climate.gov](https://www.climate.gov/enso), [UN News](https://news.un.org/), [Carbon Brief](https://www.carbonbrief.org/), [Phys.org](https://phys.org/), [ScienceDaily](https://www.sciencedaily.com/) (El Niño items only) |
 | Research papers | [arXiv](https://arxiv.org/) API, [Crossref](https://www.crossref.org/) API |
@@ -130,6 +131,22 @@ scripts/make_countries.py  # converts world-atlas TopoJSON into countries.geojso
 .github/workflows/pages.yml  # tests, builds and deploys the demo
 tests/                     # tests (upstream calls are mocked)
 ```
+
+### Adding newspapers
+
+`weather_app/data/news_feeds.csv` lists the newspaper feeds, one per row:
+
+```
+country,slug,language,publisher,url,type
+India,india,Hindi,Dainik Bhaskar,https://www.bhaskar.com/rss,page
+Peru,peru,Spanish,RPP Noticias,https://rpp.pe/feed,feed
+```
+
+- `slug` is the country's id in `impacts.py` (empty for international outlets)
+- `type` is `feed` for an RSS/Atom URL, or `page` for a page that lists a site's feeds (the site finds up to 3 of them, main sections first)
+- only items that mention El Niño, La Niña or ENSO (in many languages and scripts) are kept, and only the headline, source and link are shown
+
+Every build logs feeds that fail ("News source … failed"), and the News page lists which sources are working.
 
 ## API
 

@@ -24,8 +24,9 @@
     video: { icon: "▶️", label: "Video", many: "Videos" },
   };
   const SOURCE_GROUPS = [
-    ["news", "News searches"], ["report", "Humanitarian reports"], ["science", "Agencies and science"],
-    ["paper", "Research"], ["discussion", "Discussions"], ["podcast", "Podcasts"], ["video", "Video channels"],
+    ["news", "🔎", "News searches"], ["publisher", "🗞️", "Newspapers by country"], ["report", "🆘", "Humanitarian reports"],
+    ["science", "🔬", "Agencies and science"], ["paper", "📄", "Research"], ["discussion", "💬", "Discussions"],
+    ["podcast", "🎧", "Podcasts"], ["video", "▶️", "Video channels"],
   ];
   const FILTERS = ["kind", "q", "country", "theme", "crop", "lang"];
   const state = { data: null, shown: PAGE_SIZE, kind: "", q: "", country: "", theme: "", crop: "", lang: "" };
@@ -192,10 +193,10 @@
 
   function renderSources() {
     const d = state.data;
-    $("news-sources").innerHTML = SOURCE_GROUPS.map(([kind, title]) => {
+    $("news-sources").innerHTML = SOURCE_GROUPS.map(([kind, icon, title]) => {
       const list = d.sources.filter((s) => s.kind === kind);
       if (!list.length) return "";
-      return `<details class="source-group"><summary><b>${KINDS[kind].icon} ${title}</b>
+      return `<details class="source-group"><summary><b>${icon} ${title}</b>
           <span class="muted">${list.filter((s) => s.ok).length}/${list.length} working · ${list.reduce((n, s) => n + (s.count || 0), 0)} items</span></summary>
         <ul>${list.map((s) => `<li><span class="${s.ok ? "src-ok" : "src-bad"}">${s.ok ? "✓" : "✕"}</span>
           ${safeUrl(s.url) ? `<a href="${escapeHtml(s.url)}" target="_blank" rel="noopener">${escapeHtml(s.name)}</a>` : escapeHtml(s.name)}

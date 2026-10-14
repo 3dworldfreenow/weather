@@ -1,0 +1,154 @@
+country,slug,language,publisher,url,type
+,,English,BBC News: World,https://feeds.bbci.co.uk/news/world/rss.xml,feed
+,,English,BBC News: Science & Environment,https://feeds.bbci.co.uk/news/science_and_environment/rss.xml,feed
+,,English,The Guardian: Environment,https://www.theguardian.com/environment/rss,feed
+,,English,The Guardian: Global development,https://www.theguardian.com/global-development/rss,feed
+,,English,Al Jazeera,https://www.aljazeera.com/xml/rss/all.xml,feed
+,,English,DW (Deutsche Welle),https://rss.dw.com/rdf/rss-en-all,feed
+,,English,France 24,https://www.france24.com/en/rss,feed
+,,English,The New Humanitarian,https://www.thenewhumanitarian.org/rss/all.xml,feed
+,,English,AllAfrica,https://allafrica.com/tools/headlines/rdf/latest/headlines.rdf,feed
+,,English,Mongabay,https://news.mongabay.com/feed/,feed
+,,English,Climate Home News,https://www.climatechangenews.com/feed/,feed
+,,English,Inside Climate News,https://insideclimatenews.org/feed/,feed
+,,English,Yale Climate Connections,https://yaleclimateconnections.org/feed/,feed
+,,English,Grist,https://grist.org/feed/,feed
+,,English,The Conversation,https://theconversation.com/global/articles.atom,feed
+India,india,English,The Hindu,https://www.thehindu.com/news/national/feeder/default.rss,feed
+India,india,English,The Hindu: Environment,https://www.thehindu.com/sci-tech/energy-and-environment/feeder/default.rss,feed
+India,india,English,Times of India,https://timesofindia.indiatimes.com/rssfeedstopstories.cms,feed
+India,india,English,Hindustan Times,https://www.hindustantimes.com/feeds/rss/india-news/rssfeed.xml,feed
+India,india,English,The Indian Express,https://indianexpress.com/section/india/feed/,feed
+India,india,English,Mint,https://www.livemint.com/rss/news,feed
+India,india,English,Business Standard,https://www.business-standard.com/rss/home_page_top_stories.rss,feed
+India,india,English,The Economic Times,https://economictimes.indiatimes.com/rssfeedstopstories.cms,feed
+India,india,English,Down To Earth,https://www.downtoearth.org.in/rss,page
+India,india,Hindi,Dainik Bhaskar,https://www.bhaskar.com/rss,page
+India,india,Hindi,Patrika,https://www.patrika.com/rss,page
+India,india,Hindi,Amar Ujala,https://www.amarujala.com/rss/breaking-news.xml,feed
+India,india,Hindi,Dainik Jagran,https://www.jagran.com/rss/news/national.xml,feed
+India,india,Hindi,Navbharat Times,https://navbharattimes.indiatimes.com/rssfeedsdefault.cms,feed
+India,india,Hindi,Live Hindustan,https://www.livehindustan.com/rss,page
+India,india,Hindi,NDTV India,https://ndtv.in/rss,page
+India,india,Marathi,Lokmat,https://www.lokmat.com/rss,page
+India,india,Bengali,Anandabazar Patrika,https://www.anandabazar.com/rss,page
+India,india,Tamil,Dinamalar,https://www.dinamalar.com/rss,page
+Pakistan,pakistan,English,Dawn,https://www.dawn.com/feeds/home,feed
+Pakistan,pakistan,English,The Express Tribune,https://tribune.com.pk/feed/home,feed
+Pakistan,pakistan,English,Geo News,https://www.geo.tv/rss/1/1,feed
+Sri Lanka,sri-lanka,English,Daily Mirror (Sri Lanka),https://www.dailymirror.lk/RSS_Feeds/breaking-news,feed
+Sri Lanka,sri-lanka,English,EconomyNext,https://economynext.com/feed/,feed
+Bangladesh,bangladesh,English,The Daily Star,https://www.thedailystar.net/frontpage/rss.xml,feed
+Bangladesh,bangladesh,English,Dhaka Tribune,https://www.dhakatribune.com/feed,feed
+Bangladesh,bangladesh,Bengali,Prothom Alo,https://www.prothomalo.com/feed/,feed
+Nepal,nepal,English,The Kathmandu Post,https://kathmandupost.com/rss,feed
+Nepal,nepal,English,The Himalayan Times,https://thehimalayantimes.com/rss,page
+Indonesia,indonesia,English,Antara News (English),https://en.antaranews.com/rss/news.xml,feed
+Indonesia,indonesia,Indonesian,Antara News,https://www.antaranews.com/rss/terkini.xml,feed
+Indonesia,indonesia,Indonesian,CNN Indonesia,https://www.cnnindonesia.com/nasional/rss,feed
+Indonesia,indonesia,Indonesian,detikcom,https://rss.detik.com/index.php/detikcom,feed
+Indonesia,indonesia,Indonesian,Kompas,https://www.kompas.com/rss,page
+Malaysia,malaysia,English,The Star (Malaysia),https://www.thestar.com.my/rss/News/Nation,feed
+Malaysia,malaysia,English,Malay Mail,https://www.malaymail.com/feed/rss/malaysia,feed
+Philippines,philippines,English,Philippine Daily Inquirer,https://newsinfo.inquirer.net/feed,feed
+Philippines,philippines,English,Rappler,https://www.rappler.com/feed/,feed
+Philippines,philippines,English,GMA News,https://data.gmanetwork.com/gno/rss/news/feed.xml,feed
+Philippines,philippines,English,The Philippine Star,https://www.philstar.com/rss/headlines,feed
+Thailand,thailand,English,Bangkok Post,https://www.bangkokpost.com/rss/data/topstories.xml,feed
+Thailand,thailand,English,Thai PBS World,https://www.thaipbsworld.com/feed/,feed
+Thailand,thailand,English,Nation Thailand,https://www.nationthailand.com/rss,page
+Vietnam,vietnam,English,VnExpress International,https://e.vnexpress.net/rss/news.rss,feed
+Vietnam,vietnam,Vietnamese,VnExpress,https://vnexpress.net/rss/thoi-su.rss,feed
+Vietnam,vietnam,Vietnamese,Tuoi Tre,https://tuoitre.vn/rss/tin-moi-nhat.rss,feed
+Cambodia,cambodia,English,Khmer Times,https://www.khmertimeskh.com/feed/,feed
+Myanmar,myanmar,English,The Irrawaddy,https://www.irrawaddy.com/feed,feed
+Myanmar,myanmar,English,Myanmar Now,https://myanmar-now.org/en/feed/,feed
+Papua New Guinea,papua-new-guinea,English,Post-Courier,https://www.postcourier.com.pg/feed/,feed
+,,English,RNZ Pacific,https://www.rnz.co.nz/rss/pacific.xml,feed
+China,china,English,Xinhua,http://www.xinhuanet.com/english/rss/worldrss.xml,feed
+China,china,English,China Daily,http://www.chinadaily.com.cn/rss/china_rss.xml,feed
+China,china,English,South China Morning Post,https://www.scmp.com/rss/91/feed,feed
+Japan,japan,Japanese,NHK,https://www3.nhk.or.jp/rss/news/cat0.xml,feed
+Japan,japan,English,The Japan Times,https://www.japantimes.co.jp/feed/,feed
+Japan,japan,Japanese,Asahi Shimbun,https://www.asahi.com/rss/asahi/newsheadlines.rdf,feed
+South Korea,south-korea,English,Yonhap,https://en.yna.co.kr/RSS/news.xml,feed
+South Korea,south-korea,English,The Korea Herald,https://www.koreaherald.com/common/rss_xml.php?ct=102,feed
+Taiwan,taiwan,English,Focus Taiwan,https://focustaiwan.tw/rss,page
+Taiwan,taiwan,English,Taipei Times,https://www.taipeitimes.com/xml/index.rss,feed
+Australia,australia,English,ABC News (Australia),https://www.abc.net.au/news/feed/51120/rss.xml,feed
+Australia,australia,English,The Sydney Morning Herald,https://www.smh.com.au/rss/feed.xml,feed
+Australia,australia,English,The Guardian Australia,https://www.theguardian.com/australia-news/rss,feed
+New Zealand,new-zealand,English,RNZ,https://www.rnz.co.nz/rss/national.xml,feed
+New Zealand,new-zealand,English,Stuff,https://www.stuff.co.nz/rss,feed
+Fiji,fiji,English,The Fiji Times,https://www.fijitimes.com.fj/feed/,feed
+Fiji,fiji,English,FBC News,https://www.fbcnews.com.fj/feed/,feed
+Solomon Islands,solomon-islands,English,Solomon Star,https://www.solomonstarnews.com/feed/,feed
+Peru,peru,Spanish,El Comercio,https://elcomercio.pe/arcio/rss/,feed
+Peru,peru,Spanish,RPP Noticias,https://rpp.pe/feed,feed
+Peru,peru,Spanish,La República,https://larepublica.pe/rss/,page
+Peru,peru,Spanish,Andina,https://andina.pe/agencia/rss.aspx,page
+Ecuador,ecuador,Spanish,El Universo,https://www.eluniverso.com/arc/outboundfeeds/rss/?outputType=xml,feed
+Ecuador,ecuador,Spanish,Primicias,https://www.primicias.ec/feed/,feed
+Chile,chile,Spanish,La Tercera,https://www.latercera.com/arc/outboundfeeds/rss/?outputType=xml,feed
+Chile,chile,Spanish,Cooperativa,https://www.cooperativa.cl/noticias/site/tax/port/all/rss_3___1.xml,feed
+Colombia,colombia,Spanish,El Tiempo,https://www.eltiempo.com/rss/colombia.xml,feed
+Colombia,colombia,Spanish,El Espectador,https://www.elespectador.com/arc/outboundfeeds/rss/?outputType=xml,feed
+Venezuela,venezuela,Spanish,El Nacional,https://www.elnacional.com/feed/,feed
+Venezuela,venezuela,Spanish,Efecto Cocuyo,https://efectococuyo.com/feed/,feed
+Brazil,brazil,Portuguese,g1,https://g1.globo.com/rss/g1/,feed
+Brazil,brazil,Portuguese,g1 Agronegócios,https://g1.globo.com/rss/g1/economia/agronegocios/,feed
+Brazil,brazil,Portuguese,Folha de S.Paulo,https://feeds.folha.uol.com.br/emcimadahora/rss091.xml,feed
+Brazil,brazil,Portuguese,Agência Brasil,https://agenciabrasil.ebc.com.br/rss/ultimasnoticias/feed.xml,feed
+Argentina,argentina,Spanish,Clarín,https://www.clarin.com/rss/lo-ultimo/,feed
+Argentina,argentina,Spanish,La Nación,https://www.lanacion.com.ar/arc/outboundfeeds/rss/?outputType=xml,feed
+Argentina,argentina,Spanish,Infobae,https://www.infobae.com/arc/outboundfeeds/rss/,feed
+Argentina,argentina,Spanish,Página/12,https://www.pagina12.com.ar/rss/portada,feed
+Uruguay,uruguay,Spanish,El País (Uruguay),https://www.elpais.com.uy/rss/,feed
+Paraguay,paraguay,Spanish,ABC Color,https://www.abc.com.py/arc/outboundfeeds/rss/?outputType=xml,feed
+Bolivia,bolivia,Spanish,Los Tiempos,https://www.lostiempos.com/rss,page
+Bolivia,bolivia,Spanish,El Deber,https://eldeber.com.bo/rss,page
+Panama,panama,Spanish,La Prensa (Panamá),https://www.prensa.com/arc/outboundfeeds/rss/?outputType=xml,feed
+Costa Rica,costa-rica,Spanish,La Nación (Costa Rica),https://www.nacion.com/arc/outboundfeeds/rss/?outputType=xml,feed
+Costa Rica,costa-rica,Spanish,CRHoy,https://www.crhoy.com/feed/,feed
+Nicaragua,nicaragua,Spanish,Confidencial,https://confidencial.digital/feed/,feed
+Nicaragua,nicaragua,Spanish,La Prensa (Nicaragua),https://www.laprensani.com/feed,feed
+Honduras,honduras,Spanish,La Prensa (Honduras),https://www.laprensa.hn/rss,page
+Honduras,honduras,Spanish,El Heraldo,https://www.elheraldo.hn/rss,page
+El Salvador,el-salvador,Spanish,La Prensa Gráfica,https://www.laprensagrafica.com/rss,page
+El Salvador,el-salvador,Spanish,El Faro,https://elfaro.net/rss,page
+Guatemala,guatemala,Spanish,Prensa Libre,https://www.prensalibre.com/feed/,feed
+Mexico,mexico,Spanish,El Universal,https://www.eluniversal.com.mx/arc/outboundfeeds/rss/?outputType=xml,feed
+Mexico,mexico,Spanish,La Jornada,https://www.jornada.com.mx/rss/edicion.xml,feed
+Mexico,mexico,Spanish,Excélsior,https://www.excelsior.com.mx/rss.xml,feed
+United States,united-states,English,The New York Times: Climate,https://rss.nytimes.com/services/xml/rss/nyt/Climate.xml,feed
+United States,united-states,English,The New York Times: World,https://rss.nytimes.com/services/xml/rss/nyt/World.xml,feed
+United States,united-states,English,The Washington Post: Climate,https://feeds.washingtonpost.com/rss/climate-environment,feed
+United States,united-states,English,NPR,https://feeds.npr.org/1001/rss.xml,feed
+Canada,canada,English,CBC News,https://www.cbc.ca/webfeed/rss/rss-topstories,feed
+Canada,canada,English,The Globe and Mail,https://www.theglobeandmail.com/arc/outboundfeeds/rss/category/canada/,feed
+South Africa,south-africa,English,News24,https://feeds.news24.com/articles/news24/TopStories/rss,feed
+South Africa,south-africa,English,Mail & Guardian,https://mg.co.za/feed/,feed
+South Africa,south-africa,English,Daily Maverick,https://www.dailymaverick.co.za/dmrss/,feed
+South Africa,south-africa,English,Farmer's Weekly,https://www.farmersweekly.co.za/feed/,feed
+Zimbabwe,zimbabwe,English,The Herald (Zimbabwe),https://www.herald.co.zw/feed/,feed
+Zimbabwe,zimbabwe,English,NewsDay,https://www.newsday.co.zw/feed/,feed
+Zambia,zambia,English,Lusaka Times,https://www.lusakatimes.com/feed/,feed
+Zambia,zambia,English,News Diggers,https://diggers.news/feed/,feed
+Malawi,malawi,English,Nyasa Times,https://www.nyasatimes.com/feed/,feed
+Malawi,malawi,English,Malawi24,https://malawi24.com/feed/,feed
+Mozambique,mozambique,English,Club of Mozambique,https://clubofmozambique.com/feed/,feed
+Botswana,botswana,English,Mmegi,https://www.mmegi.bw/rss,page
+Namibia,namibia,English,The Namibian,https://www.namibian.com.na/feed/,feed
+Namibia,namibia,English,New Era,https://neweralive.na/feed/,feed
+Lesotho,lesotho,English,Lesotho Times,https://lestimes.com/feed/,feed
+Kenya,kenya,English,The Standard,https://www.standardmedia.co.ke/rss/headlines.php,feed
+Kenya,kenya,English,Capital FM,https://www.capitalfm.co.ke/news/feed/,feed
+Kenya,kenya,English,Nation,https://nation.africa/kenya/rss,page
+Somalia,somalia,English,Hiiraan Online,https://www.hiiraan.com/rss,page
+Somalia,somalia,English,Garowe Online,https://www.garoweonline.com/en/rss,page
+Ethiopia,ethiopia,English,Addis Standard,https://addisstandard.com/feed/,feed
+Ethiopia,ethiopia,English,The Reporter (Ethiopia),https://www.thereporterethiopia.com/feed/,feed
+Tanzania,tanzania,English,Daily News (Tanzania),https://dailynews.co.tz/feed/,feed
+Tanzania,tanzania,English,The Citizen,https://www.thecitizen.co.tz/tanzania/rss,page
+Uganda,uganda,English,Nile Post,https://nilepost.co.ug/feed/,feed
+Uganda,uganda,English,Daily Monitor,https://www.monitor.co.ug/uganda/rss,page

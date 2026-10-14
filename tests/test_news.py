@@ -1,6 +1,6 @@
 import pytest
 
-from weather_app import create_app, news, services
+from weather_app import create_app, impacts, news, services
 
 GDELT = {"articles": [
     {"url": "https://example.in/el-nino-monsoon", "title": "El Nino may weaken India's monsoon",
@@ -124,7 +124,28 @@ ITUNES = {"results": [{"trackName": "Episode 12: El Niño and your coffee", "tra
                        "artworkUrl160": "https://img.example/p.jpg", "description": "Why prices rise."}]}
 
 
+PAPERS = [
+    {"country": "India", "slug": "india", "language": "Hindi", "publisher": "Dainik Example",
+     "url": "https://hindi.example/rss", "type": "page"},
+    {"country": "Peru", "slug": "peru", "language": "Spanish", "publisher": "Diario Ejemplo",
+     "url": "https://diario.example/feed/", "type": "feed"},
+]
+FEEDS_PAGE = """<html><head><link rel="alternate" type="application/rss+xml" href="/rss/home.xml"></head>
+<body><a href="/rss/national.xml">National</a> <a href="https://other.example/rss.xml">Other site</a>
+<a href="/about">About</a> <a href="/rss/sports.xml">Sports</a> <a href="/rss/world.xml">World</a></body></html>"""
+HINDI_RSS = """<rss version="2.0"><channel>
+<item><title>अल नीनो से मानसून कमजोर, किसान परेशान</title><link>https://hindi.example/a/1</link>
+<pubDate>Tue, 13 Oct 2026 06:00:00 +0530</pubDate></item>
+<item><title>क्रिकेट: भारत जीता</title><link>https://hindi.example/a/2</link></item>
+</channel></rss>"""
+SPANISH_RSS = """<rss version="2.0"><channel>
+<item><title>Fenómeno El Niño: alerta en Piura</title><link>https://diario.example/1</link></item>
+<item><title>Rescatan a la niña perdida en Lima</title><link>https://diario.example/2</link></item>
+</channel></rss>"""
+
+
 def fake_sources(monkeypatch, google_ok=True, gdelt_ok=True, others_ok=True):
+    monkeypatch.setattr(news, "load_feeds", lambda: PAPERS)
     def get_json(url, params=None):
         if url == news.GDELT_URL:
             if not gdelt_ok:
@@ -153,6 +174,12 @@ def fake_sources(monkeypatch, google_ok=True, gdelt_ok=True, others_ok=True):
             return RELIEFWEB_RSS
         if "arxiv" in url:
             return ARXIV_ATOM
+        if url == "https://hindi.example/rss":
+            return FEEDS_PAGE
+        if url.startswith("https://hindi.example/rss/"):
+            return HINDI_RSS
+        if url == "https://diario.example/feed/":
+            return SPANISH_RSS
         return SCIENCE_RSS
 
     monkeypatch.setattr(services, "_get_json", get_json)
@@ -165,13 +192,16 @@ def test_get_news_combines_everything(monkeypatch):
     kinds = {}
     for a in data["articles"]:
         kinds[a["kind"]] = kinds.get(a["kind"], 0) + 1
-    assert kinds == {"news": 4, "report": 1, "science": 1, "paper": 2, "discussion": 1, "podcast": 1}
+    assert kinds == {"news": 6, "report": 1, "science": 1, "paper": 2, "discussion": 1, "podcast": 1}
+    hindi = next(a for a in data["articles"] if a["url"] == "https://hindi.example/a/1")
+    assert hindi["source"] == "Dainik Example" and hindi["language"] == "Hindi" and "india" in hindi["countries"]
+    assert not any("niña perdida" in a["title"] for a in data["articles"])  # "la niña" = "the girl"
     assert [v["id"] for v in data["videos"]] == ["AbCdEfGhIjK", "57S0Rw9L_hw"]  # deduped
     assert data["videos"][-1]["explainer"] is True
     assert all(s["ok"] for s in data["sources"])
     assert len(data["sources"]) == (1 + len(news.GOOGLE_NEWS_EDITIONS) + len(news.THEME_QUERIES)
                                     + len(news.CROP_QUERIES) + 1 + len(news.BING_MARKETS) + 1 + len(news.FEEDS)
-                                    + 4 + len(news.YOUTUBE_CHANNELS))
+                                    + 4 + len(PAPERS) + len(news.YOUTUBE_CHANNELS))
 
 
 def test_get_news_survives_some_sources_failing(monkeypatch):
@@ -307,3 +337,22 @@ def test_news_page(monkeypatch):
     assert 'id="news-kinds"' in html and "js/news.js" in html
     assert '"@type": "CollectionPage"' in html and '"ItemList"' in html
     assert "Monsoon deficit grows as El Nino takes hold" in html  # headlines pre-rendered
+
+
+def test_feed_list_is_valid():
+    feeds = news.load_feeds()
+    assert len(feeds) > 100
+    urls = [f["url"] for f in feeds]
+    assert len(urls) == len(set(urls))
+    for f in feeds:
+        assert f["url"].startswith(("http://", "https://")) and f["type"] in ("feed", "page")
+        assert f["language"]
+        assert not f["slug"] or f["slug"] in impacts.BY_SLUG, f
+    covered = {f["slug"] for f in feeds if f["slug"]}
+    assert len(covered) >= 50  # nearly every country we cover has its own papers
+
+
+def test_discover_feeds_from_a_feed_list_page():
+    urls = news.discover_feeds(FEEDS_PAGE, "https://hindi.example/rss")
+    assert urls == ["https://hindi.example/rss/home.xml", "https://hindi.example/rss/national.xml",
+                    "https://hindi.example/rss/world.xml"]  # own site only, main sections first
