@@ -166,18 +166,28 @@
     return (a * (1 - fc) + b * fc) * (1 - fr) + (d * (1 - fc) + e * fc) * fr;
   }
 
+  // Wind as u/v components (km/h, towards east / north), cached per forecast frame so
+  // the animation can interpolate smoothly (no jump where the direction wraps 359°→0°).
+  const uvCache = new Map();
+  function uvFields(f) {
+    const key = `${data.forecast.built_at}:${f}`;
+    if (!uvCache.has(key)) {
+      const sp = data.forecast.fields.wind[f], dir = data.forecast.fields.wind_dir[f];
+      const u = sp.map((v, i) => (v == null || dir[i] == null ? null : -v * Math.sin((dir[i] * Math.PI) / 180)));
+      const v = sp.map((x, i) => (x == null || dir[i] == null ? null : -x * Math.cos((dir[i] * Math.PI) / 180)));
+      if (uvCache.size > 4) uvCache.delete(uvCache.keys().next().value);
+      uvCache.set(key, { u, v });
+    }
+    return uvCache.get(key);
+  }
+
   function windAt(f, lat, lon) {
-    const fields = data.forecast.fields;
-    const speed = sample(fields.wind[f], lat, lon);
-    // Direction is where the wind comes FROM; interpolate as a vector to avoid the 359°→0° jump.
-    const g = data.forecast.grid;
-    const dirField = fields.wind_dir[f];
-    const r = Math.round((lat - g.lat0) / g.dlat);
-    const c = ((Math.round((lon - g.lon0) / g.dlon) % g.nlon) + g.nlon) % g.nlon;
-    const dir = dirField[Math.max(0, Math.min(g.nlat - 1, r)) * g.nlon + c];
-    if (speed == null || dir == null) return null;
-    const rad = (dir * Math.PI) / 180;
-    return { speed, u: -speed * Math.sin(rad), v: -speed * Math.cos(rad), dir };
+    const { u: U, v: V } = uvFields(f);
+    const u = sample(U, lat, lon), v = sample(V, lat, lon);
+    if (u == null || v == null) return null;
+    const speed = Math.hypot(u, v);
+    const dir = ((Math.atan2(-u, -v) * 180) / Math.PI + 360) % 360; // where it comes from
+    return { speed, u, v, dir };
   }
 
   function color(scale, v) {
@@ -333,6 +343,7 @@
         ],
       },
     });
+    window.wxGlobe = gm; // handy for debugging in the browser console
     gm.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "bottom-right");
     gm.addControl(new maplibregl.AttributionControl({ compact: true,
       customAttribution: "Satellites: NASA GIBS, EUMETSAT · Radar: RainViewer · Forecast: Open-Meteo" }), "bottom-right");
@@ -527,61 +538,139 @@
     writeHash();
   }
 
-  // Wind animation: particles moved by the forecast wind, drawn on a canvas that the
-  // globe shows as an animated image (Web Mercator coordinates).
+  // Wind animation, like earth.nullschool / zoom.earth: thousands of particles carried
+  // by the forecast wind, drawn with fading trails on a screen-sized canvas above the
+  // globe. Only the visible side is used; trails restart whenever the view moves.
   const wind = (() => {
-    const W = 1024, H = 1024, N = window.innerWidth < 600 ? 1800 : 3500;
-    let canvas = null, ctx = null, particles = [], raf = 0, on = false;
-    const toX = (lon) => ((lon + 180) / 360) * W;
-    const toY = (lat) => ((1 - Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360)) / Math.PI) / 2) * H;
-    const spawn = () => ({ lon: Math.random() * 360 - 180, lat: Math.asin(Math.random() * 2 - 1) * 57.2958 * 0.94, age: Math.random() * 80 });
+    let canvas = null, ctx = null, particles = [], raf = 0, on = false, moving = false, dpr = 1;
+    let target = 0, last = 0, slow = 0, fast = 0; // adaptive particle count for slower devices
+    const rad = Math.PI / 180;
+    const MAX_AGE = 110;
 
-    function step() {
+    function resize() {
+      updateCenter();
+      const box = gm.getContainer().getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(box.width * dpr);
+      canvas.height = Math.round(box.height * dpr);
+      canvas.style.width = `${box.width}px`;
+      canvas.style.height = `${box.height}px`;
+      target = Math.round(Math.min(5000, (box.width * box.height) / (window.innerWidth < 600 ? 260 : 230)));
+      particles = Array.from({ length: target }, () => spawn(true));
+    }
+
+    // Globe centre, refreshed once per frame (not per particle).
+    let sinC = 0, cosC = 1, lngC = 0;
+    const updateCenter = () => { const c = gm.getCenter(); sinC = Math.sin(c.lat * rad); cosC = Math.cos(c.lat * rad); lngC = c.lng; };
+    const visible = (lat, lon) => sinC * Math.sin(lat * rad) + cosC * Math.cos(lat * rad) * Math.cos((lon - lngC) * rad) > 0.05;
+
+    // A random point on the visible part of the globe, inside the screen.
+    function spawn(randomAge) {
+      const W = canvas.width / dpr, H = canvas.height / dpr;
+      for (let tries = 0; tries < 12; tries++) {
+        const ll = gm.unproject([Math.random() * W, Math.random() * H]);
+        const lat = ll.lat, lon = ((ll.lng + 540) % 360) - 180;
+        if (Math.abs(lat) < 85 && visible(lat, lon)) {
+          const p = gm.project([lon, lat]);
+          if (p.x >= 0 && p.x <= W && p.y >= 0 && p.y <= H) {
+            return { lat, lon, x: p.x, y: p.y, age: randomAge ? Math.floor(Math.random() * MAX_AGE) : 0 };
+          }
+        }
+      }
+      return { lat: 0, lon: 0, x: -1, y: -1, age: MAX_AGE }; // respawns next frame
+    }
+
+    function frame(now) {
+      raf = requestAnimationFrame(frame);
+      if (moving || !data.forecast) return;
+      // Keep the animation smooth: drop particles when frames take too long, add them back when there is room.
+      const dt = last ? now - last : 16;
+      last = now;
+      if (dt > 45) { slow++; fast = 0; } else if (dt < 22) { fast++; slow = 0; }
+      if (slow > 8 && particles.length > 600) { particles.length = Math.round(particles.length * 0.75); slow = 0; }
+      if (fast > 60 && particles.length < target) {
+        for (let i = 0, add = Math.min(300, target - particles.length); i < add; i++) particles.push(spawn(true));
+        fast = 0;
+      }
       const f = forecastFrame();
+      const { u: U, v: V } = uvFields(f);
+      updateCenter();
+      const W = canvas.width, H = canvas.height;
+      // Fade the old trails.
       ctx.globalCompositeOperation = "destination-in";
-      ctx.fillStyle = "rgba(0,0,0,0.92)";
+      ctx.fillStyle = "rgba(0,0,0,0.93)";
       ctx.fillRect(0, 0, W, H);
       ctx.globalCompositeOperation = "source-over";
-      ctx.strokeStyle = "rgba(255,255,255,0.85)";
-      ctx.lineWidth = 1.1;
-      ctx.beginPath();
-      for (const p of particles) {
-        const w = windAt(f, p.lat, p.lon);
-        p.age += 1;
-        if (!w || p.age > 90 || Math.abs(p.lat) > 82) { Object.assign(p, spawn(), { age: 0 }); continue; }
-        const k = 0.0022;
-        const lon2 = p.lon + (w.u * k) / Math.max(0.2, Math.cos((p.lat * Math.PI) / 180));
-        const lat2 = p.lat + w.v * k;
-        const x1 = toX(p.lon), y1 = toY(p.lat), x2 = toX(lon2), y2 = toY(lat2);
-        if (Math.abs(x2 - x1) < W / 2) { ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); }
-        p.lon = lon2 > 180 ? lon2 - 360 : lon2 < -180 ? lon2 + 360 : lon2;
-        p.lat = lat2;
+      ctx.lineWidth = 1.15 * dpr;
+      ctx.lineCap = "round";
+      // Screen speed: about 1 px per frame for a 20 km/h wind, whatever the zoom.
+      const ppd = (512 * Math.pow(2, gm.getZoom())) / 360; // pixels per degree near the centre
+      const k = 0.05 / ppd;
+      const buckets = [[], [], [], []]; // by speed, so each gets one stroke style
+      for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        if (p.age++ > MAX_AGE) { p = particles[i] = spawn(false); continue; }
+        const u = sample(U, p.lat, p.lon), v = sample(V, p.lat, p.lon);
+        if (u == null || v == null) { p.age = MAX_AGE + 1; continue; }
+        const speed = Math.abs(u) + Math.abs(v) * 0.6; // cheap stand-in for hypot, only used for brightness
+        if (speed < 0.5) { p.age = MAX_AGE + 1; continue; }
+        const lat2 = p.lat + v * k;
+        let lon2 = p.lon + (u * k) / Math.max(0.15, Math.cos(p.lat * rad));
+        lon2 = lon2 > 180 ? lon2 - 360 : lon2 < -180 ? lon2 + 360 : lon2;
+        if (Math.abs(lat2) > 85 || !visible(lat2, lon2)) { p.age = MAX_AGE + 1; continue; }
+        const q = gm.project([lon2, lat2]);
+        if (p.x >= 0 && Math.abs(q.x - p.x) < 40 && Math.abs(q.y - p.y) < 40) {
+          const b = speed < 15 ? 0 : speed < 35 ? 1 : speed < 60 ? 2 : 3;
+          buckets[b].push(p.x * dpr, p.y * dpr, q.x * dpr, q.y * dpr);
+        }
+        p.lat = lat2; p.lon = lon2; p.x = q.x; p.y = q.y;
       }
-      ctx.stroke();
-      raf = requestAnimationFrame(step);
+      const alpha = [0.45, 0.65, 0.85, 1];
+      buckets.forEach((segs, b) => {
+        if (!segs.length) return;
+        ctx.strokeStyle = `rgba(255,255,255,${alpha[b]})`;
+        ctx.beginPath();
+        for (let j = 0; j < segs.length; j += 4) { ctx.moveTo(segs[j], segs[j + 1]); ctx.lineTo(segs[j + 2], segs[j + 3]); }
+        ctx.stroke();
+      });
     }
+
+    const pause = () => { moving = true; if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height); };
+    const resume = () => {
+      moving = false;
+      if (!on) return;
+      // Re-project every particle for the new view (and re-seed the ones now hidden).
+      updateCenter();
+      particles = particles.map((p) => {
+        if (!visible(p.lat, p.lon)) return spawn(true);
+        const q = gm.project([p.lon, p.lat]);
+        return { ...p, x: q.x, y: q.y };
+      });
+    };
 
     function start() {
       if (on || !ready || !data.forecast) return;
       on = true;
       if (!canvas) {
         canvas = document.createElement("canvas");
-        canvas.width = W; canvas.height = H;
+        canvas.className = "wx-wind";
+        gm.getCanvas().after(canvas); // above the globe, below city labels and popups
         ctx = canvas.getContext("2d");
+        gm.on("movestart", pause);
+        gm.on("moveend", resume);
+        gm.on("resize", () => { if (on) resize(); });
       }
-      particles = Array.from({ length: N }, spawn);
-      gm.addSource("wind-anim", { type: "canvas", canvas, coordinates: MERC_CORNERS, animate: true });
-      gm.addLayer({ id: "wind-anim", type: "raster", source: "wind-anim", paint: { "raster-fade-duration": 0 } }, "anchor-wind");
-      raf = requestAnimationFrame(step);
+      canvas.hidden = false;
+      resize();
+      raf = requestAnimationFrame(frame);
     }
 
     function stop() {
       if (!on) return;
       on = false;
       cancelAnimationFrame(raf);
-      if (gm.getLayer("wind-anim")) gm.removeLayer("wind-anim");
-      if (gm.getSource("wind-anim")) gm.removeSource("wind-anim");
-      ctx.clearRect(0, 0, W, H);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      canvas.hidden = true;
     }
 
     return { sync: () => (state.overlays.has("windanim") && data.forecast ? start() : stop()) };
@@ -733,6 +822,7 @@
   document.querySelectorAll("[data-map]").forEach((b) => b.addEventListener("click", () => {
     setPlaying(false);
     state.map = b.dataset.map;
+    if (state.map === "wind" && !state.overlays.has("windanim")) { state.overlays.add("windanim"); applyOverlays(); }
     writeHash();
     showMap();
     if (window.innerWidth < 900) closePanels();

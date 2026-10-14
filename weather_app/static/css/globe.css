@@ -98,3 +98,4 @@
 @media (max-width: 380px) {
   .wx-site a:nth-child(3) { display: none; }
 }
+.wx-wind { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
