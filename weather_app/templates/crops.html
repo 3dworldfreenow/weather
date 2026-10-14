@@ -56,6 +56,9 @@
             {% endfor %}
           </select>
         </label>
+        <label class="field" title="Auto uses the chosen country's currency">Currency
+          <select id="crop-currency" disabled><option value="">Auto</option></select>
+        </label>
         <label class="field">Search
           <input type="search" id="crop-search" class="search" placeholder="Crop, country or news…" autocomplete="off">
         </label>
@@ -94,7 +97,8 @@
     <!-- World prices -->
     <section>
       <h2>World crop prices</h2>
-      <p class="muted">Monthly world prices (IMF, via FRED). Tap a crop to see its full history with El Niño periods shaded.</p>
+      <p class="muted">Monthly world prices (IMF, via FRED), shown in the currency you pick above (per kg, at today's exchange rate)
+        or in US$. Tap a crop to see its full history with El Niño periods shaded.</p>
       <div class="price-grid" id="price-grid">
         {% for cid, c in info.crops.items() %}
         <button class="price-card" data-crop="{{ cid }}"><span class="pc-name">{{ c.icon }} {{ c.name }}</span>
@@ -120,6 +124,7 @@
       <p>Rainfall: <a href="https://power.larc.nasa.gov/" target="_blank" rel="noopener">NASA POWER</a> (agroclimatology).
         Prices: <a href="https://www.imf.org/en/Research/commodity-prices" target="_blank" rel="noopener">IMF Primary Commodity Prices</a>
         via <a href="https://fred.stlouisfed.org/" target="_blank" rel="noopener">FRED</a>.
+        Exchange rates: <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener">Rates by Exchange Rate API</a>.
         El Niño periods: NOAA Oceanic Niño Index. Crop notes summarise typical El Niño effects reported by FAO, USDA,
         national agencies and research; every event is different.</p>
       <p>News links open the original publishers. <a href="../">Back to the El Niño Tracker</a>.</p>

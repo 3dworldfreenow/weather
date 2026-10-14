@@ -6,6 +6,8 @@ Sources (free, no key):
   https://power.larc.nasa.gov/
 * IMF Primary Commodity Prices via FRED (St. Louis Fed): monthly world prices.
   https://fred.stlouisfed.org/
+* ExchangeRate-API open access: daily exchange rates, to show world prices in
+  each country's own currency. https://www.exchangerate-api.com/
 
 The crop notes are the usual El Niño tendencies reported by FAO, USDA, national
 agriculture and weather agencies and research (e.g. Iizumi et al. 2014,
@@ -31,6 +33,7 @@ log = logging.getLogger(__name__)
 POWER_CLIMATOLOGY_URL = "https://power.larc.nasa.gov/api/temporal/climatology/point"
 POWER_DAILY_URL = "https://power.larc.nasa.gov/api/temporal/daily/point"
 FRED_CSV_URL = "https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}"
+FX_URL = "https://open.er-api.com/v6/latest/USD"
 PRICE_START_YEAR = 1990
 FETCH_WORKERS = 6
 MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
@@ -39,32 +42,32 @@ MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", 
 CROPS: dict[str, dict[str, Any]] = {
     "rice": {"name": "Rice", "icon": "🌾",
              "keywords": ["rice", "paddy", "arroz", "beras", "padi", "gabah", "riz", "米", "चावल", "धान", "lúa", "gạo", "ข้าว"],
-             "price": {"series": "PRICENPQUSDM", "unit": "US$ per tonne", "label": "Rice (Thai 5% broken)"}},
+             "price": {"series": "PRICENPQUSDM", "unit": "US$ per tonne", "usd_per_kg": 0.001, "label": "Rice (Thai 5% broken)"}},
     "wheat": {"name": "Wheat", "icon": "🌾",
               "keywords": ["wheat", "trigo", "gandum", "blé", "小麦", "गेहूं", "गेहूँ"],
-              "price": {"series": "PWHEAMTUSDM", "unit": "US$ per tonne", "label": "Wheat"}},
+              "price": {"series": "PWHEAMTUSDM", "unit": "US$ per tonne", "usd_per_kg": 0.001, "label": "Wheat"}},
     "maize": {"name": "Maize (corn)", "icon": "🌽",
               "keywords": ["maize", "corn", "maíz", "milho", "jagung", "maïs", "トウモロコシ", "मक्का"],
-              "price": {"series": "PMAIZMTUSDM", "unit": "US$ per tonne", "label": "Maize"}},
+              "price": {"series": "PMAIZMTUSDM", "unit": "US$ per tonne", "usd_per_kg": 0.001, "label": "Maize"}},
     "sugar": {"name": "Sugar & sugarcane", "icon": "🍬",
               "keywords": ["sugar", "sugarcane", "cane", "azúcar", "caña", "açúcar", "cana", "gula", "tebu", "sucre",
                            "砂糖", "चीनी", "गन्ना", "đường", "mía", "น้ำตาล"],
-              "price": {"series": "PSUGAISAUSDM", "unit": "US cents per pound", "label": "Sugar No. 11 (world)"}},
+              "price": {"series": "PSUGAISAUSDM", "unit": "US cents per pound", "usd_per_kg": 0.01 / 0.45359237, "label": "Sugar No. 11 (world)"}},
     "soybeans": {"name": "Soybeans", "icon": "🫘",
                  "keywords": ["soybean", "soybeans", "soy", "soja", "kedelai", "大豆", "सोयाबीन"],
-                 "price": {"series": "PSOYBUSDM", "unit": "US$ per tonne", "label": "Soybeans"}},
+                 "price": {"series": "PSOYBUSDM", "unit": "US$ per tonne", "usd_per_kg": 0.001, "label": "Soybeans"}},
     "coffee": {"name": "Coffee", "icon": "☕",
                "keywords": ["coffee", "café", "cafe", "kopi", "コーヒー", "कॉफी", "cà phê"],
-               "price": {"series": "PCOFFOTMUSDM", "unit": "US cents per pound", "label": "Coffee (other mild arabica)"}},
+               "price": {"series": "PCOFFOTMUSDM", "unit": "US cents per pound", "usd_per_kg": 0.01 / 0.45359237, "label": "Coffee (other mild arabica)"}},
     "cocoa": {"name": "Cocoa", "icon": "🍫",
               "keywords": ["cocoa", "cacao", "cacau", "kakao", "chocolate", "カカオ"],
-              "price": {"series": "PCOCOUSDM", "unit": "US$ per tonne", "label": "Cocoa"}},
+              "price": {"series": "PCOCOUSDM", "unit": "US$ per tonne", "usd_per_kg": 0.001, "label": "Cocoa"}},
     "palm-oil": {"name": "Palm oil", "icon": "🌴",
                  "keywords": ["palm oil", "palm-oil", "aceite de palma", "óleo de palma", "minyak sawit", "sawit", "CPO"],
-                 "price": {"series": "PPOILUSDM", "unit": "US$ per tonne", "label": "Palm oil"}},
+                 "price": {"series": "PPOILUSDM", "unit": "US$ per tonne", "usd_per_kg": 0.001, "label": "Palm oil"}},
     "cotton": {"name": "Cotton", "icon": "🧵",
                "keywords": ["cotton", "algodón", "algodão", "kapas", "coton", "綿花", "कपास"],
-               "price": {"series": "PCOTTINDUSDM", "unit": "US cents per pound", "label": "Cotton"}},
+               "price": {"series": "PCOTTINDUSDM", "unit": "US cents per pound", "usd_per_kg": 0.01 / 0.45359237, "label": "Cotton"}},
 }
 
 # Effect of a typical El Niño on the crop in that region.
@@ -283,11 +286,52 @@ def fetch_price(crop_id: str) -> dict[str, Any]:
 # Combined data for the Crops page
 # --------------------------------------------------------------------------
 
+# --------------------------------------------------------------------------
+# Local currencies
+# --------------------------------------------------------------------------
+
+# Country slug (impacts.COUNTRIES) -> ISO 4217 currency used for prices.
+COUNTRY_CURRENCY: dict[str, str] = {
+    "india": "INR", "pakistan": "PKR", "sri-lanka": "LKR", "bangladesh": "BDT", "nepal": "NPR",
+    "indonesia": "IDR", "malaysia": "MYR", "philippines": "PHP", "thailand": "THB", "vietnam": "VND",
+    "cambodia": "KHR", "myanmar": "MMK", "papua-new-guinea": "PGK", "timor-leste": "USD", "china": "CNY",
+    "japan": "JPY", "south-korea": "KRW", "taiwan": "TWD", "australia": "AUD", "new-zealand": "NZD",
+    "fiji": "FJD", "solomon-islands": "SBD", "vanuatu": "VUV", "kiribati": "AUD", "peru": "PEN",
+    "ecuador": "USD", "chile": "CLP", "colombia": "COP", "venezuela": "VES", "brazil": "BRL",
+    "argentina": "ARS", "uruguay": "UYU", "paraguay": "PYG", "bolivia": "BOB", "panama": "USD",
+    "costa-rica": "CRC", "nicaragua": "NIO", "honduras": "HNL", "el-salvador": "USD", "guatemala": "GTQ",
+    "mexico": "MXN", "united-states": "USD", "canada": "CAD", "south-africa": "ZAR", "zimbabwe": "ZWG",
+    "zambia": "ZMW", "malawi": "MWK", "mozambique": "MZN", "botswana": "BWP", "namibia": "NAD",
+    "lesotho": "LSL", "eswatini": "SZL", "kenya": "KES", "somalia": "SOS", "ethiopia": "ETB",
+    "tanzania": "TZS", "uganda": "UGX",
+}
+
+
+def parse_fx(data: dict[str, Any]) -> dict[str, Any]:
+    """Today's rates (local currency per US$) for the currencies we use."""
+    if data.get("result") != "success":
+        raise services.UpstreamError(f"Exchange rates unavailable: {data.get('error-type', 'unknown error')}")
+    rates = data.get("rates") or {}
+    wanted = set(COUNTRY_CURRENCY.values()) | {"USD", "EUR", "GBP"}
+    return {
+        "base": "USD",
+        "date": data.get("time_last_update_utc"),
+        "rates": {c: rates[c] for c in sorted(wanted) if isinstance(rates.get(c), (int, float)) and rates[c] > 0},
+        "source": "ExchangeRate-API",
+        "source_url": "https://www.exchangerate-api.com",
+    }
+
+
+def fetch_fx() -> dict[str, Any]:
+    return parse_fx(services._get_json(FX_URL))
+
+
 def public_info() -> dict[str, Any]:
     return {
         "crops": {cid: {k: v for k, v in c.items() if k != "keywords"} for cid, c in CROPS.items()},
         "regions": REGIONS,
         "outlooks": OUTLOOKS,
+        "currencies": COUNTRY_CURRENCY,
     }
 
 
@@ -302,8 +346,14 @@ def get_crops(previous: dict[str, Any] | None = None, max_age_hours: float = 20)
             fresh = age < dt.timedelta(hours=max_age_hours)
         except ValueError:
             pass
-    if fresh:
+    if fresh and previous.get("fx"):
         return previous
+    if fresh:  # data made before exchange rates were added
+        try:
+            return {**previous, "fx": fetch_fx()}
+        except (services.UpstreamError, KeyError, TypeError, ValueError) as exc:
+            log.warning("Crops: exchange rates failed: %s", exc)
+            return previous
 
     old_rain = (previous or {}).get("rain", {})
     old_prices = (previous or {}).get("prices", {})
@@ -318,9 +368,14 @@ def get_crops(previous: dict[str, Any] | None = None, max_age_hours: float = 20)
     with ThreadPoolExecutor(max_workers=FETCH_WORKERS) as pool:
         price_jobs = [pool.submit(safe, lambda c=c: fetch_price(c), c, old_prices.get(c)) for c in CROPS]
         rain_jobs = [pool.submit(safe, lambda r=r: fetch_rain(r), r["id"], old_rain.get(r["id"])) for r in REGIONS]
+        fx_job = pool.submit(safe, fetch_fx, "exchange rates", (previous or {}).get("fx"))
         prices = {k: v for k, v, _ in (j.result() for j in price_jobs) if v}
         rain = {k: v for k, v, _ in (j.result() for j in rain_jobs) if v}
 
     if not prices and not rain:
         raise services.UpstreamError("No crop data could be fetched")
-    return {"built_at": now.isoformat(timespec="seconds"), "prices": prices, "rain": rain}
+    out = {"built_at": now.isoformat(timespec="seconds"), "prices": prices, "rain": rain}
+    fx = fx_job.result()[1]
+    if fx:
+        out["fx"] = fx
+    return out

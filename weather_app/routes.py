@@ -121,7 +121,15 @@ def crops_data():
                 current_app.logger.warning("Crop price %s: %s", crop_id, exc)
         return out
 
-    return jsonify({"prices": services.cache.get_or_set("crop-prices", 12 * 3600, prices), "rain": {}})
+    def fx():
+        try:
+            return crops.fetch_fx()
+        except services.UpstreamError as exc:
+            current_app.logger.warning("Exchange rates: %s", exc)
+            return None
+
+    return jsonify({"prices": services.cache.get_or_set("crop-prices", 12 * 3600, prices), "rain": {},
+                    "fx": services.cache.get_or_set("crop-fx", 6 * 3600, fx)})
 
 
 @bp.get("/api/crops/rain")

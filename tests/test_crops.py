@@ -61,9 +61,25 @@ def test_parse_fred_csv_and_summary():
     assert crops.price_summary(series) == {"latest_month": "2026-08", "latest": 25.5, "change_12m_pct": 27.5}
 
 
+def test_every_country_has_a_currency_and_rates_are_parsed():
+    assert set(crops.COUNTRY_CURRENCY) == set(impacts.BY_SLUG)
+    fx = crops.parse_fx({"result": "success", "time_last_update_utc": "Wed, 14 Oct 2026 00:02:31 +0000",
+                         "rates": {"USD": 1, "INR": 88.1, "KES": 129.2, "XYZ": 5, "VES": 0}})
+    assert fx["rates"] == {"INR": 88.1, "KES": 129.2, "USD": 1}
+    assert fx["date"].startswith("Wed, 14 Oct 2026")
+    with pytest.raises(services.UpstreamError):
+        crops.parse_fx({"result": "error", "error-type": "quota-reached"})
+    for p in crops.CROPS.values():
+        assert p["price"]["usd_per_kg"] > 0
+    assert round(100 * crops.CROPS["sugar"]["price"]["usd_per_kg"], 4) == 2.2046  # 1 US cent/lb = 0.022 US$/kg
+
+
 def test_get_crops_reuses_fresh_data_and_keeps_old_values(monkeypatch):
-    recent = {"built_at": dt.datetime.now(dt.timezone.utc).isoformat(), "prices": {"x": 1}, "rain": {}}
+    recent = {"built_at": dt.datetime.now(dt.timezone.utc).isoformat(), "prices": {"x": 1}, "rain": {}, "fx": {"rates": {}}}
     assert crops.get_crops(recent) is recent
+    monkeypatch.setattr(crops, "fetch_fx", lambda: {"rates": {"INR": 88.0}})
+    no_fx = {k: v for k, v in recent.items() if k != "fx"}
+    assert crops.get_crops(no_fx) == {**no_fx, "fx": {"rates": {"INR": 88.0}}}  # adds rates to older data
 
     def fail(*args, **kwargs):
         raise services.UpstreamError("down")
@@ -74,6 +90,7 @@ def test_get_crops_reuses_fresh_data_and_keeps_old_values(monkeypatch):
     data = crops.get_crops(old)
     assert data["prices"] == {"sugar": {"latest": 1.0}, "rice": {"latest": 9.0}}
     assert data["rain"] == {"india-rice": {"last3_pct": 80}}
+    assert data["fx"] == {"rates": {"INR": 88.0}}
 
     monkeypatch.setattr(crops, "fetch_price", fail)
     with pytest.raises(services.UpstreamError):
@@ -83,6 +100,7 @@ def test_get_crops_reuses_fresh_data_and_keeps_old_values(monkeypatch):
 def test_crops_page_and_api(monkeypatch):
     monkeypatch.setattr(crops, "fetch_price", lambda c: {"latest": 1.0})
     monkeypatch.setattr(crops, "fetch_rain", lambda r: {"last3_pct": 90, "months": []})
+    monkeypatch.setattr(crops, "fetch_fx", lambda: {"rates": {"INR": 88.0}})
     monkeypatch.setattr(services, "_get_text", lambda url: (_ for _ in ()).throw(services.UpstreamError("offline")))
     client = create_app({"TESTING": True}).test_client()
     html = client.get("/crops/").get_data(as_text=True)
@@ -90,7 +108,9 @@ def test_crops_page_and_api(monkeypatch):
     assert 'id="crop-table"' in html and 'data-region="india-rice"' in html
     assert "js/crops.js" in html
 
-    assert client.get("/api/crops").get_json()["prices"]["sugar"] == {"latest": 1.0}
+    data = client.get("/api/crops").get_json()
+    assert data["prices"]["sugar"] == {"latest": 1.0} and data["fx"]["rates"]["INR"] == 88.0
+    assert 'id="crop-currency"' in html
     assert client.get("/api/crops/rain?region=india-rice").get_json()["last3_pct"] == 90
     assert client.get("/api/crops/rain?region=nowhere").status_code == 400
 

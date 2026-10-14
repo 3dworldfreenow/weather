@@ -12,7 +12,7 @@ A live El Niño tracker on a 3D globe and map, in the style of [zoom.earth](http
 - 📰 **News:** El Niño news from GDELT and 35 Google News editions in 20 languages (Asia, Oceania, the Americas, Africa, the Middle East and Europe), plus worldwide searches per impact theme. Every headline is tagged by topic and by the countries it mentions; filter by topic, country, language or a search word. Videos from weather agencies play inside the site
 - 📈 **History:** NOAA's Oceanic Niño Index since 1950 as an interactive chart (all, 30 or 10 years) and a table of every El Niño and La Niña episode with its peak and strength, found with NOAA's own rule
 - 📘 **Learn:** plain-language answers to common questions
-- 🌾 **Crops page** (`/crops/`): how El Niño affects rice, wheat, maize, sugar, soybeans, coffee, cocoa, palm oil and cotton in 41 main growing regions. Pick a country and a crop or search: see the typical El Niño effect and crop calendar, the last 12 months of rain in the growing region against the long-term average (chart), the world price since 1990 with past El Niño periods shaded (chart), and crop news (sugar, rice, coffee…) from around the world
+- 🌾 **Crops page** (`/crops/`): how El Niño affects rice, wheat, maize, sugar, soybeans, coffee, cocoa, palm oil and cotton in 41 main growing regions. Pick a country and a crop or search: see the typical El Niño effect and crop calendar, the last 12 months of rain in the growing region against the long-term average (chart), the world price since 1990 with past El Niño periods shaded (chart), shown in each country's own currency per kg (or US$), and, and crop news (sugar, rice, coffee…) from around the world
 - 🔎 **A page per country** (`/impacts/<country>/`, such as "El Niño impact on India") for search engines and sharing
 - 🛰️ **Live Earth backdrop:** near-real-time imagery from five geostationary satellites (GOES-West, GOES-East, Meteosat 0°, Meteosat IODC, Himawari) in true colour or infrared, the daily sea surface temperature anomaly map, and live day/night shading
 - 📚 **Sources panel** listing every data source, satellite, product and image time
@@ -30,6 +30,7 @@ All data sources are free and need **no API keys**:
 | Country shapes | [Natural Earth](https://www.naturalearthdata.com/) via world-atlas (public domain) |
 | Rainfall in growing regions | [NASA POWER](https://power.larc.nasa.gov/) (daily and long-term average) |
 | World crop prices (monthly) | [IMF Primary Commodity Prices](https://www.imf.org/en/Research/commodity-prices) via [FRED](https://fred.stlouisfed.org/) |
+| Exchange rates (daily, for local currencies) | [Rates by Exchange Rate API](https://www.exchangerate-api.com) (open access, no key) |
 | Videos | YouTube channel RSS feeds (no API key); YouTube search links out |
 | Base imagery and labels | Esri, NASA GIBS |
 
@@ -132,7 +133,7 @@ tests/                     # tests (upstream calls are mocked)
 | `GET /api/news` | El Niño news articles (tagged with `themes` and `countries`) and videos, with the status of each source |
 | `GET /impacts/<country>/` | Country page: typical El Niño impacts, past events, current status and latest news |
 | `GET /crops/` | Crops page |
-| `GET /api/crops` | World crop prices (monthly since 1990) |
+| `GET /api/crops` | World crop prices (monthly since 1990) and today's exchange rates |
 | `GET /api/crops/rain?region=<country>-<crop>` | Last 12 months of rain in a growing region against the long-term average |
 | `GET /robots.txt`, `/sitemap.xml`, `/manifest.webmanifest` | Search engine and app files |
 | `GET /healthz` | Health check |
