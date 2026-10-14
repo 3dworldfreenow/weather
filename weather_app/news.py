@@ -20,7 +20,7 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 from urllib.parse import quote_plus, urlparse
 
-from . import impacts, services
+from . import crops, impacts, services
 
 log = logging.getLogger(__name__)
 
@@ -97,6 +97,20 @@ THEME_QUERIES = [
     ("storms", '"El Niño" (hurricane OR typhoon OR cyclone)'),
     ("forecast", '"El Niño" (forecast OR outlook OR NOAA OR WMO OR advisory)'),
 ]
+
+# Crop searches (English worldwide edition + India in Hindi), tagged "food" and the crop.
+CROP_QUERIES = [
+    ("rice", '"El Niño" (rice OR paddy)'),
+    ("wheat", '"El Niño" wheat'),
+    ("maize", '"El Niño" (maize OR corn)'),
+    ("sugar", '"El Niño" (sugar OR sugarcane)'),
+    ("soybeans", '"El Niño" (soybean OR soybeans OR soy)'),
+    ("coffee", '"El Niño" coffee'),
+    ("cocoa", '"El Niño" cocoa'),
+    ("palm-oil", '"El Niño" "palm oil"'),
+    ("cotton", '"El Niño" cotton'),
+]
+CROP_QUERIES_HI = '("अल नीनो" OR "El Nino") (फसल OR गन्ना OR चीनी OR धान OR गेहूं OR कपास)'
 
 # YouTube channels of weather/climate agencies. The channel ID is looked up
 # from the handle; the fallback ID is used if that lookup fails.
@@ -232,6 +246,19 @@ def fetch_google_news(edition: tuple) -> list[dict[str, Any]]:
     return articles
 
 
+def fetch_crop_news(crop_id: str, query: str, hl="en-US", gl="US", ceid="US:en", country=None,
+                    language="English", edition=None) -> list[dict[str, Any]]:
+    url = GOOGLE_NEWS_URL.format(q=quote_plus(query), hl=hl, gl=gl, ceid=ceid)
+    articles = parse_google_news(services._get_text(url), country, language)
+    for a in articles:
+        a["theme_hint"] = "food"
+        if crop_id:
+            a["crop_hint"] = crop_id
+        if edition:
+            a["edition"] = edition
+    return articles
+
+
 def fetch_theme_news(theme_id: str, query: str) -> list[dict[str, Any]]:
     url = GOOGLE_NEWS_URL.format(q=quote_plus(query), hl="en-US", gl="US", ceid="US:en")
     articles = parse_google_news(services._get_text(url), None, "English")
@@ -307,8 +334,15 @@ def tag_article(article: dict[str, Any]) -> dict[str, Any]:
     edition = article.pop("edition", None)
     if edition and edition not in countries:
         countries.append(edition)
+    found_crops = crops.detect_crops(text)
+    crop_hint = article.pop("crop_hint", None)
+    if crop_hint and crop_hint not in found_crops:
+        found_crops.append(crop_hint)
+    if found_crops and "food" not in themes:
+        themes.append("food")
     article["themes"] = themes
     article["countries"] = countries
+    article["crops"] = found_crops
     return article
 
 
@@ -328,6 +362,7 @@ def merge_articles(groups: list[list[dict[str, Any]]]) -> list[dict[str, Any]]:
                 kept["image"] = article["image"]
             kept["themes"] = list(dict.fromkeys(kept["themes"] + article["themes"]))
             kept["countries"] = list(dict.fromkeys(kept["countries"] + article["countries"]))
+            kept["crops"] = list(dict.fromkeys(kept["crops"] + article["crops"]))
             if not kept.get("country") and article.get("country"):
                 kept["country"] = article["country"]
     articles = sorted(seen.values(), key=lambda a: a["published"] or "", reverse=True)
@@ -355,6 +390,11 @@ def get_news() -> dict[str, Any]:
         for theme_id, query in THEME_QUERIES:
             jobs.append((f"Google News worldwide: {theme_id}", "news", "https://news.google.com/",
                          lambda t=theme_id, q=query: fetch_theme_news(t, q)))
+        for crop_id, query in CROP_QUERIES:
+            jobs.append((f"Google News crops: {crop_id}", "news", "https://news.google.com/",
+                         lambda c=crop_id, q=query: fetch_crop_news(c, q)))
+        jobs.append(("Google News crops: India (Hindi)", "news", "https://news.google.com/",
+                     lambda: fetch_crop_news(None, CROP_QUERIES_HI, "hi", "IN", "IN:hi", "India", "Hindi", "india")))
         video_jobs = [(f"YouTube: {c['name']}", "video", YOUTUBE_HANDLE_URL.format(handle=c["handle"]),
                        lambda c=c: fetch_channel_videos(c)) for c in YOUTUBE_CHANNELS]
 

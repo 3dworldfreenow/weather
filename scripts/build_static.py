@@ -19,10 +19,12 @@ import shutil
 import sys
 from pathlib import Path
 
+import requests
+
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from weather_app import create_app, enso, impacts, news, satellites, seo  # noqa: E402
+from weather_app import create_app, crops, enso, impacts, news, satellites, seo  # noqa: E402
 
 log = logging.getLogger("build_static")
 
@@ -55,6 +57,15 @@ def default_site_url() -> str:
     return "http://localhost:8000/"
 
 
+def previous_data(site_url: str, name: str) -> dict | None:
+    """The copy of a data file currently published on the live site, if any."""
+    try:
+        resp = requests.get(f"{site_url}data/{name}", timeout=20)
+        return resp.json() if resp.ok else None
+    except (requests.RequestException, ValueError):
+        return None
+
+
 def build(out: Path, site_url: str | None = None) -> None:
     site_url = seo.site_url(site_url or default_site_url(), "/")
     if out.exists():
@@ -66,6 +77,8 @@ def build(out: Path, site_url: str | None = None) -> None:
         "satellites.json": satellites_data,
         "enso.json": enso.get_enso,
         "news.json": news.get_news,
+        # Rainfall and monthly prices change slowly: reuse the published copy if recent.
+        "crops.json": lambda: crops.get_crops(previous_data(site_url, "crops.json")),
     }
     built, failed = {}, []
     for name, builder in builders.items():
@@ -103,6 +116,11 @@ def build(out: Path, site_url: str | None = None) -> None:
     (out / ".nojekyll").write_text("", encoding="utf-8")
     shutil.copytree(ROOT / "weather_app" / "static", out / "static")
 
+    # The Crops page lives one folder deep.
+    page = client.get("/crops/").get_data(as_text=True).replace('"/static/', '"../static/')
+    (out / "crops").mkdir(exist_ok=True)
+    (out / "crops" / "index.html").write_text(page, encoding="utf-8")
+
     # One page per country: "El Niño impact on <country>" (two folders deep).
     for c in impacts.COUNTRIES:
         page = client.get(f"/impacts/{c['slug']}/").get_data(as_text=True).replace('"/static/', '"../../static/')
@@ -112,7 +130,7 @@ def build(out: Path, site_url: str | None = None) -> None:
 
     # 3. Search engine and app files.
     (out / "robots.txt").write_text(seo.robots(site_url), encoding="utf-8")
-    paths = [seo.impact_path(c["slug"]) for c in impacts.COUNTRIES]
+    paths = ["crops/"] + [seo.impact_path(c["slug"]) for c in impacts.COUNTRIES]
     (out / "sitemap.xml").write_text(seo.sitemap(site_url, now.date(), paths), encoding="utf-8")
     (out / "manifest.webmanifest").write_text(json.dumps(seo.manifest(), ensure_ascii=False), encoding="utf-8")
 

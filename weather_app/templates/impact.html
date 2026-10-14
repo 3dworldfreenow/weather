@@ -29,7 +29,7 @@
   <div class="page-wrap">
     <nav class="page-nav" aria-label="Site">
       <a href="../../">🌊 <b>El Niño Tracker</b></a>
-      <a href="../../#impact={{ c.slug }}">Live map →</a>
+      <span><a href="../../crops/">🌾 Crops</a> · <a href="../../#impact={{ c.slug }}">Live map →</a></span>
     </nav>
     <p class="crumbs"><a href="../../">Home</a> › <a href="../../#tab=impacts">World impacts</a> › {{ c.name }}</p>
 
@@ -71,6 +71,11 @@
       <p class="muted">No recent headlines mention {{ c.name }}. The <a href="../../#tab=news">news page</a> shows El Niño news from around the world.</p>
       {% endif %}
 
+      {% if crop_regions %}
+      <h2>El Niño and crops in {{ c.name }}</h2>
+      <ul class="related">{% for r in crop_regions %}<li><a href="../../crops/#country={{ c.slug }}&amp;crop={{ r.crop }}">{{ r.icon }} {{ r.crop_name }}</a></li>{% endfor %}</ul>
+      <p><a href="../../crops/#country={{ c.slug }}">Rainfall, world prices and crop news for {{ c.name }} →</a></p>
+      {% endif %}
       <h2>Official forecasts</h2>
       <p>{% if c.service %}For official seasonal forecasts and warnings in {{ c.name }}, follow
         <a href="{{ c.service.url }}" target="_blank" rel="noopener">{{ c.service.name }}</a>.{% else %}Follow your national

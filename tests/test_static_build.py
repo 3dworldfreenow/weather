@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import build_static  # noqa: E402
-from weather_app import enso, news, satellites, services  # noqa: E402
+from weather_app import crops, enso, news, satellites, services  # noqa: E402
 
 from test_enso import ONI, WEEKLY  # noqa: E402
 
@@ -21,6 +21,10 @@ def offline(monkeypatch):
     monkeypatch.setattr(news, "get_news", lambda: {"articles": [{"title": "El Niño", "url": "https://n.example/1", "source": "n.example",
                                                               "countries": ["india"]}],
                                                "videos": [], "sources": []})
+    monkeypatch.setattr(build_static, "previous_data", lambda site_url, name: None)
+    monkeypatch.setattr(crops, "get_crops", lambda previous=None: {
+        "built_at": "2026-10-01T00:00:00+00:00", "rain": {},
+        "prices": {"sugar": {"series": [["2026-08", 400.0]], "latest": 400.0}}})
     yield
     services.cache.clear()
 
@@ -62,6 +66,15 @@ def test_build_static_site(tmp_path):
     assert "<loc>https://demo.example/weather/</loc>" in (out / "sitemap.xml").read_text()
     assert json.loads((out / "manifest.webmanifest").read_text())["name"] == "El Niño Tracker"
     assert 'href="static/img/apple-touch-icon.png"' in html
+
+    # Crops page
+    page = (out / "crops" / "index.html").read_text()
+    assert "<h1>🌾 El Niño and crops</h1>" in page
+    assert 'src="../static/js/crops.js"' in page and '"/static/' not in page
+    assert '<link rel="canonical" href="https://demo.example/weather/crops/">' in page
+    assert json.loads((out / "data" / "crops.json").read_text())["prices"]["sugar"]["latest"] == 400.0
+    assert "<loc>https://demo.example/weather/crops/</loc>" in (out / "sitemap.xml").read_text()
+    assert 'href="crops/"' in html
 
 
 def test_build_survives_missing_optional_data(tmp_path, monkeypatch):

@@ -185,6 +185,35 @@ def impact_json_ld(base_url: str, c: dict[str, Any]) -> str:
     return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False)
 
 
+CROPS_TITLE = "El Niño and crops: rice, wheat, sugar, coffee, cocoa & palm oil by country | El Niño Tracker"
+CROPS_DESCRIPTION = (
+    "How El Niño affects crops country by country: rainfall in each main growing region against normal, "
+    "world prices for rice, wheat, maize, sugar, soybeans, coffee, cocoa, palm oil and cotton during past "
+    "El Niño years, crop calendars and the latest crop news."
+)
+
+
+def crops_meta(base_url: str) -> dict[str, Any]:
+    return {**page_meta(base_url), "title": CROPS_TITLE, "description": CROPS_DESCRIPTION, "url": base_url + "crops/"}
+
+
+def crops_json_ld(base_url: str) -> str:
+    url = base_url + "crops/"
+    graph = [
+        {"@type": "WebPage", "@id": url, "url": url, "name": "El Niño and crops", "description": CROPS_DESCRIPTION,
+         "inLanguage": "en", "isPartOf": {"@id": base_url + "#website"}},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": SITE_NAME, "item": base_url},
+            {"@type": "ListItem", "position": 2, "name": "Crops", "item": url},
+        ]},
+        {"@type": "Dataset", "name": "World crop prices and growing-region rainfall during El Niño",
+         "description": "Monthly IMF world commodity prices (via FRED) and NASA POWER rainfall for major growing regions.",
+         "url": url, "isAccessibleForFree": True,
+         "keywords": ["El Niño", "crops", "rice", "wheat", "sugar", "coffee", "cocoa", "palm oil", "rainfall"]},
+    ]
+    return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False)
+
+
 def sitemap(base_url: str, lastmod: dt.date | None = None, paths: list[str] | None = None) -> str:
     day = (lastmod or dt.datetime.now(dt.timezone.utc).date()).isoformat()
     urls = [f"  <url><loc>{base_url}</loc><lastmod>{day}</lastmod>"

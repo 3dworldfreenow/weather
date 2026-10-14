@@ -95,7 +95,7 @@ select option { background: var(--bg-solid); }
 .brand-sub { margin: 0; color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .top-actions { display: flex; padding: 4px; gap: 2px; }
 .seg-btn {
-  min-width: 44px; min-height: 44px; padding: 4px 10px; border: 0; border-radius: 10px;
+  min-width: 44px; min-height: 44px; padding: 4px 10px; border: 0; border-radius: 10px; text-decoration: none;
   background: transparent; color: var(--text-2); display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 14px;
 }
 .seg-btn span { font-weight: 600; }
@@ -362,3 +362,76 @@ body.page { overflow: auto; height: auto; background: var(--bg-solid); }
 .page footer { margin-top: 32px; font-size: 13px; color: var(--muted); }
 .related { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; list-style: none; }
 .related a { display: inline-block; padding: 8px 12px; border-radius: 10px; background: var(--bg-raised); border: 1px solid var(--border); text-decoration: none; color: var(--text); font-size: 14px; }
+
+/* ---------- Crops page (crops/) ---------- */
+.crops-page { --rain-mark: var(--cool-mark); --price-mark: var(--accent); }
+.crops-top {
+  position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: calc(10px + var(--safe-top)) 16px 10px; background: var(--bg); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
+}
+.crops-home { color: var(--text); text-decoration: none; white-space: nowrap; }
+.crops-links { display: flex; gap: 4px; }
+.crops-links a { padding: 8px 10px; border-radius: 10px; color: var(--text-2); text-decoration: none; font-size: 14px; }
+.crops-links a[aria-current="page"] { background: var(--bg-hover); color: var(--text); font-weight: 700; }
+.crops-wrap { max-width: 960px; }
+.status-pill { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 14px; color: var(--text-2); }
+.crop-controls { position: sticky; top: calc(56px + var(--safe-top)); z-index: 5; box-shadow: var(--shadow); }
+.control-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.control-row select, .control-row .search { width: 100%; min-height: 44px; }
+.crop-card h2 { margin-top: 0; }
+.crop-card h3.section-title { margin-top: 20px; }
+.note { background: var(--bg-hover); border-radius: 8px; padding: 8px 10px; font-size: 14px; }
+.outlook { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 8px;
+  color: var(--text); background: color-mix(in srgb, var(--o) 28%, transparent); border: 1px solid color-mix(in srgb, var(--o) 70%, transparent); white-space: nowrap; }
+.stat-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 6px 0 10px; }
+.stat { display: flex; flex-direction: column; padding: 8px 12px; border-radius: 10px; background: var(--bg-hover); min-width: 120px; }
+.stat-value { font-size: 22px; font-weight: 800; }
+.stat-label { font-size: 12px; color: var(--muted); }
+.stat.dry .stat-value, .dry { color: #f0a35e; }
+.stat.wet .stat-value, .wet { color: var(--cool); }
+.near { color: var(--text-2); }
+.crop-chart { position: relative; margin: 8px 0 0; }
+.crop-chart svg { display: block; width: 100%; height: auto; touch-action: pan-y; }
+.crop-chart .axis text { fill: var(--muted); font-size: 11px; }
+.crop-chart .grid line { stroke: rgba(255, 255, 255, .08); }
+.crop-chart .zero { stroke: rgba(255, 255, 255, .35); }
+.crop-chart .normal-tick { stroke: var(--text); stroke-width: 2; }
+.crop-chart .crosshair { stroke: rgba(255, 255, 255, .55); }
+.crop-chart .nino-band { fill: var(--warm-mark); opacity: .18; }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--muted); margin: 6px 0; }
+.chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.chart-legend i { display: inline-block; }
+.lg-bar { width: 10px; height: 12px; border-radius: 2px; background: var(--rain-mark); }
+.lg-tick { width: 14px; height: 2px; background: var(--text); }
+.lg-line { width: 16px; height: 2px; background: var(--price-mark); }
+.lg-band { width: 14px; height: 12px; background: color-mix(in srgb, var(--warm-mark) 30%, transparent); }
+#price-range { margin: 6px 0; }
+.crop-mini-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin: 10px 0; }
+.crop-mini, .price-card {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 10px 12px; min-height: 44px;
+  border-radius: 12px; border: 1px solid var(--border); background: var(--bg-raised); color: var(--text); text-align: left; font: inherit; cursor: pointer;
+}
+.crop-mini:hover, .price-card:hover, .price-card.active { border-color: var(--accent); }
+.crop-mini small { font-size: 12px; }
+.link-btn.inline { display: inline; padding: 0; font-size: inherit; cursor: pointer; }
+.table-scroll { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; }
+.crop-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.crop-table th, .crop-table td { text-align: left; padding: 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.crop-table th { position: sticky; top: 0; background: var(--bg-raised); color: var(--muted); font-size: 12px; font-weight: 600; }
+.crop-table td small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+.crop-table tbody tr { cursor: pointer; }
+.crop-table tbody tr:hover, .crop-table tbody tr:focus-visible { background: var(--bg-hover); outline: none; }
+.crop-table tbody tr.selected { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+.price-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; }
+.pc-name { font-weight: 700; }
+.pc-value { font-size: 13px; display: flex; flex-direction: column; gap: 2px; }
+.pc-value b { font-size: 18px; }
+.pc-value small { color: var(--muted); }
+.news-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+@media (max-width: 599px) {
+  .crops-home b { display: none; }
+  .control-row { grid-template-columns: 1fr; gap: 6px; }
+  .crop-controls { padding: 10px; position: static; box-shadow: none; }
+  .crop-table { font-size: 13px; }
+  .crop-table th:nth-child(4), .crop-table td:nth-child(4) { white-space: nowrap; }
+}

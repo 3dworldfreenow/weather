@@ -6,7 +6,7 @@ import json
 
 from flask import Blueprint, Response, abort, current_app, jsonify, render_template, request
 
-from . import enso, impacts, news, satellites, seo, services
+from . import crops, enso, impacts, news, satellites, seo, services
 
 bp = Blueprint("main", __name__)
 
@@ -79,6 +79,10 @@ def impact_page(slug: str):
         "impact.html",
         c=c,
         effect=impacts.EFFECTS[c["effect"]],
+        crop_regions=[
+            {**r, "crop_name": crops.CROPS[r["crop"]]["name"], "icon": crops.CROPS[r["crop"]]["icon"]}
+            for r in crops.REGIONS if r["country"] == slug
+        ],
         meta={**seo.impact_meta(url, c), **verification()},
         json_ld=seo.impact_json_ld(url, c),
         enso=enso_data,
@@ -88,6 +92,46 @@ def impact_page(slug: str):
     )
 
 
+@bp.get("/crops/")
+def crops_page():
+    url = base_url()
+    enso_data, articles = page_data()
+    crop_news = [a for a in articles if a.get("crops")][:15]
+    return render_template(
+        "crops.html",
+        app_config={"static": bool(current_app.config.get("STATIC_SITE"))},
+        meta={**seo.crops_meta(url), **verification()},
+        json_ld=seo.crops_json_ld(url),
+        info=crops.public_info(),
+        countries=impacts.BY_SLUG,
+        enso=enso_data,
+        headlines=crop_news,
+    )
+
+
+@bp.get("/api/crops")
+def crops_data():
+    """Crop info and world prices. Rainfall comes per region from /api/crops/rain."""
+    def prices():
+        out = {}
+        for crop_id in crops.CROPS:
+            try:
+                out[crop_id] = crops.fetch_price(crop_id)
+            except services.UpstreamError as exc:
+                current_app.logger.warning("Crop price %s: %s", crop_id, exc)
+        return out
+
+    return jsonify({"prices": services.cache.get_or_set("crop-prices", 12 * 3600, prices), "rain": {}})
+
+
+@bp.get("/api/crops/rain")
+def crop_rain():
+    region = crops.REGION_BY_ID.get(request.args.get("region", ""))
+    if region is None:
+        raise ValueError("Unknown region")
+    return jsonify(services.cache.get_or_set(("crop-rain", region["id"]), 12 * 3600, lambda: crops.fetch_rain(region)))
+
+
 @bp.get("/robots.txt")
 def robots_txt():
     return Response(seo.robots(base_url()), mimetype="text/plain")
@@ -95,7 +139,7 @@ def robots_txt():
 
 @bp.get("/sitemap.xml")
 def sitemap_xml():
-    paths = [seo.impact_path(c["slug"]) for c in impacts.COUNTRIES]
+    paths = ["crops/"] + [seo.impact_path(c["slug"]) for c in impacts.COUNTRIES]
     return Response(seo.sitemap(base_url(), paths=paths), mimetype="application/xml")
 
 

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{ meta.title }}</title>
+  <meta name="description" content="{{ meta.description }}">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="{{ meta.url }}">
+  <meta name="theme-color" content="{{ meta.theme_color }}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ meta.site_name }}">
+  <meta property="og:title" content="{{ meta.title }}">
+  <meta property="og:description" content="{{ meta.description }}">
+  <meta property="og:url" content="{{ meta.url }}">
+  <meta property="og:image" content="{{ meta.image }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ meta.title }}">
+  <meta name="twitter:description" content="{{ meta.description }}">
+  <meta name="twitter:image" content="{{ meta.image }}">
+  {% if meta.google_verification %}<meta name="google-site-verification" content="{{ meta.google_verification }}">{% endif %}
+  {% if meta.bing_verification %}<meta name="msvalidate.01" content="{{ meta.bing_verification }}">{% endif %}
+  <link rel="icon" type="image/png" sizes="48x48" href="{{ url_for('static', filename='img/favicon-48.png') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/apple-touch-icon.png') }}">
+  <script type="application/ld+json">{{ json_ld | safe }}</script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="page crops-page">
+  <header class="crops-top">
+    <a href="../" class="crops-home">🌊 <b>El Niño Tracker</b></a>
+    <nav class="crops-links" aria-label="Site">
+      <a href="../">Live map</a>
+      <a href="../#tab=news">News</a>
+      <a href="./" aria-current="page">Crops</a>
+    </nav>
+  </header>
+
+  <main class="page-wrap crops-wrap">
+    <p class="crumbs"><a href="../">Home</a> › Crops</p>
+    <h1>🌾 El Niño and crops</h1>
+    <p class="lead">How El Niño affects harvests country by country: rain in each main growing region against normal,
+      world prices during past El Niño years, crop calendars and the latest crop news.</p>
+    {% if enso %}
+    <p class="status-pill"><span class="enso-phase {{ enso.phase }}">{{ {"el_nino": "El Niño", "la_nina": "La Niña"}.get(enso.phase, "Neutral") }}</span>
+      {{ enso.headline }} · Niño 3.4 {{ enso.nino34_anomaly | signed }} °C (week of {{ enso.week }})</p>
+    {% endif %}
+
+    <!-- Pick a country and a crop -->
+    <section class="card crop-controls" aria-label="Choose a country and crop">
+      <div class="control-row">
+        <label class="field">Country
+          <select id="crop-country">
+            <option value="">All countries</option>
+            {% for slug in info.regions | map(attribute="country") | unique %}
+            <option value="{{ slug }}">{{ countries[slug].name }}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label class="field">Search
+          <input type="search" id="crop-search" class="search" placeholder="Crop, country or news…" autocomplete="off">
+        </label>
+      </div>
+      <div class="chips" id="crop-chips" role="group" aria-label="Crop">
+        <button class="chip active" data-crop="">All crops</button>
+        {% for cid, c in info.crops.items() %}<button class="chip" data-crop="{{ cid }}">{{ c.icon }} {{ c.name }}</button>{% endfor %}
+      </div>
+    </section>
+
+    <!-- Selected country + crop -->
+    <section id="crop-detail" aria-live="polite"></section>
+
+    <!-- Overview table -->
+    <section>
+      <h2>El Niño-sensitive crops by country</h2>
+      <p class="muted">Typical El Niño effect on each crop and the rain in its main growing region over the last 3 months
+        compared with the long-term average. Tap a row for charts and news.</p>
+      <div class="table-scroll">
+        <table class="crop-table" id="crop-table">
+          <thead><tr><th>Country</th><th>Crop</th><th>El Niño effect</th><th>Rain, last 3 months</th></tr></thead>
+          <tbody>
+          {% for r in info.regions %}{% set c = info.crops[r.crop] %}{% set o = info.outlooks[r.outlook] %}
+            <tr data-region="{{ r.id }}" data-country="{{ r.country }}" data-crop="{{ r.crop }}" tabindex="0">
+              <td><b>{{ countries[r.country].name }}</b><small>{{ r.region }}</small></td>
+              <td>{{ c.icon }} {{ c.name }}<small>{{ r.season }}</small></td>
+              <td><span class="outlook" style="--o: {{ o.color }}">{{ o.icon }} {{ o.label }}</span></td>
+              <td class="rain-cell" data-region="{{ r.id }}">–</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- World prices -->
+    <section>
+      <h2>World crop prices</h2>
+      <p class="muted">Monthly world prices (IMF, via FRED). Tap a crop to see its full history with El Niño periods shaded.</p>
+      <div class="price-grid" id="price-grid">
+        {% for cid, c in info.crops.items() %}
+        <button class="price-card" data-crop="{{ cid }}"><span class="pc-name">{{ c.icon }} {{ c.name }}</span>
+          <span class="pc-value muted">Loading…</span></button>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- Crop news -->
+    <section>
+      <h2 id="crop-news-title">Latest crop news</h2>
+      <div id="crop-news">
+        {% for a in headlines %}
+        <a class="news-item" href="{{ a.url }}" target="_blank" rel="noopener noreferrer">
+          <div><div class="news-title">{{ a.title }}</div>
+            <div class="news-meta">{% if a.country %}<span class="flag">{{ a.country }}</span>{% endif %}{{ a.source }}{% if a.language %} · {{ a.language }}{% endif %}</div></div>
+        </a>
+        {% else %}<p class="muted">Loading crop news…</p>{% endfor %}
+      </div>
+    </section>
+
+    <footer>
+      <p>Rainfall: <a href="https://power.larc.nasa.gov/" target="_blank" rel="noopener">NASA POWER</a> (agroclimatology).
+        Prices: <a href="https://www.imf.org/en/Research/commodity-prices" target="_blank" rel="noopener">IMF Primary Commodity Prices</a>
+        via <a href="https://fred.stlouisfed.org/" target="_blank" rel="noopener">FRED</a>.
+        El Niño periods: NOAA Oceanic Niño Index. Crop notes summarise typical El Niño effects reported by FAO, USDA,
+        national agencies and research; every event is different.</p>
+      <p>News links open the original publishers. <a href="../">Back to the El Niño Tracker</a>.</p>
+    </footer>
+  </main>
+
+  <div class="toast" id="toast" hidden></div>
+  <script type="application/json" id="crops-info">{{ info | tojson }}</script>
+  <script type="application/json" id="countries-info">{{ countries | tojson }}</script>
+  <script>window.APP_CONFIG = {{ app_config | tojson }};</script>
+  <script src="{{ url_for('static', filename='js/crops.js') }}"></script>
+</body>
+</html>

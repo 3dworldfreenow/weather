@@ -113,7 +113,7 @@ def test_get_news_combines_everything(monkeypatch):
     assert data["videos"][-1]["explainer"] is True
     assert all(s["ok"] for s in data["sources"])
     assert len(data["sources"]) == (1 + len(news.GOOGLE_NEWS_EDITIONS) + len(news.THEME_QUERIES)
-                                    + len(news.YOUTUBE_CHANNELS))
+                                    + len(news.CROP_QUERIES) + 1 + len(news.YOUTUBE_CHANNELS))
 
 
 def test_get_news_survives_some_sources_failing(monkeypatch):
@@ -179,6 +179,17 @@ def test_articles_are_tagged_with_themes_and_countries():
     assert set(panama["countries"]) == {"panama", "united-states"}
     assert {"drought", "economy"} <= set(panama["themes"])
     assert "edition" not in india and "theme_hint" not in peru
+    assert india["crops"] == ["rice"] and peru["crops"] == []
+
+
+def test_crop_search_hint_tags_the_crop():
+    merged = news.merge_articles([[
+        {"title": "Mills brace for a weaker harvest as El Niño looms", "url": "https://s.example/1", "source": "s",
+         "country": None, "language": "English", "published": "2026-10-10T00:00:00+00:00", "image": None,
+         "via": "Google News", "theme_hint": "food", "crop_hint": "sugar"},
+    ]])
+    assert merged[0]["crops"] == ["sugar"] and "food" in merged[0]["themes"]
+    assert "crop_hint" not in merged[0]
 
 
 def test_duplicate_articles_merge_their_tags():

@@ -76,7 +76,7 @@ def test_country_page_and_sitemap():
     assert '"@type": "BreadcrumbList"' in html
     assert client.get("/impacts/atlantis/").status_code == 404
     sitemap = client.get("/sitemap.xml").get_data(as_text=True)
-    assert sitemap.count("<url>") == 1 + len(impacts.COUNTRIES)
+    assert sitemap.count("<url>") == 2 + len(impacts.COUNTRIES)  # home, crops, countries
 
 
 def test_country_page_shows_cached_news_about_that_country():
