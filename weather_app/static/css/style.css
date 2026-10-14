@@ -347,7 +347,9 @@ body.sheet-full .legend { display: none; }
 }
 
 /* ---------- Country impact pages (impacts/<country>/) ---------- */
-body.page { overflow: auto; height: auto; background: var(--bg-solid); }
+/* Content pages scroll normally (the map app locks the document instead) */
+html.page-root { overflow-y: auto; height: auto; overscroll-behavior: auto; }
+body.page { overflow: visible; height: auto; overscroll-behavior: auto; background: var(--bg-solid); }
 .page-wrap { max-width: 760px; margin: 0 auto; padding: calc(16px + var(--safe-top)) 16px calc(32px + var(--safe-bottom)); }
 .page-nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 18px; font-size: 14px; }
 .page-nav a { text-decoration: none; }
