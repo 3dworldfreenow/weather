@@ -6,7 +6,7 @@
 * Bing News RSS      - El Niño searches in several markets
 * Humanitarian reports - ReliefWeb, FAO, WFP, OCHA, IFRC, UNICEF and FEWS NET
                        (searched through Google News)
-* Science & agency RSS feeds (NOAA Climate.gov, NASA Earth Observatory, UN News,
+* Science & agency RSS feeds (NOAA Climate.gov, UN News,
   Carbon Brief, Phys.org, ScienceDaily), filtered to El Niño / ENSO
 * arXiv and Crossref - new research papers
 * Hacker News (Algolia API) - discussions
@@ -157,7 +157,6 @@ BING_MARKETS = [
 # (name, url, kind, home page)
 FEEDS = [
     ("NOAA Climate.gov ENSO blog", "https://www.climate.gov/feeds/news-features/enso.rss", "science", "https://www.climate.gov/enso"),
-    ("NASA Earth Observatory", "https://earthobservatory.nasa.gov/feeds/earth-observatory.rss", "science", "https://earthobservatory.nasa.gov/"),
     ("UN News: climate", "https://news.un.org/feed/subscribe/en/news/topic/climate-change/feed/rss.xml", "news", "https://news.un.org/"),
     ("Carbon Brief", "https://www.carbonbrief.org/feed/", "science", "https://www.carbonbrief.org/"),
     ("Phys.org Earth", "https://phys.org/rss-feed/earth-news/", "science", "https://phys.org/earth-news/"),

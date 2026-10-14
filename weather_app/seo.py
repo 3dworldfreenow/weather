@@ -217,7 +217,7 @@ def crops_json_ld(base_url: str) -> str:
 NEWS_TITLE = "El Niño news today: world headlines, reports, research, podcasts & videos | El Niño Tracker"
 NEWS_DESCRIPTION = (
     "Live El Niño news from around the world in many languages: headlines from Google News, Bing News and GDELT, "
-    "UN humanitarian reports, NOAA and NASA updates, new research papers, podcasts and videos. "
+    "UN humanitarian reports, NOAA and UN updates, new research papers, podcasts and videos. "
     "Filter by country, topic, crop and language. Free, updated every 30 minutes."
 )
 
