@@ -545,3 +545,8 @@ select.gn-pick.on { background-color: var(--accent-soft); border-color: var(--ac
 }
 .kind-badge.k-elnino { background: #fce8e6; color: #c5221f; }
 .kind-badge.k-official { background: #e6f4ea; color: #0d652d; }
+/* Desktop: show every tab (wrap instead of hiding some off to the right) */
+@media (min-width: 600px) {
+  .gn-tabs { flex-wrap: wrap; overflow: visible; }
+  .gn-sub { flex-wrap: wrap; overflow: visible; }
+}
