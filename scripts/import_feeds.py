@@ -145,7 +145,9 @@ def from_awesome(session: requests.Session) -> list[dict[str, str]]:
             continue
         country = f["name"][:-5].replace("_", " ").strip()
         try:
-            root = ET.fromstring(session.get(f["download_url"], timeout=60).content)
+            text = session.get(f["download_url"], timeout=60).content.decode("utf-8", errors="replace")
+            text = re.sub(r"&(?!(?:amp|lt|gt|quot|apos|#\d+|#x[0-9a-fA-F]+);)", "&amp;", text)  # bare "&" in titles
+            root = ET.fromstring(text)
         except (requests.RequestException, ET.ParseError) as exc:
             log.warning("awesome-rss-feeds %s: %s", f["name"], exc)
             continue
@@ -244,12 +246,13 @@ def main() -> None:
 
     slugs = country_slugs()
     order = {"newspaper": 0, "tv": 1, "government": 2, "weather": 3, "university": 4}
-    rows, final_seen = [], set()
+    rows = []
+    final_seen = {norm_url(r["url"]) for r in curated if r.get("url")} | {r["url"] for r in curated if r.get("url")}
     for c in sorted(good, key=lambda c: (order[c["category"]], c["country"] or "~", c["publisher"].lower())):
         key = norm_url(c["url"])
-        if key in final_seen:
+        if key in final_seen or c["url"] in final_seen:
             continue  # redirected to a feed we already have
-        final_seen.add(key)
+        final_seen.update((key, c["url"]))
         rows.append({
             "country": c["country"], "slug": slugs.get(c["country"].lower(), ""), "language": c["language"],
             "publisher": c["publisher"].strip()[:120], "url": c["url"], "type": "feed", "category": c["category"],

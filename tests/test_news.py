@@ -423,9 +423,12 @@ def test_import_feeds_classifies_and_writes_csv(tmp_path, monkeypatch):
          "category": "newspaper", "origin": "wikidata"},
         {"country": "Kenya", "language": "", "publisher": "Kenya Met", "url": "https://met.example/rss",
          "category": "weather", "origin": "wikidata"},
+        {"country": "India", "language": "", "publisher": "Redirects to hand-picked", "url": "https://redirect.example/rss",
+         "category": "newspaper", "origin": "wikidata"},
     ])
     monkeypatch.setattr(import_feeds, "from_awesome", lambda s: [])
-    monkeypatch.setattr(import_feeds, "check_feed", lambda s, c, now: None if "dead" in c["url"] else c)
+    monkeypatch.setattr(import_feeds, "check_feed", lambda s, c, now: None if "dead" in c["url"] else
+                        {**c, "url": "https://hand.example/rss"} if "redirect" in c["url"] else c)
     monkeypatch.setattr(sys, "argv", ["import_feeds.py"])
     import_feeds.main()
 
