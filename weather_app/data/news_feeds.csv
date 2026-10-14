@@ -437,7 +437,7 @@ United States,united-states,English,San José Spotlight,https://sanjosespotlight
 United States,united-states,English,Santa Fe Reporter,https://sfreporter.com/api/rss/content.rss,feed,newspaper,topic,wikidata
 United States,united-states,English,SharpPost,https://ruibao.news/rss/,feed,newspaper,topic,wikidata
 United States,united-states,English,Steam Deck HQ,https://steamdeckhq.com/feed/,feed,newspaper,topic,wikidata
-United States,united-states,English,The Athletic,https://www.nytimes.com/athletic/rss/news/,feed,newspaper,topic,wikidata
+United States,united-states,French,The Athletic,https://www.nytimes.com/athletic/rss/news/,feed,newspaper,topic,wikidata
 United States,united-states,English,The Daily Memphian,https://dailymemphian.com/feed,feed,newspaper,topic,wikidata
 United States,united-states,English,The Intercept,https://theintercept.com/feed/?rss,feed,newspaper,topic,wikidata
 United States,united-states,English,The Verge,https://www.theverge.com/rss/index.xml,feed,newspaper,topic,wikidata
@@ -445,6 +445,7 @@ United States,united-states,English,Unbiasable,https://unbiasable.com/rss.xml,fe
 United States,united-states,English,Unicorn Riot,https://unicornriot.ninja/feed/,feed,newspaper,topic,wikidata
 United States,united-states,English,US Top News and Analysis,https://www.cnbc.com/id/100003114/device/rss/rss.html,feed,newspaper,topic,awesome-rss-feeds
 United States,united-states,English,Washington Business Journal,"https://rss.bizjournals.com/feed/2c976b9e9ab38dbe5a468eeb848e17dc76188c19/2102?market=washington&selectortype=channel&selectorvalue=1,6,2,3,4,13,17,5,9,10,18,7,11,12,14,15,8,16",feed,newspaper,topic,wikidata
+United States,united-states,,World,https://feeds.washingtonpost.com/rss/world,feed,newspaper,topic,awesome-rss-feeds
 United States,united-states,English,World & Nation,https://www.latimes.com/world-nation/rss2.0.xml,feed,newspaper,topic,awesome-rss-feeds
 United States,united-states,English,"World News - Breaking News, Top Stories",https://chaski.huffpost.com/us/auto/vertical/world-news,feed,newspaper,topic,awesome-rss-feeds
 United States,united-states,English,Zeteo,https://zeteo.com/feed,feed,newspaper,topic,wikidata
@@ -516,7 +517,7 @@ Czech Republic,,Czech,Radio Proglas,https://www.proglas.cz/?rss=1,feed,tv,topic,
 Czech Republic,,Czech,Radio Relax,https://radio-relax.cz/new/feed/,feed,tv,topic,wikidata
 Czech Republic,,Czech,Rádio 7,https://radio7.cz/?format=feed&type=rss,feed,tv,topic,wikidata
 Czech Republic,,Czech,Rádio DAB Praha,https://praha.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
-Czech Republic,,Czech,Óčko Star,https://ocko.tv/rss.aspx,feed,tv,topic,wikidata
+Czech Republic,,Czech,Óčko,https://ocko.tv/rss.aspx,feed,tv,topic,wikidata
 Czech Republic,,Czech,Český rozhlas Brno,https://brno.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
 Czech Republic,,Czech,Český rozhlas D-dur,https://d-dur.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
 Czech Republic,,Czech,Český rozhlas Dvojka,https://dvojka.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
@@ -544,15 +545,15 @@ France,,French,Radio Calade,https://www.radio-calade.fr/category/podcast/feed/,f
 France,,French,Radio Pulsar,https://www.radio-pulsar.org/feed/,feed,tv,topic,wikidata
 France,,French,RT en français,https://rtenfrancais.tv/rss,feed,tv,topic,wikidata
 Germany,,German,Broadcasting Combine Saxony,https://www.rundfunkkombinat.de/feed/,feed,tv,topic,wikidata
-Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/film-serie-100.rss,feed,tv,topic,wikidata
 Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/umwelt-104.rss,feed,tv,topic,wikidata
 Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/buehne-100.rss,feed,tv,topic,wikidata
+Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/film-serie-100.rss,feed,tv,topic,wikidata
 Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/psychologie-100.rss,feed,tv,topic,wikidata
 Germany,,German,Deutschlandfunk,https://www.deutschlandfunk.de/politikportal-100.rss,feed,tv,topic,wikidata
-Germany,,German,Deutschlandfunk,https://www.deutschlandfunk.de/nachrichten-100.rss,feed,tv,topic,wikidata
+Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/meinung-debatte-100.rss,feed,tv,topic,wikidata
 Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/philosophie-104.rss,feed,tv,topic,wikidata
 Germany,,German,Deutschlandfunk,https://www.deutschlandfunk.de/wissen-106.rss,feed,tv,topic,wikidata
-Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/meinung-debatte-100.rss,feed,tv,topic,wikidata
+Germany,,German,Deutschlandfunk,https://www.deutschlandfunk.de/nachrichten-100.rss,feed,tv,topic,wikidata
 Germany,,German,Deutschlandfunk,https://www.deutschlandfunk.de/wirtschaft-106.rss,feed,tv,topic,wikidata
 Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/geschichte-136.rss,feed,tv,topic,wikidata
 Germany,,German,MDF.1,http://www.mdf1.de/feeds/index.rss,feed,tv,topic,wikidata
@@ -572,7 +573,6 @@ Norway,,,NRK Sápmi,https://www.nrk.no/sapmi/oddasat.rss,feed,tv,topic,wikidata
 Norway,,,NRK Troms og Finnmark,https://www.nrk.no/tromsogfinnmark/siste.rss,feed,tv,topic,wikidata
 Norway,,,NRK Troms og Finnmark,https://www.nrk.no/tromsogfinnmark/toppsaker.rss,feed,tv,topic,wikidata
 Norway,,English,Voice of Tibet,https://feeds.feedburner.com/VoiceOfTibet,feed,tv,topic,wikidata
-Qatar,,Arabic,Al Jazeera Mubasher,https://www.aljazeeramubasher.net/rss.xml,feed,tv,topic,wikidata
 Romania,,French,TeenNick,https://www.nickalive.net/feeds/posts/default?alt=rss,feed,tv,topic,wikidata
 Russia,,,Zvezda,https://tvzvezda.ru/export/rss.xml,feed,tv,topic,wikidata
 Singapore,,English,CNA,https://www.channelnewsasia.com/api/v1/rss-outbound-feed?_format=xml,feed,tv,topic,wikidata
@@ -617,6 +617,7 @@ Vatican City,,English,Vatican News,https://www.vaticannews.va/en.rss.xml,feed,tv
 ,,,rbb24,https://www.rbb24.de/sport/index.xml/feed=rss.xml,feed,tv,topic,wikidata
 ,,,rbb24,https://www.rbb24.de/wirtschaft/index.xml/feed=rss.xml,feed,tv,topic,wikidata
 ,,English,Really American,https://feeds.megaphone.fm/VJJET3007346842,feed,tv,topic,wikidata
+,,Czech,Show Jana Krause,https://showjanakrause.cz/feed/,feed,tv,topic,wikidata
 ,,English,SModcast,http://feeds.feedburner.com/SModcasts,feed,tv,topic,wikidata
 ,,American english,The Circuit,https://www.omnycontent.com/d/playlist/e73c998e-6e60-432f-8610-ae210140c5b1/5fcb25d0-ece4-45e4-93f6-b01900d5e2ff/3d8551fb-ccf9-49ef-b51c-b01900d636c8/podcast.rss,feed,tv,topic,wikidata
 ,,English,The David Rubenstein Show,https://www.omnycontent.com/d/playlist/e73c998e-6e60-432f-8610-ae210140c5b1/4d56c12f-2316-44f8-bc9a-ae3c0003206b/b3927dcf-9c18-47af-9b1c-ae3c00032087/podcast.rss,feed,tv,topic,wikidata
@@ -665,403 +666,11 @@ Czech Republic,,Czech,Březno,https://www.obecbrezno.cz/feed/,feed,government,to
 Czech Republic,,Czech,Březolupy,https://brezolupy.cz/feed/,feed,government,topic,wikidata
 Czech Republic,,Czech,Březí,https://www.brezi.eu/feed/,feed,government,topic,wikidata
 Czech Republic,,Czech,Břežany I,https://www.brezany1.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Bříšťany,http://bristany.cz/feed/,feed,government,topic,wikidata
 Czech Republic,,Czech,Centre for International Cooperation in Education,https://www.dzs.cz/rss.xml,feed,government,topic,wikidata
 Czech Republic,,Czech,Cerhenice,https://cerhenice.cz/feed/,feed,government,topic,wikidata
 Czech Republic,,Czech,Cerhovice,http://www.cerhovice.cz/www/mestyscerhovice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
 Czech Republic,,Czech,Chleby,https://obec-chleby.cz/feed/,feed,government,topic,wikidata
 Czech Republic,,Czech,Chlum,https://www.chlum-blatna.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Chobot,https://www.obecchobot.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Chocnějovice,http://www.obecchocnejovice.eud.cz/www/obecchocnejovice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Chotoviny,http://www.chotoviny.cz/www/obecchotoviny/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,,Chotěboř,https://www.chotebor.cz/data/4,feed,government,topic,wikidata
-Czech Republic,,Czech,Choťovice,https://www.obec-chotovice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Chrudim,https://www.chrudim.eu/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Crhov,https://obeccrhov.cz/rss/all.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Czech Geological Survey,https://cgs.gov.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,,Czech Office of Surveying and Cadastre,https://www.cuzk.gov.cz/?rss=RSS,feed,government,topic,wikidata
-Czech Republic,,Czech,Czech Science Foundation,https://gacr.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,,Desná,https://www.obecdesna.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Dobronice u Bechyně,https://www.dobronice.cz/www/obecdobronice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Dolní Bousov,https://dolni-bousov.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Dolní Chvatliny,https://www.dolnichvatliny.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Dolní Hořice,http://www.dolnihorice.cz/www/obecdolnihorice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Dolní Vilímeč,https://web4.dolnivilimec.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Dolní Věstonice,http://www.obecdolnivestonice.cz/www/obecdolnivestonice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Dolní Žďár,https://www.dolnizdar.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Doubek,https://obecdoubek.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Dražice,http://www.obecdrazice.cz/www/obecdrazice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Drhovice,https://www.obecdrhovice.cz/www/obecdrhovice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Dubičné,http://www.dubicne.cz/www/obecdubicne/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Dubné,https://www.dubne.cz/www/obecdubne/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Dubovice,http://www.dubovice.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Dvory,http://www.dvory-veleliby.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Dvůr Králové nad Labem,https://www.mudk.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Dyjákovice,https://www.dyjakovice.cz/?format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Dětřichov,https://www.obecdetrichov.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Dřevěnice,http://www.drevenice.org/www/obecdrevenice/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Dřínov,https://www.drinov.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Dřísy,https://www.drisy.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,,Electrotechnical Association of the Czech Republic,https://www.electroindustry.cz/rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Energy Regulatory Office,https://eru.gov.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,English,European Union Agency for the Space Programme,https://www.euspa.europa.eu/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Hamry nad Sázavou,https://hamryns.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Hartmanice,http://www.obechartmanice.cz/www/obechartmanice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Haškovcova Lhota,https://www.haskovcovalhota.cz/www/obechaskovcovalhota/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Hejnice,https://www.mestohejnice.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Heřmanov,https://www.hermanov.info/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Heřmanov,https://www.hermanov.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Heřmanovice,https://www.hermanovice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Hlavice,http://www.obechlavice.cz/index.php/cz/?format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Hlincová Hora,http://www.hlincovahora.cz/www/obechlincovahora/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Hlohovčice,https://www.hlohovcice.cz/?feed=rss2,feed,government,topic,wikidata
-Czech Republic,,Czech,Hlučín,https://www.hlucin.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Hodkovice nad Mohelkou,https://www.hodkovicenm.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Hodonice,http://www.obechodonice.bechynsko.cz/www/obechodonice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Holotín,https://obecholotin.cz/rss/all.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Holín,https://holin.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Horní Bukovina,https://www.hornibukovina.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Horní Jiřetín,http://www.hornijiretin.cz/www/hornijiretin/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Horní Řepčice,https://hornirepcice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Horušice,https://obechorusice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Hostín,https://www.hostin.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Hořešovice,https://www.horesovice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Hoštice,https://obechostice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Hradce,http://www.hradce.cz/www/obechradce/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Hradištko,https://www.hradistko.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,,Hradiště,https://www.obec-hradiste.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Hrazany,https://www.obechrazany.cz/www/obechrazany/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Hrušová,http://hrusova.cz/index.php?format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Husinec,https://www.husinec.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Hvozdec,https://www.obechvozdec.cz/www/obechvozdec/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Jankovice,https://jankovice.net/feed/,feed,government,topic,wikidata
-Czech Republic,,,Jarošov,http://www.obecjarosov.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Jedlany,https://www.jedlany.cz/www/obecjedlany/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Jetětice,http://www.jetetice.cz/www/obecjetetice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Jindřichův Hradec,https://www.jh.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Jivno,http://www.jivno.cz/www/obecjivno/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Jiřetín pod Bukovou,https://www.jiretinpb.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Jílovice,https://obec-jilovice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Jíloviště,https://jiloviste.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Kadaň,https://www.mesto-kadan.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Kaliště,https://obec-kaliste.cz/remote/rss.php?tp=4&id=-1,feed,government,topic,wikidata
-Czech Republic,,Czech,Kamenná,http://www.oukamenna.cz/www/obeckamenna/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Kamenná,https://kamenna-tr.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Karlovice,https://www.karlovice-sedmihorky.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Karviná,https://www.karvina.cz/rss/cs,feed,government,topic,wikidata
-Czech Republic,,Czech,Katov,https://www.katov.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Kašnice,https://www.kasnice.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Kladky,https://obeckladky.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Kladruby,https://www.kladruby.info/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Klenová,http://www.klenova.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Klášter Hradiště nad Jizerou,https://www.klasterhradistenj.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Kobylnice,http://www.obeckobylnice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Koclířov,https://www.koclirov.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Kojetín,https://www.kojetin.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Koldín,https://www.koldin.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,,Komárovice,https://www.komarovice.cz/export/rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Koruna,https://www.obec-koruna.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Korytná,https://www.korytna.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Kosořín,https://kosorin.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Kostelec u Holešova,https://www.kostelecuholesova.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Kouty,https://obec-kouty.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Krucemburk,https://www.krucemburk.cz/rss.rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Kunčina Ves,https://www.kuncinaves.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Kutrovice,http://www.kutrovice.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Kuřim,https://www.kurim.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Kuřimany,https://www.kurimany.cz/www/obeckurimany/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Květnice,https://www.kvetnice.eu/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Květná,https://www.kvetna.cz/?format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Kyjov,https://www.mestokyjov.cz/rss/cs,feed,government,topic,wikidata
-Czech Republic,,Czech,Kácov,https://www.kacov.cz/rss.php,feed,government,topic,wikidata
-Czech Republic,,Czech,Křenovy,https://www.krenovy.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Křečkov,http://www.kreckov.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Křešín,http://www.oukresin.cz/index.php?format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Křižanov,http://www.obeckrizanov.eud.cz/www/obeckrizanov/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Křižínkov,https://www.krizinkov.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Labská Stráň,http://www.labskastran.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Lažany,http://www.obeclazany.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Ledeč nad Sázavou,https://www.ledecns.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,,Leština,http://www.obeclestina.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Lhota-Vlasenice,http://www.lhota-vlasenice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Lhotka,https://oulhotka.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Libavské Údolí,https://www.libavskeudoli.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,,Libchavy,https://www.libchavy.cz/data/65,feed,government,topic,wikidata
-Czech Republic,,Czech,Libice nad Doubravou,https://www.libicend.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Libochovičky,http://www.libochovicky.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Librantice,https://www.librantice.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Libraries in Prostějov,https://knihovnapv.webnode.cz/rss/all.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Libuň,https://libun.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Libčany,https://www.libcany.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Lipová,https://www.lipova-obec.cz/feed,feed,government,topic,wikidata
-Czech Republic,,Czech,Lipí,https://www.lipi.cz/www/obeclipi/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Litovel,https://www.litovel.eu/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Lom,http://www.obeclom.eud.cz/www/obeclom/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Lomy,https://www.obec-lomy.cz/cs/?format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Loukov,https://loukov.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Louny,https://www.mulouny.cz/rss.php,feed,government,topic,wikidata
-Czech Republic,,Czech,Louňovice pod Blaníkem,https://www.lounovicepodblanikem.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,,Lozice,http://www.lozice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Lubná,https://obeclubna.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Luhačovice,https://www.luhacovice.eu/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Luka,https://obecluka.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Lukavec,https://www.lukavec.info/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Luženičky,https://luzenicky.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Lužice,http://www.luziceuhodonina.cz/www/obecluzice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Lysá nad Labem,https://www.mestolysa.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Lásenice,https://www.lasenice.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Lázně Libverda,https://www.laznelibverda.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Líbeznice,https://www.libeznice.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Líšeň,https://www.brno-lisen.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Makov,https://makovukunstatu.cz/rss/all.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Mačkov,https://www.mackov.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Mažice,http://www.mazice.cz/www/obecmazice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Metylovice,https://metylovice.cz/?format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Meziříčí,http://www.obecmezirici.cz/www/obecmezirici/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Miletín,https://www.miletin.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Milíkov,http://www.obecmilikov.cz/rss/rss-aktuality-cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Mladeč,https://www.mladec.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Mladá Vožice,https://www.mu-vozice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,,Mlázovice,https://www.mlazovice.cz/rss/,feed,government,topic,wikidata
-Czech Republic,,Czech,Mníšek pod Brdy,https://www.mnisek.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Mojné,https://www.mojne.cz/www/obecmojne/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Moravany,https://obec-moravany.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Moraveč,https://obecmoravec.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Moravská Třebová,https://www.moravskatrebova.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Mrlínek,https://www.mrlinek.eu/?format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Municipal Library,https://www.kostomlaty-knihovna.cz/index.php?format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Municipal Library,https://knihovna-repiste.cz/?format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,,Municipal Library,https://www.doubrava.cz/rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Municipal Library,https://psary.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Municipal library,https://www.jistebnice.cz/www/mestojistebnice/fs/wrs-rss/rss_uvod.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Municipal Library,https://mesto.strazov.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,,Municipal Library Borovnice,https://www.borovnice.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Municipal Library Drozdov,https://www.obecdrozdov.eu/www/obecdrozdov/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Municipal Library in Koněprusy,https://koneprusy.cz/www/obeckoneprusy/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Municipal Library in Libomyšl,https://www.libomysl-be.cz/www/obeclibomysl/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Municipal Library in Nedrahovice,https://www.nedrahovice.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Municipal Library in Pavlovice,http://www.obecpavlovice.cz/?format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Municipal Library Jimramov,https://jimramov.cz/?format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Municipal Library of Jablonec nad Nisou,https://knihovna.mestojablonec.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Municipal Library Osek,https://www.obecosek.eud.cz/www/obecosek/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Municipal Library Všelibice,https://www.vselibice.cz/?format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Municipal Police of Brno,https://www.mpb.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Municipal Police of Přerov,https://www.mpprerov.eu/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Mysliboř,http://myslibor.imunis.cz/edeska/feed/rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Myslotín,https://www.myslotin.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Myštice,https://www.obecmystice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Městské lesy Doksy,https://lesydoksy.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Městské muzeum Frýdlant,https://www.mesto-frydlant.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,National Cyber and Information Security Agency,https://nukib.gov.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Nechvalín,https://www.nechvalin.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Nemojov,https://nemojov.com/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Nemyšl,https://www.nemysl.cz/www/obecnemysl/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Nepomuk,https://nepomuk-pb.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Nesehnutí,https://nesehnuti.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Nezvěstice,https://www.nezvestice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Nosálov,http://www.nosalov.cz/www/obecnosalov/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Nová Ves,http://www.novaves-so.cz/index.php?format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Nová Ves nad Popelkou,https://novavesnadpopelkou.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Nová Ves u Mladé Vožice,https://www.obec-nova-ves.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Nové Město na Moravě,https://www.nmnm.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,,Nový Hrádek,https://www.novy-hradek.cz/rss.php,feed,government,topic,wikidata
-Czech Republic,,Czech,Níhov,https://www.nihov.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Office for Personal Data Protection,https://uoou.gov.cz/feed/cs-rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Ohrazenice,https://ohrazenice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Okna,https://obecokna.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,,Okrouhlá,https://www.ouokrouhla.cz/blog-feed.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Olbramice,https://www.obecolbramice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Oleško,http://www.olesko.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Olešnice,https://www.olesnice-obec.cz/www/obecolesnice/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Olešná,https://www.ouolesna.cz/www/obecolesna/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Olešná,http://www.olesna-be.cz/www/obecolesnabe/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Olomouc,https://www.olomouc.eu/administrace/action/rss.php?rss=aktualityolomouceu,feed,government,topic,wikidata
-Czech Republic,,Czech,Olší,https://www.olsi.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Olší,https://obecolsi.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,OpenAlt,https://www.openalt.org/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Ostrata,https://www.ostrata.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Ostrovánky,https://www.ostrovanky.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Ostrožská Nová Ves,https://onves.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Oudoleň,https://www.oudolen.cz/rss.rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Oznice,https://www.oznice.cz/rss.php,feed,government,topic,wikidata
-Czech Republic,,Czech,Paseky nad Jizerou,https://www.paseky.cz/?format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Pavlice,http://www.pavlice.cz/?format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Petrovice,https://www.oupetrovice.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Pilníkov,https://www.pilnikov.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,English,Platform of European Memory and Conscience,https://www.memoryandconscience.eu/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Plchov,https://www.plchov.cz/www/obecplchov/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Pleše,https://www.obecplese.cz/www/obecplese/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Podluhy,https://obecpodluhy.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Podolí I,https://www.podoli1.cz/www/obecpodoli/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Pohnání,http://www.pohnani.cz/www/obecpohnani/fs/wrs-rss/rss_vychozi-novy.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Pohoří,https://obecpohori.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Polička,https://www.policka.org/rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Potštejn,https://potstejn.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Prague 11,https://www.praha11.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Prague 7,https://www.praha7.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Proboštov,https://www.ouprobostov.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Proruby,https://proruby.webnode.cz/rss/all.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Proseč,https://www.mestoprosec.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Prostějov,https://www.prostejov.eu/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Prušánky,https://obecprusanky.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Prštice,https://www.prstice.cz/www/obecprstice/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Ptýrov,https://www.obec-ptyrov.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Písečná,https://www.obecpisecna.cz/rss/rss-aktuality-cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Pístina,https://www.pistina.cz/www/obecpistina/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Pňov-Předhradí,https://www.pnov-predhradi.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Přerov,https://www.prerov.eu/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Příšovice,https://prisovice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Radenín,http://www.radenin.cz/www/obecradenin/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Radiměř,https://www.obec-radimer.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Radostná pod Kozákovem,https://radostna.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Radětice,https://www.radetice.cz/www/obecradetice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Ralsko,https://mestoralsko.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Rodná,https://www.rodna.eu/www/obecrodna/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Rohatsko municipal office,https://www.rohatsko.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Rokytnice nad Jizerou,https://www.mesto-rokytnice.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Rosice,https://www.rosice.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Rozstání,http://www.rozstani.eu/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Roztoky u Jilemnice,https://www.roztoky-u-jilemnice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Rožnov pod Radhoštěm,https://www.roznov.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Rudíkov,https://rudikov.webnode.cz/rss/all.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Rusava,https://www.rusava.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Rychvald,https://rychvald.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Rýmařov,https://www.rymarov.cz/?format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Samšina,http://www.samsina.nasweb.eu/www/obecsamsina/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Sběř,https://obec-sber.cz/index.php/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Sedlčany,https://www.mesto-sedlcany.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Senorady,http://www.senorady.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Skryje,http://www.obecskryje.cz/www/obecskryje/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Slabčice,https://www.slabcice.cz/www/obecslabcice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Slatina,https://www.obec-slatina.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Slatina nad Zdobnicí,https://www.slatinanz.cz/www/obecslatinanadzdobnici/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Slavkov u Brna,https://www.slavkov.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Slavětín nad Metují,http://www.slavetinnadmetuji.cz/www/obecslavetinnadmetuji/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Slověnice,https://www.slovenice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,,Smrček,http://www.obecsmrcek.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Snovídky,http://www.snovidky.eu/index.php?option=com_content&view=featured&Itemid=2037&format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Sobkovice,https://sobkovice.info/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Sokoleč,https://www.sokolec.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Sousedovice,https://sousedovice.info/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Srbice,https://www.srbice.cz/www/obecsrbice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Staré Hodějovice,http://www.starehodejovice.cz/www/obecstarehodejovice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Starý Kolín,https://www.starykolin.eu/feed/,feed,government,topic,wikidata
-Czech Republic,,,State Veterinary Administration,https://en.svs.gov.cz/?dl_name=rss,feed,government,topic,wikidata
-Czech Republic,,,Strakov,https://www.strakov.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Stráž nad Nisou,https://www.straznadnisou.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Strážkovice,http://www.strazkovice.cz/www/obecstrazkovice/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Stádlec,https://www.stadlec.eu/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Suchodol,http://www.obecsuchodol.cz/www/obecsuchodol/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Suchá Loz,https://www.suchaloz.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Sudice,https://www.obecsudice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Sudoměřice,https://www.obecsudomerice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Sudoměřice u Tábora,http://www.sudomericeutabora.cz/www/obecsudomericeutabora/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Svatý Jiří,https://www.svaty-jiri.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Svatý Mikuláš,https://www.svatymikulas.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Svijany,https://www.obecsvijany.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Svitavy,https://www.svitavy.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Svojetice,https://svojetice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Svrabov,http://www.svrabov.cz/www/obecsvrabov/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Svrkyně,http://www.svrkyne.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Světlá,https://www.obecsvetla.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Syřenov,https://syrenov.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Sádek,https://www.obec-sadek.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Tachov,https://obectachov.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Tanvald,https://www.tanvald.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,English,Telč,https://www.telc.eu/rss/,feed,government,topic,wikidata
-Czech Republic,,Czech,Thanks That We Can,https://dikyzemuzem.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Tichá,https://www.ticha.cz/rss.php,feed,government,topic,wikidata
-Czech Republic,,Czech,Tlumačov,https://www.tlumacov.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Trojanovice,https://www.trojanovice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Trutnov,https://www.trutnov.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Tupesy,https://www.tupesy.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Turnov,https://www.turnov.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Týnec nad Sázavou,https://www.mestotynec.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Týniště nad Orlicí,https://www.tyniste.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Těšetice,https://www.tesetice.cz/rss.php,feed,government,topic,wikidata
-Czech Republic,,Czech,Třebohostice,https://www.obectrebohostice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,,Třebětín,https://www.trebetin.cz/blog/x5feed.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Ubušínek,https://www.ubusinek.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Uzenice,https://obec-uzenice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Uzeničky,https://obec-uzenicky.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Vejprty,https://www.vejprty.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Velenov,https://www.velenov.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Velká Chyška,https://velkachyska.cz/rss/all.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Velké Janovice,https://velkejanovice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Velké Němčice,https://www.velkenemcice.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Vendolí,https://obecvendoli.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Vestec,http://www.obecvestec.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Vestec,https://vestec.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Vevčice,https://vevcice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Veřovice,https://www.verovice.cz/rss.php,feed,government,topic,wikidata
-Czech Republic,,Czech,Vidov,http://www.vidov.cz/www/obecvidov/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Vikantice,https://www.obecvikantice.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,,Vintířov,https://www.vintirov.cz/_includes/rss_notams.php?language=CS,feed,government,topic,wikidata
-Czech Republic,,Czech,Višňové,https://www.visnove.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Vlastibořice,https://vlastiborice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Vlkanov,https://www.vlkanov.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Vlkanov,https://vlkanov.com/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Vlksice,https://www.obecvlksice.cz/www/obecvlksice/fs/wrs-rss/rss_vychozi-novy.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Volenice,https://www.obecvolenice.eud.cz/www/obecvolenice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Vonoklasy,https://www.vonoklasy.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Vracov,https://www.mestovracov.cz/feed,feed,government,topic,wikidata
-Czech Republic,,Czech,Vracovice,https://www.obecvracovice.cz/?format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Vrbno pod Pradědem,https://www.vrbnopp.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Vrbová Lhota,https://www.vrbova-lhota.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Vrčeň,https://www.vrcen.cz/rss/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Vršovka,http://www.vrsovka.cz/www/obecvrsovka/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Vysoké Mýto,https://www.vysoke-myto.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Vyžlovka,https://vyzlovka.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Všestudy,http://vsestudy-obec.cz/index.php/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Zahořany,https://www.zahorany.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Zalužany,https://www.obeczaluzany.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Zastávka,https://www.zastavka.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Zbelítov,http://www.zbelitov.cz/www/obeczbelitov/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Zběšičky,http://www.obeczbesicky.cz/www/obeczbesicky/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Zdíkov,http://www.zdikov.cz/www/obeczdikov/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Zeleneč,https://www.zelenec.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Zhoř,https://www.obec-zhor.cz/www/obeczhor/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Zlátenka,https://www.zlatenka.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Zubčice,https://www.zubcice.cz/www/obeczubcice/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Zvánovice,https://www.obeczvanovice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Zvíkov,http://www.zvikovulisova.cz/www/obeczvikovulisova/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Újezdec,https://www.obec-ujezdec.cz/www/obecujezdec/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Úmyslovice,http://www.umyslovice.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Úsilov,https://usilov.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Ústup,https://obec-ustup.webnode.cz/rss/all.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Útěchov,https://www.utechov.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Úvaly,https://www.mestouvaly.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Čakov,http://www.cakov.cz/www/obeccakov/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Čankov,http://www.endora.cz/feed,feed,government,topic,wikidata
-Czech Republic,,Czech,Častolovice,http://www.ou-castolovice.cz/?format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Častrov,https://castrov.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Čelákovice,https://www.celakovice.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Čenkov u Bechyně,http://www.cenkov.cz/www/obeccenkov/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Čermná,https://www.cermna.cz/index.php?format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Černiv,https://cerniv.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,,Černá Voda,https://www.obeccernavoda.cz/data/14,feed,government,topic,wikidata
-Czech Republic,,Czech,Černíč,https://www.cernic.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Černýšovice,http://www.obeccernysovice.cz/www/obeccernysovice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Česká Kamenice,https://ceska-kamenice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,České Heřmanice,https://www.ceskehermanice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Slovak,Český ekologický ústav,https://www.ceu.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Čkyně,http://www.ckyne.cz/www/obecckyne/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Řečice,https://www.obecrecice.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Římov,http://www.rimov.cz/www/obecrimov/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Škvořetice,http://www.obecskvoretice.cz/www/obecskvoretice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Šlapanice,https://www.slapanice.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Šošůvka,https://sosuvka.com/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Štíhlice,https://www.stihlice.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Štěkeň,https://steken.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Štětí,https://www.steti.cz/?format=feed&type=rss,feed,government,topic,wikidata
-Czech Republic,,Czech,Šumperk,https://www.sumperk.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Želešice,https://www.zelesice.eu/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Ženklava,https://www.zenklava.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Žerůtky,https://www.obeczerutky.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Žichlínek,https://zichlinek.eu/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Židlochovice,https://www.zidlochovice.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Žítková,https://www.zitkova.cz/rss.xml,feed,government,topic,wikidata
-Czech Republic,,Czech,Žďár,https://www.obec-zdar.eu/feed/,feed,government,topic,wikidata
 France,,French,Académie Française,https://www.academie-francaise.fr/rss.xml,feed,government,topic,wikidata
 France,,French,Public Sénat,https://www.publicsenat.fr/feed,feed,government,topic,wikidata
 Germany,,German,Altenholz,https://altenholz.de/?format=feed&type=rss,feed,government,topic,wikidata
@@ -1074,14 +683,15 @@ Germany,,German,City administration of Mannheim,https://www.mannheim.de/de/rss/p
 Germany,,German,City administration of Mannheim,https://www.mannheim.de/de/rss/veranstaltungen,feed,government,topic,wikidata
 Germany,,German,Elmshorn,https://www.elmshorn.de/media/rss/BekanntmachungenStadtElmshorn.xml,feed,government,topic,wikidata
 Germany,,German,Eutin,https://www.vg-eutin-suesel.de/media/rss/presseeutin.xml,feed,government,topic,wikidata
-Germany,,German,"Federal Ministry for the Environment, Climate Protection, Nature Conservation and Nuclear Safety",https://www.bundesumweltministerium.de/meldungen.rss,feed,government,topic,wikidata
 Germany,,German,"Federal Ministry for the Environment, Climate Protection, Nature Conservation and Nuclear Safety",https://www.bundesumweltministerium.de/index.php?type=708,feed,government,topic,wikidata
 Germany,,German,"Federal Ministry for the Environment, Climate Protection, Nature Conservation and Nuclear Safety",https://www.bundesumweltministerium.de/index.php?type=704,feed,government,topic,wikidata
 Germany,,German,"Federal Ministry for the Environment, Climate Protection, Nature Conservation and Nuclear Safety",https://www.bundesumweltministerium.de/index.php?type=705,feed,government,topic,wikidata
 Germany,,German,"Federal Ministry for the Environment, Climate Protection, Nature Conservation and Nuclear Safety",https://www.bundesumweltministerium.de/uvp.rss,feed,government,topic,wikidata
 Germany,,German,"Federal Ministry for the Environment, Climate Protection, Nature Conservation and Nuclear Safety",https://www.bundesumweltministerium.de/events.rss,feed,government,topic,wikidata
+Germany,,German,"Federal Ministry for the Environment, Climate Protection, Nature Conservation and Nuclear Safety",https://www.bundesumweltministerium.de/meldungen.rss,feed,government,topic,wikidata
 Germany,,German,Federal Ministry of Health of Germany,https://www.bundesgesundheitsministerium.de/meldungen.xml,feed,government,topic,wikidata
 Germany,,German,Federal Ministry of Health of Germany,https://www.bundesgesundheitsministerium.de/pressemitteilungen.xml,feed,government,topic,wikidata
+Germany,,German,Friesland,https://www.friesland.de/portal/rss.xml,feed,government,topic,wikidata
 Germany,,German,Geesthacht,https://www.geesthacht.de/media/rss/Aktuelles.xml,feed,government,topic,wikidata
 Germany,,German,German Bundestag,https://www.bundestag.de/static/appdata/includes/rss/pressemitteilungen.rss,feed,government,topic,wikidata
 Germany,,German,German Bundestag,https://www.bundestag.de/static/appdata/includes/rss/tagesordnungen.rss,feed,government,topic,wikidata
@@ -1169,8 +779,8 @@ Austria,,German,Seeburg Castle University,https://www.uni-seeburg.at/feed/,feed,
 Austria,,,University of Innsbruck,https://www.uibk.ac.at/de/newsroom/video/video.atom,feed,university,topic,wikidata
 Austria,,,University of Innsbruck,https://www.uibk.ac.at/en/newsroom/news.atom,feed,university,topic,wikidata
 Austria,,,University of Innsbruck,https://www.uibk.ac.at/de/newsroom/unileben/unileben.atom,feed,university,topic,wikidata
-Austria,,,University of Innsbruck,https://www.uibk.ac.at/de/newsroom/audio/audio.atom,feed,university,topic,wikidata
 Austria,,German,University of Innsbruck,https://www.uibk.ac.at/newsroom/pressemitteilungen.rss,feed,university,topic,wikidata
+Austria,,,University of Innsbruck,https://www.uibk.ac.at/de/newsroom/audio/audio.atom,feed,university,topic,wikidata
 Azerbaijan,,Azerbaijani,Azerbaijan State University of Culture and Arts,https://admiu.edu.az/feed/,feed,university,topic,wikidata
 Bahrain,,English,Ahlia University,https://www.ahlia.edu.bh/feed/,feed,university,topic,wikidata
 Bahrain,,English,University College of Bahrain,https://ucb.edu.bh/feed/,feed,university,topic,wikidata
@@ -1237,14 +847,14 @@ Costa Rica,costa-rica,Spanish,Latin University of Costa Rica,https://www.ulatina
 Costa Rica,costa-rica,English,University for Peace,https://upeace.org/feed/,feed,university,topic,wikidata
 Croatia,,Croatian,National and University Library in Zagreb,https://nsk.hr/feed/,feed,university,topic,wikidata
 Croatia,,Croatian,University of Osijek,https://www.unios.hr/feed/,feed,university,topic,wikidata
-Cuba,,Spanish,"University ""Marta Abreu"" of Las Villas",https://www.uclv.edu.cu/feed/,feed,university,topic,wikidata
 Cyprus,,Greek,Cyprus College,https://cycollege.ac.cy/el/feed/,feed,university,topic,wikidata
+Cyprus,,English,Middle East Technical University Northern Cyprus Campus,https://ncc.metu.edu.tr/rss.xml,feed,university,topic,wikidata
+Cyprus,,Turkish,Middle East Technical University Northern Cyprus Campus,https://ncc.metu.edu.tr/tr/rss.xml,feed,university,topic,wikidata
 Czech Republic,,Czech,ARCHIP,https://www.archip.eu/feed/,feed,university,topic,wikidata
 Czech Republic,,Czech,Association Of Research Organizations,https://www.avo.cz/feed/,feed,university,topic,wikidata
 Czech Republic,,Czech,Boleslav Tecla Observatory in Moravská Třebová,https://www.autovylet.cz/feed/,feed,university,topic,wikidata
 Czech Republic,,,"Brno University of Technology, Central Library",https://www.vut.cz/rss/uk/aktuality-f29435,feed,university,topic,wikidata
 Czech Republic,,Czech,Czech Academy of Sciences,https://www.avcr.cz/rss/feed-news-cs-veda-a-vyzkum.rss,feed,university,topic,wikidata
-Czech Republic,,Czech,Czech Chamber of Authorized Engineers and Technicians Active in Construction,https://www.ckait.cz/rss.xml,feed,university,topic,wikidata
 Czech Republic,,Czech,Czech Chemical Society,https://www.csch.cz/feed/,feed,university,topic,wikidata
 Czech Republic,,English,"Czech Institute of Informatics, Robotics and Cybernetics",https://www.ciirc.cvut.cz/en/feed/,feed,university,topic,wikidata
 Czech Republic,,Czech,Czech Pedagogical Research Association,https://capv.cz/feed/,feed,university,topic,wikidata
@@ -1327,6 +937,7 @@ Greece,,English,Technical University of Crete,https://www.tuc.gr/el/index.php?id
 Greece,,English,University of the Aegean,https://www.aegean.edu/feed/,feed,university,topic,wikidata
 Greece,,Greek,University of the Aegean,https://www.aegean.gr/rss.xml,feed,university,topic,wikidata
 Greece,,Greek,University of Western Macedonia,https://www.uowm.gr/feed/,feed,university,topic,wikidata
+Greece,,Greek,Vakalo Art & Design College,https://vakalo.gr/feed/,feed,university,topic,wikidata
 Guatemala,guatemala,Spanish,Universidad del Istmo,https://unis.edu.gt/feed/,feed,university,topic,wikidata
 Guatemala,guatemala,,Universidad Mesoamericana,https://www.umes.edu.gt/blog-feed.xml,feed,university,topic,wikidata
 Hungary,,Hungarian,Corvinus University of Budapest,https://www.uni-corvinus.hu/feed/,feed,university,topic,wikidata
@@ -1384,6 +995,7 @@ Indonesia,indonesia,English,Universitas Islam Negeri Raden Fatah Palembang,https
 Indonesia,indonesia,English,Universitas Pasundan,https://www.unpas.ac.id/feed/,feed,university,topic,wikidata
 Indonesia,indonesia,English,University of Bengkulu,https://www.unib.ac.id/feed/,feed,university,topic,wikidata
 Indonesia,indonesia,Indonesian,University of Bunda Mulia,https://www.ubm.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,Indonesian,University Primagraha,https://unsera.ac.id/feed/,feed,university,topic,wikidata
 Iran,,Persian,International University of Chabahar,https://iuc.ac.ir/feed/,feed,university,topic,wikidata
 Iran,,Persian,Iran University of Science and Technology,https://idea.iust.ac.ir/rss.php?sid=1&slc_lang=1,feed,university,topic,wikidata
 Iran,,Persian,Kharazmi University,https://khu.ac.ir/rss.php?sid=1&slc_lang=1,feed,university,topic,wikidata
@@ -1450,21 +1062,7 @@ Japan,japan,Japanese,Otaru University of Commerce,https://www.otaru-uc.ac.jp/fee
 Japan,japan,Japanese,Rakuno Gakuen University,https://www.rakuno.ac.jp/feed,feed,university,topic,wikidata
 Japan,japan,Japanese,Rissho University Museum,https://www.ris.ac.jp/museum/news/rss.xml,feed,university,topic,wikidata
 Japan,japan,Japanese,Sapporo Gakuin University,https://www.sgu.ac.jp:443/rss.xml,feed,university,topic,wikidata
-Japan,japan,Japanese,Shimonoseki City University,http://www.shimonoseki-cu.ac.jp/feed,feed,university,topic,wikidata
-Japan,japan,,Shiraume Gakuen College,https://daigaku.shiraume.ac.jp/atom.xml,feed,university,topic,wikidata
-Japan,japan,Japanese,Shoin University,https://www.shoin-u.ac.jp/feed/,feed,university,topic,wikidata
-Japan,japan,Japanese,Shumei University,https://www.shumei-u.ac.jp/feed,feed,university,topic,wikidata
-Japan,japan,Japanese,Suzuka University of Medical Science,https://www.suzuka-u.ac.jp/feed,feed,university,topic,wikidata
-Japan,japan,Japanese,The Institute of Statistical Mathematics,https://www.ism.ac.jp/ura/press/rss.rss,feed,university,topic,wikidata
-Japan,japan,Japanese,The Japanese Red Cross Kyushu International College of Nursing,https://www.jrckicn.ac.jp/feed/,feed,university,topic,wikidata
-Japan,japan,Japanese,Toho College of Music,https://www.toho-music.ac.jp/feed/,feed,university,topic,wikidata
-Japan,japan,,Tokyo University of Marine Science and Technology,https://www.kaiyodai.ac.jp/rss.xml,feed,university,topic,wikidata
-Japan,japan,Japanese,Uekusa University,https://www.uekusa.ac.jp/feed/,feed,university,topic,wikidata
-Japan,japan,,University of Human Environments,https://www.uhe.ac.jp/atom.xml,feed,university,topic,wikidata
-Japan,japan,,University of Miyazaki,https://www.miyazaki-u.ac.jp/newsrelease/atom.xml,feed,university,topic,wikidata
-Japan,japan,Japanese,University of Yamanashi,https://www.yamanashi.ac.jp/feed,feed,university,topic,wikidata
-Japan,japan,Japanese,Yamagata Prefectural University of Health Sciences,https://www.yachts.ac.jp/rss2.xml,feed,university,topic,wikidata
-Japan,japan,Japanese,Yamanashi Eiwa College,https://www.yamanashi-eiwa.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,Japanese,Shibata Gakuen University,https://univ.shibata.ac.jp/feed/,feed,university,topic,wikidata
 Jordan,,Arabic,Amman Arab University,https://www.aau.edu.jo/rss.xml,feed,university,topic,wikidata
 Jordan,,English,Middle East University,https://www.meu.edu.jo/feed/,feed,university,topic,wikidata
 Jordan,,Arabic,Tafila Technical University,https://www.ttu.edu.jo/feed/,feed,university,topic,wikidata
@@ -1513,6 +1111,7 @@ Montenegro,,Serbian,"Faculty for Information technology, Podgorica",http://fit.u
 Morocco,,French,National School of Agriculture of Meknes,https://www.enameknes.ac.ma/feed/,feed,university,topic,wikidata
 Morocco,,Arabic,University of al-Qarawiyyin,http://uaq.ma/index.php?format=feed&type=rss,feed,university,topic,wikidata
 Mozambique,mozambique,Portuguese,Eduardo Mondlane University,https://uem.mz/feed/,feed,university,topic,wikidata
+Myanmar,myanmar,English,"University of Computer Studies, Mandalay",https://www.ucsm.edu.mm/feed/,feed,university,topic,wikidata
 Nepal,nepal,English,Lumbini Buddha University,https://lbu.edu.np/feed/,feed,university,topic,wikidata
 Nepal,nepal,English,Pokhara University,https://pu.edu.np/feed/,feed,university,topic,wikidata
 Netherlands,,English,Maastricht University,https://www.maastrichtuniversity.nl/rss.xml,feed,university,topic,wikidata
@@ -1587,6 +1186,7 @@ Philippines,philippines,English,University of Luzon,https://ul.edu.ph/feed/,feed
 Philippines,philippines,English,University of Northern Philippines,https://unp.edu.ph/feed/,feed,university,topic,wikidata
 Philippines,philippines,English,University of Southeastern Philippines,https://usep.edu.ph/feed/,feed,university,topic,wikidata
 Poland,,Polish,University of Silesia in Katowice,https://us.edu.pl/feed/,feed,university,topic,wikidata
+Poland,,Polish,University of the National Education Commission,https://www.uken.krakow.pl/?format=feed&type=rss,feed,university,topic,wikidata
 Poland,,Polish,University of Warsaw,https://www.uw.edu.pl/feed/,feed,university,topic,wikidata
 Poland,,English,University of Wrocław,https://uwr.edu.pl/en/feed/,feed,university,topic,wikidata
 Poland,,Polish,University of Wrocław,https://uwr.edu.pl/feed/,feed,university,topic,wikidata
@@ -1606,6 +1206,7 @@ Romania,,Romanian,Tibiscus University of Timișoara,https://tibiscus.ro/feed/,fe
 Romania,,Romanian,Victor Babeș University of Medicine and Pharmacy,https://www.umft.ro/ro/feed/,feed,university,topic,wikidata
 Russia,,Russian,Astrakhan State Medical University,https://astgmu.ru/feed/,feed,university,topic,wikidata
 Russia,,Russian,Baltic State Technical University,https://voenmeh.ru/feed/,feed,university,topic,wikidata
+Russia,,Russian,Bratsk State University,https://www.brstu.ru:443/?format=feed&type=rss,feed,university,topic,wikidata
 Russia,,Russian,Dagestan State Agricultural Academy,https://xn--80aaiac8g.xn--p1ai/?format=feed&type=rss,feed,university,topic,wikidata
 Russia,,,Gorno-Altaisk State University,https://gasu.ru/university/news/rss.php,feed,university,topic,wikidata
 Russia,,Russian,Ivanovo State Power Engineering University,http://www.ispu.ru/rss.xml,feed,university,topic,wikidata
@@ -1615,6 +1216,7 @@ Russia,,Russian,Komsomolsk-on-Amur state university,https://knastu.ru/news/rss,f
 Russia,,Russian,"Lesgaft National State University of Physical Education, Sport and Health",https://lesgaft.spb.ru/ru/rss.xml,feed,university,topic,wikidata
 Russia,,Russian,Pacific State Medical University,https://tgmu.ru/feed/,feed,university,topic,wikidata
 Russia,,Russian,Russian State Hydrometeorological University,https://www.rshu.ru/rss.xml,feed,university,topic,wikidata
+Russia,,Russian,Siberian Law University,https://siblu.ru/rss.xml,feed,university,topic,wikidata
 Russia,,,Udmurt State University,https://udsu.ru/news.xml,feed,university,topic,wikidata
 Russia,,Russian,Volgograd Municipal Institute of Arts,http://new.serebryakovka.ru/feed/,feed,university,topic,wikidata
 Russia,,,Volgograd State University,https://www.volsu.ru/index.php?rss=y,feed,university,topic,wikidata
@@ -1692,6 +1294,7 @@ Ukraine,,Ukrainian,Lviv Polytechnic,https://lpnu.ua/rss.xml,feed,university,topi
 Ukraine,,Ukrainian,Mykolayiv State Agrarian University,https://www.mnau.edu.ua/feed/,feed,university,topic,wikidata
 Ukraine,,Ukrainian,National Academy of Legal Sciences of Ukraine,https://nals.com.ua/feed,feed,university,topic,wikidata
 Ukraine,,Ukrainian,O.M.Beketov National University of Urban Economy in Kharkiv,https://www.kname.edu.ua/?format=feed&type=rss,feed,university,topic,wikidata
+Ukraine,,Ukrainian,Odesa University,https://onu.edu.ua/uk/?format=feed&type=rss,feed,university,topic,wikidata
 Ukraine,,Ukrainian,Prydniprovska State Academy of Civil Engineering and Architecture,https://pgasa.dp.ua/feed/,feed,university,topic,wikidata
 Ukraine,,,Ternopil Ivan Puluj National Technical University,https://tntu.edu.ua/rss.php?t=news&l=uk,feed,university,topic,wikidata
 Ukraine,,Ukrainian,Ukrainian State University of Railway Transport,https://kart.edu.ua/feed,feed,university,topic,wikidata
@@ -1742,50 +1345,6 @@ United States,united-states,English,MIT Media Lab,https://www.media.mit.edu/feed
 United States,united-states,English,Mount Madonna Institute,https://mountmadonna.org/feed/,feed,university,topic,wikidata
 United States,united-states,English,Mount Vernon Nazarene University,https://mvnu.edu/feed/,feed,university,topic,wikidata
 United States,united-states,English,National Agricultural Law Center,https://nationalaglawcenter.org/feed/,feed,university,topic,wikidata
-United States,united-states,,National Institute of Mental Health,https://www.nimh.nih.gov/site-info/index-rss.atom,feed,university,topic,wikidata
-United States,united-states,English,Newcomb–Tulane College,https://college.tulane.edu/rss.xml,feed,university,topic,wikidata
-United States,united-states,English,North American University,https://www.na.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,Northeast Ohio Medical University,https://www.neomed.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,Northwestern State University,https://www.nsula.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,Oikos University,https://www.oikos.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,Oklahoma State System of Higher Education,https://okhighered.org/feed/,feed,university,topic,wikidata
-United States,united-states,English,Pensacola State College,https://pensacolastate.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,Pittsburgh Institute of Mortuary Science,https://pims.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,Point Loma Nazarene University,https://www.pointloma.edu/rss.xml,feed,university,topic,wikidata
-United States,united-states,English,Queens University of Charlotte,https://www.queens.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,Robert M. La Follette School of Public Affairs,https://lafollette.wisc.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,Robert Morris University,https://www.rmu.edu/rss.xml,feed,university,topic,wikidata
-United States,united-states,English,Russell Sage Foundation,https://www.russellsage.org/rss.xml,feed,university,topic,wikidata
-United States,united-states,English,Rutgers University–Newark,https://www.newark.rutgers.edu/rss.xml,feed,university,topic,wikidata
-United States,united-states,English,Saint Peter's University,https://www.saintpeters.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,Saint Vladimir's Orthodox Theological Seminary,https://www.svots.edu/rss.xml,feed,university,topic,wikidata
-United States,united-states,English,San Francisco State University,https://www.sfsu.edu/rss.xml,feed,university,topic,wikidata
-United States,united-states,Spanish,School of Plastic Arts of Puerto Rico,https://eap.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,Sophie Davis School of Biomedical Education,https://medicine.cuny.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,South Coast College,https://southcoastcollege.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,Southern California Coastal Water Research Project,https://www.sccwrp.org/feed/,feed,university,topic,wikidata
-United States,united-states,English,Stevenson University,https://www.stevenson.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,Sul Ross State University,https://www.sulross.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,Tulane University,https://tulane.edu/rss.xml,feed,university,topic,wikidata
-United States,united-states,English,Tulane University School of Liberal Arts,https://liberalarts.tulane.edu/rss.xml,feed,university,topic,wikidata
-United States,united-states,English,Tulane University School of Social Work,https://sse.tulane.edu/rss.xml,feed,university,topic,wikidata
-United States,united-states,English,UF Innovate | Sid Martin Biotech,https://innovate.research.ufl.edu/feed/,feed,university,topic,wikidata
-United States,united-states,Spanish,Universidad del Sagrado Corazón,https://www.sagrado.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,University of Florida Cancer and Genetics Research Complex,https://ufgi.ufl.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,University of Florida forensic science distance education program,https://forensicscience.ufl.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,University of Florida pharmaceutical chemistry distance education program,https://pharmchem.cop.ufl.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,University of Illinois Springfield,https://www.uis.edu/rss.xml,feed,university,topic,wikidata
-United States,united-states,English,"University of Maryland, Baltimore County",https://umbc.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,University of San Francisco,https://www.usfca.edu/rss.xml,feed,university,topic,wikidata
-United States,united-states,English,University of Texas at Dallas,https://www.utdallas.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,University of the Potomac,https://potomac.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,University of Tulsa,https://tulsahurricane.com/api/v2/rss/xml,feed,university,topic,wikidata
-United States,united-states,English,University of Washington Astrobiology Program,https://depts.washington.edu/astrobio/wordpress/feed/,feed,university,topic,wikidata
-United States,united-states,English,University of Washington School of Aquatic and Fishery Sciences,https://fish.uw.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,University of Washington Stroum Center for Jewish Studies,https://jewishstudies.washington.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,University of Washington Tech Policy Lab,https://techpolicylab.uw.edu/news/feed/,feed,university,topic,wikidata
-United States,united-states,English,UPRRP College of Natural Sciences,https://natsci.uprrp.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,Washington University in St. Louis,https://washu.edu/feed/,feed,university,topic,wikidata
 Uruguay,uruguay,Spanish,University Latin American Center for Human Economy,https://universidad.claeh.edu.uy/feed/,feed,university,topic,wikidata
 Venezuela,venezuela,Spanish,Universidad Bicentenaria de Aragua,https://uba.edu.ve/feed/,feed,university,topic,wikidata
 Venezuela,venezuela,Spanish,Universidad Gran Mariscal de Ayacucho,https://ugma.terna.net/Noticias.php?type=rss,feed,university,topic,wikidata
