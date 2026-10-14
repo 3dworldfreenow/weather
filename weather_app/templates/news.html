@@ -26,7 +26,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body class="page news-page">
-  <header class="crops-top">
+  <header class="crops-top news-head">
     <a href="../" class="crops-home">🌊 <b>El Niño Tracker</b></a>
     <nav class="crops-links" aria-label="Site">
       <a href="../">Live map</a>
@@ -35,49 +35,40 @@
     </nav>
   </header>
 
-  <main class="page-wrap crops-wrap">
-    <p class="crumbs"><a href="../">Home</a> › News</p>
-    <h1>📰 El Niño news from around the world</h1>
-    <p class="lead">Headlines in many languages, humanitarian reports, agency updates, new research, discussions,
-      podcasts and videos about El Niño, all from free public sources.</p>
-    {% if enso %}
-    <p class="status-pill"><span class="enso-phase {{ enso.phase }}">{{ {"el_nino": "El Niño", "la_nina": "La Niña"}.get(enso.phase, "Neutral") }}</span>
-      {{ enso.headline }} · Niño 3.4 {{ enso.nino34_anomaly | signed }} °C (week of {{ enso.week }})</p>
-    {% endif %}
-    <p class="muted" id="news-stats" aria-live="polite"></p>
+  <!-- Google News-style menu: type tabs, then one row of compact filters -->
+  <div class="gn-bar" role="region" aria-label="Filter news">
+    <nav class="gn-tabs" id="news-kinds" aria-label="Section">
+      <button class="chip gn-tab active" data-kind="">All</button>
+      <button class="chip gn-tab" data-kind="elnino">🌊 El Niño</button>
+      <button class="chip gn-tab" data-kind="weather">🌦️ World weather</button>
+      <button class="chip gn-tab" data-kind="official">🏛️ Official</button>
+      <button class="chip gn-tab" data-kind="report">🆘 Reports</button>
+      <button class="chip gn-tab" data-kind="science">🔬 Science</button>
+      <button class="chip gn-tab" data-kind="paper">📄 Research</button>
+      <button class="chip gn-tab" data-kind="discussion">💬 Discussions</button>
+      <button class="chip gn-tab" data-kind="podcast">🎧 Podcasts</button>
+      <button class="chip gn-tab" data-kind="video">▶️ Videos</button>
+    </nav>
+    <div class="gn-sub">
+      <label class="gn-search"><span aria-hidden="true">🔍</span>
+        <input type="search" id="news-q" placeholder="Search news" aria-label="Search news" autocomplete="off"></label>
+      <select id="news-country" class="gn-pick" aria-label="Country"><option value="">🌍 Country</option></select>
+      <select id="news-theme" class="gn-pick" aria-label="Topic"><option value="">🏷️ Topic</option>
+        {% for t in themes %}<option value="{{ t.id }}">{{ t.icon }} {{ t.title }}</option>{% endfor %}</select>
+      <select id="news-crop" class="gn-pick" aria-label="Crop"><option value="">🌾 Crop</option>
+        {% for cid, c in crop_names.items() %}<option value="{{ cid }}">{{ c.icon }} {{ c.name }}</option>{% endfor %}</select>
+      <select id="news-lang" class="gn-pick" aria-label="Language"><option value="">🗣️ Language</option></select>
+      <button class="gn-clear" id="news-reset" hidden>✕ Clear</button>
+    </div>
+  </div>
 
-    <section class="card crop-controls" aria-label="Filter news">
-      <div class="chips" id="news-kinds" role="group" aria-label="Type">
-        <button class="chip active" data-kind="">All</button>
-        <button class="chip" data-kind="news">📰 News</button>
-        <button class="chip" data-kind="report">🆘 Reports</button>
-        <button class="chip" data-kind="science">🔬 Science</button>
-        <button class="chip" data-kind="paper">📄 Research</button>
-        <button class="chip" data-kind="discussion">💬 Discussions</button>
-        <button class="chip" data-kind="podcast">🎧 Podcasts</button>
-        <button class="chip" data-kind="video">▶️ Videos</button>
-      </div>
-      <div class="news-controls">
-        <label class="field news-search-field">Search
-          <input type="search" id="news-q" class="search" placeholder="Word, place, source…" autocomplete="off">
-        </label>
-        <label class="field">Country
-          <select id="news-country"><option value="">All countries</option></select>
-        </label>
-        <label class="field">Topic
-          <select id="news-theme"><option value="">All topics</option>
-            {% for t in themes %}<option value="{{ t.id }}">{{ t.icon }} {{ t.title }}</option>{% endfor %}</select>
-        </label>
-        <label class="field">Crop
-          <select id="news-crop"><option value="">All crops</option>
-            {% for cid, c in crop_names.items() %}<option value="{{ cid }}">{{ c.icon }} {{ c.name }}</option>{% endfor %}</select>
-        </label>
-        <label class="field">Language
-          <select id="news-lang"><option value="">All languages</option></select>
-        </label>
-      </div>
-      <button class="link-btn" id="news-reset" hidden>✕ Clear filters</button>
-    </section>
+  <main class="page-wrap crops-wrap news-main">
+    <div class="news-headline">
+      <h1>El Niño &amp; weather news</h1>
+      {% if enso %}<span class="enso-phase {{ enso.phase }}" title="{{ enso.headline }}">{{ {"el_nino": "El Niño", "la_nina": "La Niña"}.get(enso.phase, "Neutral") }}
+        {{ enso.nino34_anomaly | signed }} °C</span>{% endif %}
+    </div>
+    <p class="muted news-stats" id="news-stats" aria-live="polite"></p>
 
     <section id="news-list" aria-live="polite">
       {% for a in headlines %}
@@ -89,6 +80,10 @@
     </section>
 
     <section id="sources">
+      <h2>About this page</h2>
+      <p class="muted">El Niño news and weather news from around the world in many languages: storms, floods, heat,
+        monsoon, drought and more, plus humanitarian reports, agency updates, new research, discussions, podcasts
+        and videos, all from free public sources.</p>
       <h2>Where this comes from</h2>
       <p class="muted">Everything is collected automatically every 30 minutes from free sources that need no account.
         Links open the original publisher. Topics, countries and crops are tagged from the headline, so a few tags can be wrong.</p>

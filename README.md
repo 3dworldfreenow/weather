@@ -12,7 +12,7 @@ A live El Niño tracker on a 3D globe and map, in the style of [zoom.earth](http
 - 📰 **News:** El Niño news from GDELT and 35 Google News editions in 20 languages (Asia, Oceania, the Americas, Africa, the Middle East and Europe), plus worldwide searches per impact theme. Every headline is tagged by topic and by the countries it mentions; filter by topic, country, language or a search word. Videos from weather agencies play inside the site
 - 📈 **History:** NOAA's Oceanic Niño Index since 1950 as an interactive chart (all, 30 or 10 years) and a table of every El Niño and La Niña episode with its peak and strength, found with NOAA's own rule
 - 📘 **Learn:** plain-language answers to common questions
-- 📰 **News page** (`/news/`): every El Niño item from 80+ free sources in one place: news (GDELT, 35 Google News editions, 12 Bing News markets), humanitarian reports (ReliefWeb, FAO, WFP, OCHA, IFRC, UNICEF, FEWS NET), agency and science updates (NOAA Climate.gov ENSO blog, UN News, Carbon Brief, Phys.org, ScienceDaily), new research papers (arXiv, Crossref), discussions (Hacker News), podcast episodes (Apple Podcasts) and videos. Filter by type, country, topic, crop, language or search; filters are kept in the link; a list shows which sources are working
+- 📰 **News page** (`/news/`): El Niño news **and world weather news** (storms, floods, heat, monsoon, drought; 23 weather searches in many countries and languages), with a Google News-style menu: section tabs (All, El Niño, World weather, Reports, Science, Research, Discussions, Podcasts, Videos) and one compact row of Country / Topic / Crop / Language filters. Every El Niño item from 80+ free sources in one place: news (GDELT, 35 Google News editions, 12 Bing News markets), humanitarian reports (ReliefWeb, FAO, WFP, OCHA, IFRC, UNICEF, FEWS NET), agency and science updates (NOAA Climate.gov ENSO blog, UN News, Carbon Brief, Phys.org, ScienceDaily), new research papers (arXiv, Crossref), discussions (Hacker News), podcast episodes (Apple Podcasts) and videos. Filter by type, country, topic, crop, language or search; filters are kept in the link; a list shows which sources are working
 - 🌾 **Crops page** (`/crops/`): how El Niño affects rice, wheat, maize, sugar, soybeans, coffee, cocoa, palm oil and cotton in 41 main growing regions. Pick a country and a crop or search: see the typical El Niño effect and crop calendar, the last 12 months of rain in the growing region against the long-term average (chart), the world price since 1990 with past El Niño periods shaded (chart), shown in each country's own currency per kg (or US$), and, and crop news (sugar, rice, coffee…) from around the world
 - 🔎 **A page per country** (`/impacts/<country>/`, such as "El Niño impact on India") for search engines and sharing
 - 🛰️ **Live Earth backdrop:** near-real-time imagery from five geostationary satellites (GOES-West, GOES-East, Meteosat 0°, Meteosat IODC, Himawari) in true colour or infrared, the daily sea surface temperature anomaly map, and live day/night shading
@@ -137,14 +137,19 @@ tests/                     # tests (upstream calls are mocked)
 `weather_app/data/news_feeds.csv` lists the newspaper feeds, one per row:
 
 ```
-country,slug,language,publisher,url,type
-India,india,Hindi,Dainik Bhaskar,https://www.bhaskar.com/rss,page
-Peru,peru,Spanish,RPP Noticias,https://rpp.pe/feed,feed
+country,slug,language,publisher,url,type,category,filter
+India,india,Hindi,Dainik Bhaskar,https://www.bhaskar.com/rss,page,newspaper,topic
+India,india,Hindi,Aaj Tak,https://www.aajtak.in/rssfeeds/?id=home,feed,tv,topic
+Australia,australia,English,Bureau of Meteorology warnings (NSW),http://www.bom.gov.au/fwo/IDZ00054.warnings_nsw.xml,feed,weather,all
 ```
+
+- `category`: `newspaper`, `tv` (news channels), `government` (official bulletins), `weather` (national weather services) or `university` (universities and research institutes). Government and weather items appear under the "Official" tab
+- `filter`: `topic` keeps only El Niño and weather stories; `all` keeps every item (for weather-service warning feeds)
+- lines starting with `#` are comments
 
 - `slug` is the country's id in `impacts.py` (empty for international outlets)
 - `type` is `feed` for an RSS/Atom URL, or `page` for a page that lists a site's feeds (the site finds up to 3 of them, main sections first)
-- only items that mention El Niño, La Niña or ENSO (in many languages and scripts) are kept, and only the headline, source and link are shown
+- only the headline, source and link are shown
 
 Every build logs feeds that fail ("News source … failed"), and the News page lists which sources are working.
 

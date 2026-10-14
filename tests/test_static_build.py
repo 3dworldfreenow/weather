@@ -69,7 +69,7 @@ def test_build_static_site(tmp_path):
 
     # News page
     page = (out / "news" / "index.html").read_text()
-    assert "<h1>📰 El Niño news from around the world</h1>" in page
+    assert "<h1>El Niño &amp; weather news</h1>" in page
     assert 'src="../static/js/news.js"' in page and '"/static/' not in page
     assert '<link rel="canonical" href="https://demo.example/weather/news/">' in page
     assert "<loc>https://demo.example/weather/news/</loc>" in (out / "sitemap.xml").read_text()

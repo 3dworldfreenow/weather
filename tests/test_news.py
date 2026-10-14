@@ -201,7 +201,7 @@ def test_get_news_combines_everything(monkeypatch):
     assert all(s["ok"] for s in data["sources"])
     assert len(data["sources"]) == (1 + len(news.GOOGLE_NEWS_EDITIONS) + len(news.THEME_QUERIES)
                                     + len(news.CROP_QUERIES) + 1 + len(news.BING_MARKETS) + 1 + len(news.FEEDS)
-                                    + 4 + len(PAPERS) + len(news.YOUTUBE_CHANNELS))
+                                    + 4 + len(PAPERS) + len(news.WEATHER_EDITIONS) + len(news.YOUTUBE_CHANNELS))
 
 
 def test_get_news_survives_some_sources_failing(monkeypatch):
@@ -333,7 +333,7 @@ def test_news_page(monkeypatch):
     app = create_app({"TESTING": True})
     news.get_news()  # fills the cache the page pre-renders from
     html = app.test_client().get("/news/").get_data(as_text=True)
-    assert "<h1>📰 El Niño news from around the world</h1>" in html
+    assert "<h1>El Niño &amp; weather news</h1>" in html
     assert 'id="news-kinds"' in html and "js/news.js" in html
     assert '"@type": "CollectionPage"' in html and '"ItemList"' in html
     assert "Monsoon deficit grows as El Nino takes hold" in html  # headlines pre-rendered
@@ -346,6 +346,7 @@ def test_feed_list_is_valid():
     assert len(urls) == len(set(urls))
     for f in feeds:
         assert f["url"].startswith(("http://", "https://")) and f["type"] in ("feed", "page")
+        assert f["category"] in news.FEED_CATEGORIES and f["filter"] in ("topic", "all")
         assert f["language"]
         assert not f["slug"] or f["slug"] in impacts.BY_SLUG, f
     covered = {f["slug"] for f in feeds if f["slug"]}
@@ -356,3 +357,41 @@ def test_discover_feeds_from_a_feed_list_page():
     urls = news.discover_feeds(FEEDS_PAGE, "https://hindi.example/rss")
     assert urls == ["https://hindi.example/rss/home.xml", "https://hindi.example/rss/national.xml",
                     "https://hindi.example/rss/world.xml"]  # own site only, main sections first
+
+
+def test_weather_and_el_nino_flags():
+    merged = news.merge_articles([[
+        {"title": "Cyclone nears Odisha coast, heavy rain warning", "url": "https://w.example/1", "source": "w",
+         "country": "India", "language": "English", "published": None, "image": None, "via": "x", "scope_hint": "feed"},
+        {"title": "El Niño may weaken the monsoon", "url": "https://w.example/2", "source": "w", "country": None,
+         "language": "English", "published": None, "image": None, "via": "x"},
+        {"title": "Mills shut for Diwali", "url": "https://w.example/3", "source": "w", "country": None,
+         "language": "English", "published": None, "image": None, "via": "x", "scope_hint": "weather"},
+    ]])
+    by_url = {a["url"]: a for a in merged}
+    assert by_url["https://w.example/1"]["weather"] and not by_url["https://w.example/1"]["elnino"]
+    assert by_url["https://w.example/2"]["elnino"] and by_url["https://w.example/2"]["weather"]  # "monsoon"
+    assert by_url["https://w.example/3"]["weather"] and not by_url["https://w.example/3"]["elnino"]  # weather search
+
+
+def test_feeds_keep_weather_stories_when_asked():
+    rss = SCIENCE_RSS.replace("New beetle species found", "Record heatwave hits Europe")
+    assert len(news.parse_feed(rss, "x", "news", "x")) == 1
+    assert len(news.parse_feed(rss, "x", "news", "x", weather=True)) == 2
+
+
+def test_weather_service_feeds_keep_every_item(monkeypatch):
+    warnings = """<rss version="2.0"><channel>
+<item><title>Yellow warning: thunderstorms in the south east</title><link>https://met.example/w/1</link></item>
+<item><title>Amber warning issued for the Highlands</title><link>https://met.example/w/2</link></item>
+</channel></rss>"""
+    monkeypatch.setattr(services, "_get_text", lambda url: warnings)
+    service = {"country": "", "slug": "", "language": "English", "publisher": "Met Example", "url": "https://met.example/rss",
+               "type": "feed", "category": "weather", "filter": "all"}
+    items = news.fetch_publisher(service)
+    assert len(items) == 2 and {a["kind"] for a in items} == {"official"}
+    tagged = news.merge_articles([items])
+    assert all(a["weather"] and not a["elnino"] for a in tagged)
+    # A newspaper with the default "topic" filter keeps only the El Niño / weather story.
+    paper = {**service, "category": "newspaper", "filter": "topic"}
+    assert [a["url"] for a in news.fetch_publisher(paper)] == ["https://met.example/w/1"]

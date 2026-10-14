@@ -214,9 +214,10 @@ def crops_json_ld(base_url: str) -> str:
     return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False)
 
 
-NEWS_TITLE = "El Niño news today: world headlines, reports, research, podcasts & videos | El Niño Tracker"
+NEWS_TITLE = "El Niño & world weather news today: headlines, reports, research & videos | El Niño Tracker"
 NEWS_DESCRIPTION = (
-    "Live El Niño news from around the world in many languages: headlines from Google News, Bing News and GDELT, "
+    "Live El Niño and weather news from around the world in many languages (storms, floods, heat, monsoon, drought): "
+    "headlines from Google News, Bing News, GDELT and 100+ newspapers, "
     "UN humanitarian reports, NOAA and UN updates, new research papers, podcasts and videos. "
     "Filter by country, topic, crop and language. Free, updated every 30 minutes."
 )
@@ -229,7 +230,7 @@ def news_meta(base_url: str) -> dict[str, Any]:
 def news_json_ld(base_url: str, articles: list[dict[str, Any]] | None = None) -> str:
     url = base_url + "news/"
     graph: list[dict[str, Any]] = [
-        {"@type": "CollectionPage", "@id": url, "url": url, "name": "El Niño news from around the world",
+        {"@type": "CollectionPage", "@id": url, "url": url, "name": "El Niño and world weather news",
          "description": NEWS_DESCRIPTION, "inLanguage": "en", "isPartOf": {"@id": base_url + "#website"}},
         {"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": SITE_NAME, "item": base_url},

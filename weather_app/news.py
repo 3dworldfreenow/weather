@@ -60,7 +60,7 @@ ITUNES_URL = "https://itunes.apple.com/search"
 NEWS_TTL = 30 * 60
 MAX_ARTICLES = 500  # news; other kinds keep up to MAX_PER_KIND each
 MAX_PER_KIND = 80
-KINDS = ["news", "report", "science", "paper", "discussion", "podcast"]
+KINDS = ["news", "official", "report", "science", "paper", "discussion", "podcast"]
 FETCH_WORKERS = 16
 FEEDS_CSV = Path(__file__).parent / "data" / "news_feeds.csv"
 FEEDS_PER_PAGE = 3  # feeds to follow from a page that lists a site's feeds
@@ -200,6 +200,52 @@ TOPIC = re.compile(
     r"|เอลนีโญ|ลานีญา"                               # Thai
     r"|[Ээ]ль[\s-]*[Нн]иньо|[Лл]а[\s-]*[Нн]инья"       # Russian
 )
+# Weather news in general (storms, floods, heat, rain, monsoon …) in the main languages.
+WEATHER = re.compile(
+    r"\b(?:weather|rain(?:fall|s|y)?|monsoon|storms?|thunderstorms?|cyclones?|hurricanes?|typhoons?|tornado(?:es)?"
+    r"|floods?|flooding|flash floods?|droughts?|heat ?waves?|heatwaves?|snow(?:fall|storm)?s?|blizzards?|wildfires?"
+    r"|bushfires?|downpours?|cloudbursts?|landslides?|forecasters?|meteorolog\w*|met office|el tiempo"
+    r"|lluvias?|tormentas?|sequías?|inundaci\w+|huracán|huracanes|ola de calor|heladas?|granizo"
+    r"|chuvas?|enchentes?|onda de calor|tempestades?|frente fria|estiagem|ciclone"
+    r"|météo|orages?|canicule|inondations?|sécheresse|tempête"
+    r"|wetter|unwetter|hitzewelle|hochwasser|dürre|sturm"
+    r"|cuaca|banjir|kemarau|hujan|longsor|thời tiết|mưa lớn|lũ lụt)\b"
+    r"|मौसम|बारिश|मानसून|बाढ़|सूखा|चक्रवात|आंधी|ओलावृष्टि|लू का|शीतलहर"
+    r"|আবহাওয়া|বৃষ্টি|ঘূর্ণিঝড়|বন্যা|موسم|بارش|سیلاب|طوفان"
+    r"|天気|台風|大雨|猛暑|豪雨|気象|天气|暴雨|台风|高温|气象|洪水|干旱"
+    r"|날씨|태풍|폭우|폭염|장마|สภาพอากาศ|พายุ|น้ำท่วม|ภัยแล้ง"
+    r"|погод|ливн|шторм|жара|наводнен|засух",
+    re.IGNORECASE,
+)
+
+# Worldwide weather news searches (Google News): (country, language, hl, gl, ceid, query, slug)
+WEATHER_EDITIONS = [
+    (None, "English", "en-US", "US", "US:en", "weather OR storm OR flood OR heatwave OR cyclone OR hurricane OR typhoon OR drought", None),
+    ("United States", "English", "en-US", "US", "US:en", 'weather OR "National Weather Service" OR hurricane OR tornado OR blizzard', "united-states"),
+    ("Canada", "English", "en-CA", "CA", "CA:en", 'weather OR "Environment Canada" OR storm OR wildfire', "canada"),
+    ("United Kingdom", "English", "en-GB", "GB", "GB:en", 'weather OR "Met Office" OR storm OR flood', None),
+    ("India", "English", "en-IN", "IN", "IN:en", "weather OR monsoon OR IMD OR heatwave OR cyclone OR rain", "india"),
+    ("India", "Hindi", "hi", "IN", "IN:hi", "मौसम OR बारिश OR मानसून OR बाढ़ OR चक्रवात", "india"),
+    ("Pakistan", "English", "en", "PK", "PK:en", "weather OR rain OR flood OR heatwave OR PMD", "pakistan"),
+    ("Bangladesh", "Bengali", "bn", "BD", "BD:bn", "আবহাওয়া OR বৃষ্টি OR ঘূর্ণিঝড় OR বন্যা", "bangladesh"),
+    ("Philippines", "English", "en", "PH", "PH:en", "PAGASA OR typhoon OR weather OR flood", "philippines"),
+    ("Indonesia", "Indonesian", "id", "ID", "ID:id", "cuaca OR banjir OR BMKG OR kemarau", "indonesia"),
+    ("Vietnam", "Vietnamese", "vi", "VN", "VN:vi", '"thời tiết" OR bão OR "mưa lớn"', "vietnam"),
+    ("China", "Chinese", "zh-CN", "CN", "CN:zh-Hans", "天气 OR 暴雨 OR 台风 OR 高温", "china"),
+    ("Japan", "Japanese", "ja", "JP", "JP:ja", "天気 OR 台風 OR 大雨 OR 猛暑", "japan"),
+    ("Australia", "English", "en-AU", "AU", "AU:en", "weather OR BOM OR storm OR flood OR bushfire", "australia"),
+    ("Brazil", "Portuguese", "pt-BR", "BR", "BR:pt-419", 'chuva OR temporal OR seca OR "onda de calor"', "brazil"),
+    ("Mexico", "Spanish", "es-419", "MX", "MX:es-419", "clima OR lluvias OR huracán OR tormenta", "mexico"),
+    ("Peru", "Spanish", "es-419", "PE", "PE:es-419", "lluvias OR SENAMHI OR huaico OR friaje", "peru"),
+    ("Argentina", "Spanish", "es-419", "AR", "AR:es-419", "clima OR tormenta OR lluvias OR SMN", "argentina"),
+    ("South Africa", "English", "en", "ZA", "ZA:en", "weather OR storm OR flood OR SAWS", "south-africa"),
+    ("Kenya", "English", "en", "KE", "KE:en", "weather OR rain OR flood OR drought", "kenya"),
+    ("Nigeria", "English", "en", "NG", "NG:en", "weather OR flood OR rain OR NiMet", None),
+    ("France", "French", "fr", "FR", "FR:fr", "météo OR orage OR canicule OR inondations", None),
+    ("Germany", "German", "de", "DE", "DE:de", "Wetter OR Unwetter OR Hitze OR Hochwasser", None),
+]
+MAX_WEATHER = 400  # weather-only news kept, besides the El Niño news
+
 VIDEO_ID = re.compile(r"^[A-Za-z0-9_-]{11}$")
 CHANNEL_ID = re.compile(r"^UC[A-Za-z0-9_-]{22}$")
 
@@ -329,6 +375,17 @@ def fetch_crop_news(crop_id: str, query: str, hl="en-US", gl="US", ceid="US:en",
     return articles
 
 
+def fetch_weather_news(edition: tuple) -> list[dict[str, Any]]:
+    country, language, hl, gl, ceid, query, slug = edition
+    url = GOOGLE_NEWS_URL.format(q=quote_plus(query), hl=hl, gl=gl, ceid=ceid)
+    articles = parse_google_news(services._get_text(url), country, language)
+    for a in articles:
+        a["scope_hint"] = "weather"
+        if slug:
+            a["edition"] = slug
+    return articles
+
+
 def fetch_theme_news(theme_id: str, query: str) -> list[dict[str, Any]]:
     url = GOOGLE_NEWS_URL.format(q=quote_plus(query), hl="en-US", gl="US", ceid="US:en")
     articles = parse_google_news(services._get_text(url), None, "English")
@@ -375,8 +432,10 @@ def _date(value: str | None) -> dt.datetime | None:
 
 
 def parse_feed(xml: str, source: str, kind: str, via: str, topic_only: bool = True,
-               country: str | None = None, language: str | None = "English") -> list[dict[str, Any]]:
-    """Items from an RSS 2.0 or Atom feed. With topic_only, keep El Niño / ENSO items."""
+               country: str | None = None, language: str | None = "English",
+               weather: bool = False) -> list[dict[str, Any]]:
+    """Items from an RSS 2.0 or Atom feed. With topic_only, keep El Niño / ENSO items
+    (and weather stories too when weather is set)."""
     try:
         root = ET.fromstring(xml)
     except ET.ParseError:
@@ -399,7 +458,8 @@ def parse_feed(xml: str, source: str, kind: str, via: str, topic_only: bool = Tr
         url = _safe_url(link)
         summary_el = _child(item, "description", "summary", "content")
         summary = _text(summary_el.text if summary_el is not None else "")
-        if not url or not title or (topic_only and not TOPIC.search(f"{title} {summary}")):
+        text = f"{title} {summary}"
+        if not url or not title or (topic_only and not (TOPIC.search(text) or (weather and WEATHER.search(text)))):
             continue
         # Bing wraps links: .../apiclick.aspx?...&url=<real link>
         if "bing.com" in urlparse(url).netloc:
@@ -422,6 +482,7 @@ def parse_feed(xml: str, source: str, kind: str, via: str, topic_only: bool = Tr
             "via": via,
             "kind": kind,
             "summary": summary or None,
+            "scope_hint": "feed",  # El Niño or not is decided from the text
         })
     return out
 
@@ -431,6 +492,7 @@ def fetch_bing_news(market: tuple) -> list[dict[str, Any]]:
     items = parse_feed(services._get_text(BING_NEWS_URL.format(q=quote_plus(query), mkt=mkt)), "Bing News",
                        "news", "Bing News", topic_only=False, country=country, language=language)
     for a in items:
+        a["scope_hint"] = "elnino"  # an El Niño search
         if slug:
             a["edition"] = slug
     return items
@@ -446,7 +508,7 @@ def fetch_reports() -> list[dict[str, Any]]:
 
 def fetch_feed(feed: tuple) -> list[dict[str, Any]]:
     name, url, kind, _home = feed
-    return parse_feed(services._get_text(url), name, kind, name)
+    return parse_feed(services._get_text(url), name, kind, name, weather=True)
 
 
 def fetch_arxiv() -> list[dict[str, Any]]:
@@ -524,11 +586,26 @@ def fetch_podcasts() -> list[dict[str, Any]]:
 # Newspapers by country (data/news_feeds.csv)
 # --------------------------------------------------------------------------
 
+# category -> (kind of the items, group in the source list)
+FEED_CATEGORIES = {
+    "newspaper": ("news", "publisher"),
+    "tv": ("news", "tv"),
+    "government": ("official", "official"),
+    "weather": ("official", "official"),      # national weather services
+    "university": ("science", "university"),  # universities and research institutes
+}
+
+
 def load_feeds(path: Path = FEEDS_CSV) -> list[dict[str, str]]:
-    """Rows: country, slug (impacts country or empty), language, publisher, url, type (feed|page)."""
+    """Rows: country, slug (impacts country or empty), language, publisher, url,
+    type (feed|page), category (see FEED_CATEGORIES; default newspaper) and
+    filter (topic = El Niño and weather stories only, all = every item)."""
     with path.open(encoding="utf-8") as f:
-        rows = [{k: (v or "").strip() for k, v in row.items()} for row in csv.DictReader(f)]
-    return [r for r in rows if r.get("url") and r.get("publisher")]
+        rows = [{k: (v or "").strip() for k, v in row.items() if k} for row in csv.DictReader(f)]
+    for r in rows:
+        r["category"] = r.get("category") or "newspaper"
+        r["filter"] = r.get("filter") or "topic"
+    return [r for r in rows if r.get("url") and r.get("publisher") and r["category"] in FEED_CATEGORIES]
 
 
 _FEED_LINK = re.compile(r"<link\b[^>]*>", re.IGNORECASE)
@@ -581,17 +658,21 @@ def fetch_publisher(feed: dict[str, str]) -> list[dict[str, Any]]:
                 log.info("Feed %s from %s failed: %s", url, feed["publisher"], exc)
         if not texts:
             raise services.UpstreamError(f"None of the feeds listed on {feed['url']} could be read")
+    kind = FEED_CATEGORIES[feed.get("category") or "newspaper"][0]
+    keep_all = feed.get("filter") == "all"
     items = []
     for t in texts:
         try:
-            items += parse_feed(t, feed["publisher"], "news", feed["publisher"], country=country,
-                                language=feed.get("language") or None)
+            items += parse_feed(t, feed["publisher"], kind, feed["publisher"], topic_only=not keep_all,
+                                country=country, language=feed.get("language") or None, weather=True)
         except ET.ParseError as exc:
             if len(texts) == 1:
                 raise
             log.info("Feed from %s is not valid XML: %s", feed["publisher"], exc)
     for a in items:
         a["source"] = feed["publisher"]  # feeds name the section, not the paper
+        if keep_all and feed.get("category") == "weather":
+            a["scope_hint"] = "weather"  # everything a weather service publishes is weather news
         if feed.get("slug"):
             a["edition"] = feed["slug"]
     return items
@@ -671,6 +752,10 @@ def tag_article(article: dict[str, Any]) -> dict[str, Any]:
     if found_crops and "food" not in themes:
         themes.append("food")
     article.setdefault("kind", "news")
+    scope = article.pop("scope_hint", "elnino")
+    full = f"{text} {article.get('summary') or ''}"
+    article["elnino"] = scope == "elnino" or bool(TOPIC.search(full))
+    article["weather"] = scope == "weather" or bool(WEATHER.search(full))
     article["themes"] = themes
     article["countries"] = countries
     article["crops"] = found_crops
@@ -694,14 +779,18 @@ def merge_articles(groups: list[list[dict[str, Any]]]) -> list[dict[str, Any]]:
             kept["themes"] = list(dict.fromkeys(kept["themes"] + article["themes"]))
             kept["countries"] = list(dict.fromkeys(kept["countries"] + article["countries"]))
             kept["crops"] = list(dict.fromkeys(kept["crops"] + article["crops"]))
+            kept["elnino"] = kept["elnino"] or article["elnino"]
+            kept["weather"] = kept["weather"] or article["weather"]
             if not kept.get("country") and article.get("country"):
                 kept["country"] = article["country"]
     articles = sorted(seen.values(), key=lambda a: a["published"] or "", reverse=True)
     counts: dict[str, int] = {}
     kept_articles = []
+    limits = {"news": MAX_ARTICLES, "weather-news": MAX_WEATHER}
     for a in articles:
-        n = counts[a["kind"]] = counts.get(a["kind"], 0) + 1
-        if n <= (MAX_ARTICLES if a["kind"] == "news" else MAX_PER_KIND):
+        key = "weather-news" if a["kind"] == "news" and not a["elnino"] else a["kind"]
+        n = counts[key] = counts.get(key, 0) + 1
+        if n <= limits.get(key, MAX_PER_KIND):
             kept_articles.append(a)
     return kept_articles
 
@@ -732,6 +821,9 @@ def get_news() -> dict[str, Any]:
                          lambda c=crop_id, q=query: fetch_crop_news(c, q)))
         jobs.append(("Google News crops: India (Hindi)", "news", "https://news.google.com/",
                      lambda: fetch_crop_news(None, CROP_QUERIES_HI, "hi", "IN", "IN:hi", "India", "Hindi", "india")))
+        for e in WEATHER_EDITIONS:
+            jobs.append((f"Google News weather: {e[0] or 'world'} ({e[1]})", "weather", "https://news.google.com/",
+                         lambda e=e: fetch_weather_news(e)))
         for m in BING_MARKETS:
             jobs.append((f"Bing News {m[1] or m[0]} ({m[2]})", "news", "https://www.bing.com/news",
                          lambda m=m: fetch_bing_news(m)))
@@ -748,7 +840,8 @@ def get_news() -> dict[str, Any]:
             label = feed["publisher"]
             if feed.get("country") and feed["country"] not in label:
                 label += f" ({feed['country']})"
-            jobs.append((label, "publisher", home, lambda feed=feed: fetch_publisher(feed)))
+            group = FEED_CATEGORIES[feed.get("category") or "newspaper"][1]
+            jobs.append((label, group, home, lambda feed=feed: fetch_publisher(feed)))
         video_jobs = [(f"YouTube: {c['name']}", "video", YOUTUBE_HANDLE_URL.format(handle=c["handle"]),
                        lambda c=c: fetch_channel_videos(c)) for c in YOUTUBE_CHANNELS]
 
@@ -760,10 +853,12 @@ def get_news() -> dict[str, Any]:
         for items in video_results:
             videos += items
 
-        papers = [src for src in sources if src["kind"] == "publisher"]
-        if papers:
-            log.info("Newspaper feeds: %d of %d working, %d El Niño items", sum(p["ok"] for p in papers),
-                     len(papers), sum(p["count"] for p in papers))
+        for group, label in (("publisher", "Newspaper"), ("tv", "TV channel"), ("official", "Government and weather agency"),
+                             ("university", "University and research")):
+            feeds = [src for src in sources if src["kind"] == group]
+            if feeds:
+                log.info("%s feeds: %d of %d working, %d items", label, sum(f["ok"] for f in feeds),
+                         len(feeds), sum(f["count"] for f in feeds))
         articles = merge_articles(groups)
         if not articles and not any(s["ok"] for s in sources if s["kind"] != "video"):
             raise services.UpstreamError("All news sources failed")

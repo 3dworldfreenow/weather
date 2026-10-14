@@ -63,7 +63,7 @@ def index():
         faq=seo.FAQ,
         impacts=impacts.public_data(),
         enso=enso_data,
-        headlines=articles[:12],
+        headlines=[a for a in articles if a.get("elnino", True)][:12],
     )
 
 
@@ -86,7 +86,7 @@ def impact_page(slug: str):
         meta={**seo.impact_meta(url, c), **verification()},
         json_ld=seo.impact_json_ld(url, c),
         enso=enso_data,
-        news=[a for a in articles if slug in (a.get("countries") or [])][:10],
+        news=[a for a in articles if slug in (a.get("countries") or []) and a.get("elnino", True)][:10],
         related=related,
         sources=impacts.SOURCES,
     )

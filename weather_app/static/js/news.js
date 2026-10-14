@@ -15,7 +15,10 @@
   const THEMES = Object.fromEntries(INFO.themes.map((t) => [t.id, t]));
   const STATIC_SITE = Boolean(window.APP_CONFIG && window.APP_CONFIG.static);
   const KINDS = {
+    elnino: { icon: "🌊", label: "El Niño", many: "El Niño" },
+    weather: { icon: "🌦️", label: "Weather", many: "World weather" },
     news: { icon: "📰", label: "News", many: "News" },
+    official: { icon: "🏛️", label: "Official", many: "Official" },
     report: { icon: "🆘", label: "Report", many: "Reports" },
     science: { icon: "🔬", label: "Science", many: "Science" },
     paper: { icon: "📄", label: "Research", many: "Research" },
@@ -24,7 +27,8 @@
     video: { icon: "▶️", label: "Video", many: "Videos" },
   };
   const SOURCE_GROUPS = [
-    ["news", "🔎", "News searches"], ["publisher", "🗞️", "Newspapers by country"], ["report", "🆘", "Humanitarian reports"],
+    ["news", "🔎", "El Niño news searches"], ["weather", "🌦️", "Weather news searches"], ["publisher", "🗞️", "Newspapers by country"], ["tv", "📺", "TV news channels"],
+    ["official", "🏛️", "Government and weather services"], ["university", "🎓", "Universities and research institutes"], ["report", "🆘", "Humanitarian reports"],
     ["science", "🔬", "Agencies and science"], ["paper", "📄", "Research"], ["discussion", "💬", "Discussions"],
     ["podcast", "🎧", "Podcasts"], ["video", "▶️", "Video channels"],
   ];
@@ -61,10 +65,13 @@
   // Filtering
   // ------------------------------------------------------------------
   const kindOf = (a) => a.kind || "news";
+  const isElNino = (a) => a.elnino !== false; // older data has no flag: it was all El Niño
+  // The "kind" tab can be a section (El Niño, World weather) or a type of item.
+  const inTab = (a, tab) => (tab === "elnino" ? isElNino(a) : tab === "weather" ? Boolean(a.weather) : kindOf(a) === tab);
 
   function matches(a, skip) {
     const q = state.q.trim().toLowerCase();
-    return (skip === "kind" || !state.kind || kindOf(a) === state.kind)
+    return (skip === "kind" || !state.kind || inTab(a, state.kind))
       && (!state.country || (state.country.startsWith("slug:")
         ? (a.countries || []).includes(state.country.slice(5)) : a.country === state.country.slice(3)))
       && (!state.theme || (a.themes || []).includes(state.theme))
@@ -91,9 +98,9 @@
       ...Object.entries(slugs).map(([s, n]) => [`slug:${s}`, INFO.countries[s].name, n]),
       ...Object.entries(editions).filter(([name]) => !covered.has(name)).map(([name, n]) => [`ed:${name}`, name, n]),
     ].sort((a, b) => a[1].localeCompare(b[1]));
-    $("news-country").innerHTML = `<option value="">All countries</option>${options.map(([v, label, n]) =>
+    $("news-country").innerHTML = `<option value="">🌍 Country</option>${options.map(([v, label, n]) =>
       `<option value="${escapeHtml(v)}">${escapeHtml(label)} (${n})</option>`).join("")}`;
-    $("news-lang").innerHTML = `<option value="">All languages</option>${Object.entries(langs)
+    $("news-lang").innerHTML = `<option value="">🗣️ Language</option>${Object.entries(langs)
       .sort((a, b) => b[1] - a[1]).map(([l, n]) => `<option value="${escapeHtml(l)}">${escapeHtml(l)} (${n})</option>`).join("")}`;
     // Keep a filter from the link even if nothing matches yet.
     for (const [id, key] of [["news-country", "country"], ["news-lang", "lang"]]) {
@@ -120,7 +127,8 @@
     return `<a class="news-item gn" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">
       <div class="gn-body">
         <div class="news-src"><img class="favicon" src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=32" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.visibility='hidden'">
-          <span>${escapeHtml(a.source)}</span>${kind !== "news" ? `<span class="kind-badge k-${kind}">${KINDS[kind].icon} ${KINDS[kind].label}</span>` : ""}</div>
+          <span>${escapeHtml(a.source)}</span>${kind !== "news" ? `<span class="kind-badge k-${kind}">${KINDS[kind].icon} ${KINDS[kind].label}</span>`
+            : isElNino(a) ? `<span class="kind-badge k-elnino">🌊 El Niño</span>` : ""}</div>
         <div class="news-title">${escapeHtml(a.title)}</div>
         ${a.summary && kind !== "news" ? `<div class="news-summary">${escapeHtml(a.summary)}</div>` : ""}
         <div class="news-meta">${[a.published && timeAgo(a.published), a.country, a.language].filter(Boolean).map(escapeHtml).join(" · ")}</div>
@@ -153,9 +161,14 @@
 
   function renderKindCounts() {
     const counts = {};
-    state.data.articles.filter((a) => matches(a, "kind")).forEach((a) => { counts[kindOf(a)] = (counts[kindOf(a)] || 0) + 1; });
+    const pool = state.data.articles.filter((a) => matches(a, "kind"));
+    pool.forEach((a) => {
+      counts[kindOf(a)] = (counts[kindOf(a)] || 0) + 1;
+      if (isElNino(a)) counts.elnino = (counts.elnino || 0) + 1;
+      if (a.weather) counts.weather = (counts.weather || 0) + 1;
+    });
     counts.video = state.data.videos.filter((v) => VIDEO_ID.test(v.id) && videoMatches(v)).length;
-    const total = Object.entries(counts).filter(([k]) => k !== "video").reduce((s, [, n]) => s + n, 0);
+    const total = pool.length;
     document.querySelectorAll("#news-kinds .chip").forEach((chip) => {
       const k = chip.dataset.kind;
       const n = k ? counts[k] || 0 : total;
@@ -167,7 +180,9 @@
   function render() {
     if (!state.data) return;
     renderKindCounts();
-    $("news-reset").hidden = !FILTERS.some((k) => state[k]);
+    $("news-reset").hidden = !FILTERS.some((k) => state[k] && k !== "kind");
+    [["news-country", "country"], ["news-theme", "theme"], ["news-crop", "crop"], ["news-lang", "lang"]]
+      .forEach(([id, key]) => $(id).classList.toggle("on", Boolean(state[key])));
     const list = $("news-list");
     if (state.kind === "video") {
       renderVideos(list, state.data.videos.filter((v) => VIDEO_ID.test(v.id) && videoMatches(v)));
@@ -238,7 +253,7 @@
   }
 
   function reset() {
-    FILTERS.forEach((k) => { state[k] = ""; });
+    FILTERS.forEach((k) => { if (k !== "kind") state[k] = ""; });
     syncControls();
     update({});
   }

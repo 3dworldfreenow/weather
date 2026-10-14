@@ -1017,7 +1017,7 @@
     try {
       const d = await api("/api/news");
       // The map app shows headlines; papers, podcasts and discussions live on the News page.
-      d.articles = (d.articles || []).filter((x) => ["news", "report", "science"].includes(x.kind || "news"));
+      d.articles = (d.articles || []).filter((x) => ["news", "official", "report", "science"].includes(x.kind || "news") && x.elnino !== false);
       newsState.data = d;
       newsState.loadedAt = Date.now();
       fillNewsSelects();

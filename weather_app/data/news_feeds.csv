@@ -1,4 +1,4 @@
-country,slug,language,publisher,url,type
+country,slug,language,publisher,url,type,category,filter
 ,,English,BBC News: World,https://feeds.bbci.co.uk/news/world/rss.xml,feed
 ,,English,BBC News: Science & Environment,https://feeds.bbci.co.uk/news/science_and_environment/rss.xml,feed
 ,,English,The Guardian: Environment,https://www.theguardian.com/environment/rss,feed
@@ -104,3 +104,47 @@ Kenya,kenya,English,Capital FM,https://www.capitalfm.co.ke/news/feed/,feed
 Tanzania,tanzania,English,Daily News (Tanzania),https://dailynews.co.tz/feed/,feed
 Botswana,botswana,English,Sunday Standard,https://www.sundaystandard.info/feed/,feed
 Somalia,somalia,English,Somali Guardian,https://somaliguardian.com/feed/,feed
+# --- TV news channels ---
+India,india,Hindi,Aaj Tak,https://www.aajtak.in/rssfeeds/?id=home,feed,tv,topic
+India,india,Hindi,ABP News,https://www.abplive.com/home/feed,feed,tv,topic
+India,india,English,Zee News,https://zeenews.india.com/rss/india-national-news.xml,feed,tv,topic
+India,india,English,India Today,https://www.indiatoday.in/rss/home,feed,tv,topic
+India,india,English,News18,https://www.news18.com/rss/india.xml,feed,tv,topic
+India,india,English,DD News,https://ddnews.gov.in/en/feed/,feed,tv,topic
+Pakistan,pakistan,English,ARY News,https://arynews.tv/feed/,feed,tv,topic
+Philippines,philippines,English,ABS-CBN News,https://news.abs-cbn.com/rss,page,tv,topic
+Brazil,brazil,Portuguese,CNN Brasil,https://www.cnnbrasil.com.br/feed/,feed,tv,topic
+Brazil,brazil,Portuguese,R7,https://noticias.r7.com/feed.xml,feed,tv,topic
+United States,united-states,English,CBS News,https://www.cbsnews.com/latest/rss/main,feed,tv,topic
+United States,united-states,English,ABC News (US),https://feeds.abcnews.com/abcnews/topstories,feed,tv,topic
+United States,united-states,English,NBC News,https://feeds.nbcnews.com/nbcnews/public/news,feed,tv,topic
+,,English,Sky News,https://feeds.skynews.com/feeds/rss/world.xml,feed,tv,topic
+Australia,australia,English,SBS News,https://www.sbs.com.au/news/feed,feed,tv,topic
+Australia,australia,English,9News,https://www.9news.com.au/rss,feed,tv,topic
+South Africa,south-africa,English,SABC News,https://www.sabcnews.com/sabcnews/feed/,feed,tv,topic
+South Korea,south-korea,English,KBS World,https://world.kbs.co.kr/rss/rss_news.htm?lang=e,feed,tv,topic
+China,china,English,CGTN,https://www.cgtn.com/subscribe/rss/section/world.xml,feed,tv,topic
+Canada,canada,English,CTV News,https://www.ctvnews.ca/rss/ctvnews-ca-top-stories-public-rss-1.822009,feed,tv,topic
+Canada,canada,English,Global News,https://globalnews.ca/feed/,feed,tv,topic
+# --- Government bulletins ---
+India,india,English,Press Information Bureau (PIB),https://pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=3,feed,government,topic
+,,English,NASA,https://www.nasa.gov/feed/,feed,government,topic
+,,English,GDACS disaster alerts (UN & EU),https://www.gdacs.org/xml/rss.xml,feed,government,topic
+,,English,World Meteorological Organization,https://wmo.int/,page,government,topic
+,,English,Copernicus Climate Change Service,https://climate.copernicus.eu/,page,government,topic
+# --- National weather services (every item kept) ---
+United States,united-states,English,NOAA National Hurricane Center (Atlantic),https://www.nhc.noaa.gov/index-at.xml,feed,weather,all
+United States,united-states,English,NOAA National Hurricane Center (Eastern Pacific),https://www.nhc.noaa.gov/index-ep.xml,feed,weather,all
+,,English,Met Office (UK) warnings,https://www.metoffice.gov.uk/public/data/PWSCache/WarningsRSS/Region/UK,feed,weather,all
+Australia,australia,English,Bureau of Meteorology warnings (NSW),http://www.bom.gov.au/fwo/IDZ00054.warnings_nsw.xml,feed,weather,all
+Australia,australia,English,Bureau of Meteorology warnings (Queensland),http://www.bom.gov.au/fwo/IDZ00056.warnings_qld.xml,feed,weather,all
+Australia,australia,English,Bureau of Meteorology warnings (Western Australia),http://www.bom.gov.au/fwo/IDZ00060.warnings_wa.xml,feed,weather,all
+China,china,English,Hong Kong Observatory warnings,https://rss.weather.gov.hk/rss/WeatherWarningSummaryv2.xml,feed,weather,all
+# --- Universities and research institutes ---
+,,English,Columbia IRI (climate & society),https://iri.columbia.edu/feed/,feed,university,topic
+,,English,Columbia Climate School: State of the Planet,https://news.climate.columbia.edu/feed/,feed,university,topic
+,,English,UCAR / NCAR news,https://news.ucar.edu/,page,university,topic
+,,English,EurekAlert! Earth science,https://www.eurekalert.org/rss/earth_science.xml,feed,university,topic
+,,English,University of Washington News,https://www.washington.edu/news/feed/,feed,university,topic
+,,English,University of Hawaii News,https://www.hawaii.edu/news/feed/,feed,university,topic
+,,English,MIT News: climate,https://news.mit.edu/topic/climate-change,page,university,topic
