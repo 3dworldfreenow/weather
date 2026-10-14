@@ -4,7 +4,8 @@
 * Google News RSS    - El Niño searches in ~35 country/language editions and
                        worldwide searches per impact theme
 * Bing News RSS      - El Niño searches in several markets
-* ReliefWeb RSS      - humanitarian reports and appeals (UN OCHA)
+* Humanitarian reports - ReliefWeb, FAO, WFP, OCHA, IFRC, UNICEF and FEWS NET
+                       (searched through Google News)
 * Science & agency RSS feeds (NOAA Climate.gov, NASA Earth Observatory, UN News,
   Carbon Brief, Phys.org, ScienceDaily), filtered to El Niño / ENSO
 * arXiv and Crossref - new research papers
@@ -41,7 +42,10 @@ YOUTUBE_HANDLE_URL = "https://www.youtube.com/@{handle}"
 YOUTUBE_SEARCH_URL = "https://www.youtube.com/results?search_query=El+Ni%C3%B1o"
 
 BING_NEWS_URL = "https://www.bing.com/news/search?q={q}&format=rss&mkt={mkt}"
-RELIEFWEB_RSS_URL = "https://reliefweb.int/updates/rss.xml?search=%22El%20Ni%C3%B1o%22%20OR%20%22El%20Nino%22"
+# Humanitarian reports: ReliefWeb's own feed blocks automated requests, so search
+# the humanitarian agencies' sites through Google News.
+REPORTS_QUERY = ('("El Niño" OR "El Nino") (site:reliefweb.int OR site:fao.org OR site:wfp.org '
+                 'OR site:unocha.org OR site:ifrc.org OR site:unicef.org OR site:fews.net)')
 ARXIV_URL = ("https://export.arxiv.org/api/query?search_query=all:%22El%20Nino%22%20OR%20all:ENSO"
              "&sortBy=submittedDate&sortOrder=descending&max_results=30")
 CROSSREF_URL = "https://api.crossref.org/works"
@@ -147,14 +151,12 @@ BING_MARKETS = [
     ("fr-FR", None, "French", None, '"El Niño" climat'),
     ("de-DE", None, "German", None, '"El Niño" Klima'),
     ("ja-JP", "Japan", "Japanese", "japan", "エルニーニョ"),
-    ("zh-CN", "China", "Chinese", "china", "厄尔尼诺"),
 ]
 
 # Agency and science feeds (RSS/Atom). Only El Niño / ENSO items are kept.
 # (name, url, kind, home page)
 FEEDS = [
     ("NOAA Climate.gov ENSO blog", "https://www.climate.gov/feeds/news-features/enso.rss", "science", "https://www.climate.gov/enso"),
-    ("NOAA Climate.gov news", "https://www.climate.gov/feeds/news-features/featured-articles.rss", "science", "https://www.climate.gov/"),
     ("NASA Earth Observatory", "https://earthobservatory.nasa.gov/feeds/earth-observatory.rss", "science", "https://earthobservatory.nasa.gov/"),
     ("UN News: climate", "https://news.un.org/feed/subscribe/en/news/topic/climate-change/feed/rss.xml", "news", "https://news.un.org/"),
     ("Carbon Brief", "https://www.carbonbrief.org/feed/", "science", "https://www.carbonbrief.org/"),
@@ -356,7 +358,12 @@ def _date(value: str | None) -> dt.datetime | None:
 def parse_feed(xml: str, source: str, kind: str, via: str, topic_only: bool = True,
                country: str | None = None, language: str | None = "English") -> list[dict[str, Any]]:
     """Items from an RSS 2.0 or Atom feed. With topic_only, keep El Niño / ENSO items."""
-    root = ET.fromstring(xml)
+    try:
+        root = ET.fromstring(xml)
+    except ET.ParseError:
+        # Some feeds have bare "&" or HTML entities; fix those and try once more.
+        fixed = re.sub(r"&(?!(?:amp|lt|gt|quot|apos|#\d+|#x[0-9a-fA-F]+);)", "&amp;", xml)
+        root = ET.fromstring(fixed)
     items = [el for el in root.iter() if _local(el.tag) in ("item", "entry")]
     out = []
     for item in items:
@@ -409,8 +416,12 @@ def fetch_bing_news(market: tuple) -> list[dict[str, Any]]:
     return items
 
 
-def fetch_reliefweb() -> list[dict[str, Any]]:
-    return parse_feed(services._get_text(RELIEFWEB_RSS_URL), "ReliefWeb", "report", "ReliefWeb", topic_only=False)
+def fetch_reports() -> list[dict[str, Any]]:
+    url = GOOGLE_NEWS_URL.format(q=quote_plus(REPORTS_QUERY), hl="en-US", gl="US", ceid="US:en")
+    items = parse_google_news(services._get_text(url), None, "English")
+    for a in items:
+        a["kind"] = "report"
+    return items
 
 
 def fetch_feed(feed: tuple) -> list[dict[str, Any]]:
@@ -627,7 +638,8 @@ def get_news() -> dict[str, Any]:
         for m in BING_MARKETS:
             jobs.append((f"Bing News {m[1] or m[0]} ({m[2]})", "news", "https://www.bing.com/news",
                          lambda m=m: fetch_bing_news(m)))
-        jobs.append(("ReliefWeb humanitarian reports", "report", "https://reliefweb.int/", fetch_reliefweb))
+        jobs.append(("Humanitarian reports (ReliefWeb, FAO, WFP, OCHA, IFRC, UNICEF, FEWS NET)", "report",
+                     "https://reliefweb.int/", fetch_reports))
         for f in FEEDS:
             jobs.append((f[0], f[2], f[3], lambda f=f: fetch_feed(f)))
         jobs.append(("arXiv research papers", "paper", "https://arxiv.org/", fetch_arxiv))

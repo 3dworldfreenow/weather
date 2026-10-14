@@ -135,6 +135,8 @@ def fake_sources(monkeypatch, google_ok=True, gdelt_ok=True, others_ok=True):
         return {news.CROSSREF_URL: CROSSREF, news.HN_URL: HN, news.ITUNES_URL: ITUNES}[url]
 
     def get_text(url):
+        if url.startswith("https://news.google.com") and "reliefweb" in url and others_ok:
+            return RELIEFWEB_RSS
         if url.startswith("https://news.google.com"):
             if not google_ok:
                 raise services.UpstreamError("google down")
@@ -267,6 +269,9 @@ def test_new_sources_are_parsed():
 
     relief = news.parse_feed(RELIEFWEB_RSS, "ReliefWeb", "report", "ReliefWeb", topic_only=False)
     assert relief[0]["summary"] == "Appeal for USD 300 million." and relief[0]["kind"] == "report"
+
+    broken = SCIENCE_RSS.replace("Warm Pacific waters", "Sun & sea: warm Pacific waters")  # bare "&"
+    assert news.parse_feed(broken, "NASA", "science", "NASA")[0]["title"].startswith("Sun & sea")
 
     science = news.parse_feed(SCIENCE_RSS, "Phys.org", "science", "Phys.org")
     assert [a["url"] for a in science] == ["https://science.example/enso"]  # off-topic items dropped
