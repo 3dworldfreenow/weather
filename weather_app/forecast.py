@@ -27,6 +27,7 @@ STEP_HOURS = 3           # time between forecast frames
 FRAMES = 17              # 48 hours ahead
 BATCH = 50               # locations per request
 TIMEOUT = 60             # seconds; multi-location requests take a while
+PAUSE = 6                # seconds between batches: ~500 locations a minute
 REFRESH_HOURS = 6        # reuse the previous data for this long
 VARIABLES = "temperature_2m,precipitation,relative_humidity_2m,pressure_msl,wind_speed_10m,wind_direction_10m"
 
@@ -132,7 +133,7 @@ def build_forecast(now: dt.datetime | None = None) -> dict[str, Any]:
     locations: list[dict[str, Any]] = []
     for i in range(0, len(points), BATCH):
         locations += _fetch_batch(points[i: i + BATCH])
-        time.sleep(1)  # be gentle with the free service
+        time.sleep(PAUSE)  # stay under Open-Meteo's per-minute limit (a location counts as a call)
     if len(locations) != len(points):
         raise services.UpstreamError(f"Open-Meteo returned {len(locations)} of {len(points)} grid points")
     hourly_times = locations[0]["hourly"]["time"]
