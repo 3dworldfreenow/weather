@@ -42,7 +42,7 @@ def test_series_sums_rain_over_each_step():
 def test_build_and_reuse(monkeypatch):
     calls = []
 
-    def fake_get_json(url, params=None):
+    def fake_get_json(url, params=None, timeout=None):
         n = len(params["latitude"].split(","))
         calls.append(n)
         return [{"hourly": hourly()} for _ in range(n)]
@@ -57,7 +57,8 @@ def test_build_and_reuse(monkeypatch):
     assert len(data["cities"]) == len(forecast.CITIES) and data["cities"][0]["temp"][0] == 26.0
 
     assert forecast.get_forecast(data, now + dt.timedelta(hours=1)) is data  # recent: reused
-    monkeypatch.setattr(services, "_get_json", lambda url, params=None: (_ for _ in ()).throw(services.UpstreamError("down")))
+    monkeypatch.setattr(services, "_get_json", lambda url, params=None, timeout=None: (_ for _ in ()).throw(
+        services.UpstreamError("down", status=400)))
     assert forecast.get_forecast(data, now + dt.timedelta(hours=9)) is data  # refresh failed: keep old
     with pytest.raises(services.UpstreamError):
         forecast.get_forecast(None, now)

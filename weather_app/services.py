@@ -72,9 +72,9 @@ _session.mount("https://", requests.adapters.HTTPAdapter(pool_connections=32, po
 _session.mount("http://", requests.adapters.HTTPAdapter(pool_connections=32, pool_maxsize=32))
 
 
-def _get_json(url: str, params: dict[str, Any] | None = None) -> Any:
+def _get_json(url: str, params: dict[str, Any] | None = None, timeout: float = HTTP_TIMEOUT) -> Any:
     try:
-        resp = _session.get(url, params=params, timeout=HTTP_TIMEOUT)
+        resp = _session.get(url, params=params, timeout=timeout)
     except requests.RequestException as exc:
         raise UpstreamError(f"Request to {url} failed: {exc}") from exc
     if not resp.ok:

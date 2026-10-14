@@ -25,7 +25,8 @@ GRID_STEP = 6.0          # degrees
 GRID_MAX_LAT = 84.0
 STEP_HOURS = 3           # time between forecast frames
 FRAMES = 17              # 48 hours ahead
-BATCH = 100              # locations per request
+BATCH = 50               # locations per request
+TIMEOUT = 60             # seconds; multi-location requests take a while
 REFRESH_HOURS = 6        # reuse the previous data for this long
 VARIABLES = "temperature_2m,precipitation,relative_humidity_2m,pressure_msl,wind_speed_10m,wind_direction_10m"
 
@@ -84,10 +85,11 @@ def _fetch_batch(points: list[tuple[float, float]]) -> list[dict[str, Any]]:
     }
     for delay in (5, 20, 60, None):
         try:
-            data = services._get_json(FORECAST_URL, params)
+            data = services._get_json(FORECAST_URL, params, timeout=TIMEOUT)
             return data if isinstance(data, list) else [data]
         except services.UpstreamError as exc:
-            if delay is None or not (exc.rate_limited or (exc.status or 0) >= 500):
+            client_error = exc.status is not None and 400 <= exc.status < 500 and not exc.rate_limited
+            if delay is None or client_error:  # retry timeouts, rate limits and server errors
                 raise
             log.info("Open-Meteo busy (%s), retrying in %s s", exc, delay)
             time.sleep(delay)
