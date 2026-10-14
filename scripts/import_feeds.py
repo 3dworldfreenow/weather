@@ -207,6 +207,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--max", type=int, default=10000, help="most imported feeds to keep")
     parser.add_argument("--workers", type=int, default=48)
+    parser.add_argument("--per-country", type=int, default=40,
+                        help="most government and university feeds per country (some countries list every town hall)")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 
@@ -258,7 +260,16 @@ def main() -> None:
             "publisher": c["publisher"].strip()[:120], "url": c["url"], "type": "feed", "category": c["category"],
             "filter": "all" if c["category"] == "weather" else "topic", "origin": c["origin"],
         })
-    rows = rows[: args.max]
+    capped, per = [], {}
+    for r in rows:
+        if r["category"] in ("government", "university"):
+            key = (r["country"], r["category"])
+            per[key] = per.get(key, 0) + 1
+            if per[key] > args.per_country:
+                continue
+        capped.append(r)
+    log.info("Kept %d of %d after the per-country limit for government and university feeds", len(capped), len(rows))
+    rows = capped[: args.max]
 
     out = io.StringIO()
     writer = csv.DictWriter(out, fieldnames=FIELDS, lineterminator="\n")
