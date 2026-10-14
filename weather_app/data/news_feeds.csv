@@ -148,3 +148,1660 @@ China,china,English,Hong Kong Observatory warnings,https://rss.weather.gov.hk/rs
 ,,English,University of Washington News,https://www.washington.edu/news/feed/,feed,university,topic
 ,,English,University of Hawaii News,https://www.hawaii.edu/news/feed/,feed,university,topic
 ,,English,MIT News: climate,https://news.mit.edu/topic/climate-change,page,university,topic
+# ==== imported by scripts/import_feeds.py: do not edit below, add hand-picked feeds above ====
+Australia,australia,English,ABC News,https://www.abc.net.au/news/feed/1948/rss.xml,feed,newspaper,topic,awesome-rss-feeds
+Australia,australia,English,Brisbane Times - Latest News,https://www.brisbanetimes.com.au/rss/feed.xml,feed,newspaper,topic,awesome-rss-feeds
+Australia,australia,English,Business News - Latest Headlines,https://www.businessnews.com.au/rssfeed/latest.rss,feed,newspaper,topic,awesome-rss-feeds
+Australia,australia,English,checkpointgaming.net,https://joy.org.au/checkpoint/feed/podcast,feed,newspaper,topic,wikidata
+Australia,australia,English,Crikey,https://feeds.feedburner.com/com/rCTl,feed,newspaper,topic,awesome-rss-feeds
+Australia,australia,,Independent Australia,http://feeds.feedburner.com/IndependentAustralia,feed,newspaper,topic,awesome-rss-feeds
+Australia,australia,,PerthNow,https://www.perthnow.com.au/news/feed,feed,newspaper,topic,awesome-rss-feeds
+Australia,australia,English,The Age - Latest News,https://www.theage.com.au/rss/feed.xml,feed,newspaper,topic,awesome-rss-feeds
+Australia,australia,English,The Canberra Times - Local News,https://www.canberratimes.com.au/rss.xml,feed,newspaper,topic,awesome-rss-feeds
+Belgium,,Dutch,vrtnws.be,https://www.vrt.be/vrtnws/nl.rss.articles.xml,feed,newspaper,topic,wikidata
+Belgium,,Dutch,vrtnws.be,https://www.vrt.be/vrtnws/fr.rss.articles.xml,feed,newspaper,topic,wikidata
+Belgium,,Dutch,vrtnws.be,https://www.vrt.be/vrtnws/de.rss.articles.xml,feed,newspaper,topic,wikidata
+Belgium,,Dutch,vrtnws.be,https://www.vrt.be/vrtnws/en.rss.articles.xml,feed,newspaper,topic,wikidata
+Benin,,French,La Nouvelle Tribune,https://lanouvelletribune.info/feed/,feed,newspaper,topic,wikidata
+Brazil,brazil,English,Brasil Wire,https://www.brasilwire.com/feed/,feed,newspaper,topic,awesome-rss-feeds
+Brazil,brazil,Brazilian portuguese,InfoMoney,https://www.infomoney.com.br/feed/,feed,newspaper,topic,wikidata
+Brazil,brazil,Portuguese,Jornal da USP,https://jornal.usp.br/feed/,feed,newspaper,topic,wikidata
+Brazil,brazil,English,The Rio Times,https://www.riotimesonline.com/feed/,feed,newspaper,topic,awesome-rss-feeds
+Brazil,brazil,Portuguese,UOL,https://www.uol.com.br/vueland/api/?loadComponent=XmlFeedRss,feed,newspaper,topic,awesome-rss-feeds
+Canada,canada,English,Financial Post,https://financialpost.com/feed,feed,newspaper,topic,awesome-rss-feeds
+Canada,canada,French,LaPresse.ca - Actualités,https://www.lapresse.ca/actualites/rss,feed,newspaper,topic,awesome-rss-feeds
+Canada,canada,English,National Post,https://nationalpost.com/feed,feed,newspaper,topic,awesome-rss-feeds
+Canada,canada,English,Ottawa Citizen,https://ottawacitizen.com/feed,feed,newspaper,topic,awesome-rss-feeds
+Canada,canada,English,Pinkbike,https://www.pinkbike.com/pinkbike_xml_feed.php,feed,newspaper,topic,wikidata
+Canada,canada,English,The Province,https://theprovince.com/feed,feed,newspaper,topic,awesome-rss-feeds
+Canada,canada,English,Toronto Sun - RSS Feed,https://torontosun.com/category/news/feed.xml,feed,newspaper,topic,awesome-rss-feeds
+Canada,canada,English,videochums.com,https://videochums.com/feed.rss,feed,newspaper,topic,wikidata
+Chile,chile,Spanish,ArchDaily,https://www.archdaily.com/feed.xml,feed,newspaper,topic,wikidata
+Czech Republic,,Czech,Aha!,https://www.ahaonline.cz/rss,feed,newspaper,topic,wikidata
+Czech Republic,,Czech,Aktuálně.cz,https://www.aktualne.cz/rss/,feed,newspaper,topic,wikidata
+Czech Republic,,Czech,Blesk.cz,https://www.blesk.cz/rss,feed,newspaper,topic,wikidata
+Czech Republic,,Czech,Deník Alarm,https://denikalarm.cz/feed/,feed,newspaper,topic,wikidata
+Czech Republic,,Czech,Deník N,https://denikn.cz/feed,feed,newspaper,topic,wikidata
+Czech Republic,,Czech,Deník N,https://denikn.cz/minuta/feed/?cat=738,feed,newspaper,topic,wikidata
+Czech Republic,,Czech,Deník.cz,https://www.denik.cz/rss/vse.xml,feed,newspaper,topic,wikidata
+Czech Republic,,Czech,e15,https://www.e15.cz/rss,feed,newspaper,topic,wikidata
+Czech Republic,,Czech,euro.cz,https://www.euro.cz/rss/clanky/,feed,newspaper,topic,wikidata
+Czech Republic,,Czech,Hospodářské noviny,https://hn.cz/?m=rss,feed,newspaper,topic,wikidata
+Czech Republic,,Czech,iRozhlas,https://www.irozhlas.cz/rss/irozhlas,feed,newspaper,topic,wikidata
+Czech Republic,,Czech,Mediaguru,https://www.mediaguru.cz/rss/nejnovejsi,feed,newspaper,topic,wikidata
+Czech Republic,,,Seznam Zprávy,https://www.seznamzpravy.cz/rss,feed,newspaper,topic,wikidata
+Czech Republic,,Czech,Sport,https://isport.blesk.cz/rss,feed,newspaper,topic,wikidata
+Czech Republic,,English,Transitions Online,https://tol.org/feed,feed,newspaper,topic,wikidata
+Denmark,,Danish,Dagens.dk,https://www.dagens.dk/feed,feed,newspaper,topic,wikidata
+Finland,,Finnish,Lentoposti.fi,https://www.lentoposti.fi/lentoposti_rss.xml,feed,newspaper,topic,wikidata
+Finland,,Finnish,Seurakuntalainen,https://www.seurakuntalainen.fi/feed/,feed,newspaper,topic,wikidata
+France,,,Franceinfo - Les Titres,https://www.franceinfo.fr/titres.rss,feed,newspaper,topic,awesome-rss-feeds
+France,,French,Frandroid,https://www.frandroid.com/feed,feed,newspaper,topic,wikidata
+France,,French,L'essentiel,https://www.sudouest.fr/essentiel/rss.xml,feed,newspaper,topic,awesome-rss-feeds
+France,,French,L'Obs - A la une,https://www.nouvelobs.com/a-la-une/rss.xml,feed,newspaper,topic,awesome-rss-feeds
+France,,French,La Dépêche du Midi : actualités et info en direct de la région Occitanie et des environs - ladepeche.fr,https://www.ladepeche.fr/rss.xml,feed,newspaper,topic,awesome-rss-feeds
+France,,French,Le Courrier d'Europe centrale,https://courrierdeuropecentrale.fr/feed/,feed,newspaper,topic,wikidata
+France,,French,Le Huffington Post,https://www.huffingtonpost.fr/rss/all_headline.xml,feed,newspaper,topic,awesome-rss-feeds
+France,,French,Le Monde,https://www.lemonde.fr/rss/une.xml,feed,newspaper,topic,wikidata
+France,,French,Le Pèlerin,https://www.lepelerin.com/rss,feed,newspaper,topic,wikidata
+France,,French,Les e-novateurs,https://les-enovateurs.com/rss/posts.rss,feed,newspaper,topic,wikidata
+France,,French,Les Jours,https://lesjours.fr/rss.xml,feed,newspaper,topic,wikidata
+France,,French,Mediapart,https://www.mediapart.fr/articles/feed,feed,newspaper,topic,wikidata
+France,,French,NewsIA,https://newsia.fr/rss.xml,feed,newspaper,topic,wikidata
+France,,French,Newsweed,https://www.newsweed.fr/feed/,feed,newspaper,topic,wikidata
+France,,French,Ouest-France - Actualité,https://www.ouest-france.fr/rss/une,feed,newspaper,topic,awesome-rss-feeds
+France,,English,Paris Star,https://www.parisstaronline.com/feed,feed,newspaper,topic,awesome-rss-feeds
+France,,French,Reporterre,https://reporterre.net/spip.php?page=backend-simple,feed,newspaper,topic,wikidata
+France,,French,Saint-Martin's Week,https://www.stmartinweek.fr/feed/,feed,newspaper,topic,wikidata
+France,,French,TF1 info,https://www.tf1info.fr/feeds/rss-une.xml,feed,newspaper,topic,wikidata
+Germany,,German,Aktuell - FAZ.NET,https://www.faz.net/rss/aktuell/,feed,newspaper,topic,awesome-rss-feeds
+Germany,,German,Antifaschistisches Pressearchiv und Bildungszentrum Berlin,https://www.apabiz.de/feed/,feed,newspaper,topic,wikidata
+Germany,,,Antifaschistisches Pressearchiv und Bildungszentrum Berlin,https://www.apabiz.de/feed/atom/,feed,newspaper,topic,wikidata
+Germany,,German,Die Zeit,https://newsfeed.zeit.de/index,feed,newspaper,topic,wikidata
+Germany,,German,Direkte Aktion,https://direkteaktion.org/feed/,feed,newspaper,topic,wikidata
+Germany,,German,Direkte Aktion,https://direkteaktion.org/feed/atom/,feed,newspaper,topic,wikidata
+Germany,,Russian,Echo,https://echofm.online/feed,feed,newspaper,topic,wikidata
+Germany,,German,Eurogamer Germany,https://www.eurogamer.de/feed,feed,newspaper,topic,wikidata
+Germany,,German,Junge Freiheit,https://jungefreiheit.de/feed/,feed,newspaper,topic,wikidata
+Germany,,German,Kontext weekly,https://www.kontextwochenzeitung.de/feed.rss,feed,newspaper,topic,wikidata
+Germany,,German,netzpolitik.org,https://netzpolitik.org/feed/,feed,newspaper,topic,wikidata
+Germany,,German,netzpolitik.org,https://netzpolitik.org/feed/atom/,feed,newspaper,topic,wikidata
+Germany,,English,Ruptly,https://alert.ruptly.tv/feed/rss,feed,newspaper,topic,wikidata
+Germany,,German,tagesschau.de,https://www.tagesschau.de/infoservices/alle-meldungen-100~rss2.xml,feed,newspaper,topic,wikidata
+Germany,,German,tagesschau.de,https://www.tagesschau.de/infoservices/alle-meldungen-100~rdf.xml,feed,newspaper,topic,wikidata
+Germany,,German,tagesschau.de,https://www.tagesschau.de/infoservices/alle-meldungen-100~atom.xml,feed,newspaper,topic,wikidata
+Germany,,German,Tichys Einblick,https://feeds.soundcloud.com/users/soundcloud:users:186342045/sounds.rss,feed,newspaper,topic,wikidata
+Germany,,German,watson.de,https://www.watson.de/api/1.0/rss.xml,feed,newspaper,topic,wikidata
+Greece,,Greek,Argolika,https://argolika.gr/feed/,feed,newspaper,topic,wikidata
+Greece,,English,DSOGaming,https://www.dsogaming.com/feed/,feed,newspaper,topic,wikidata
+Greece,,Greek,eKorinthos,https://ekorinthos.gr/feed/,feed,newspaper,topic,wikidata
+Greece,,Greek,ENIKOS,https://www.enikos.gr/feed/,feed,newspaper,topic,wikidata
+Hong Kong SAR China,,English,Hong Kong Free Press HKFP,https://hongkongfp.com/feed/,feed,newspaper,topic,awesome-rss-feeds
+Hong Kong SAR China,,English,hongkongnews.net latest rss headlines,http://feeds.hongkongnews.net/rss/b82693edf38ebff8,feed,newspaper,topic,awesome-rss-feeds
+Iceland,,,Mannlíf,https://mannlif.is/rss/,feed,newspaper,topic,wikidata
+India,india,,BBC News - India,https://feeds.bbci.co.uk/news/world/asia/india/rss.xml,feed,newspaper,topic,awesome-rss-feeds
+India,india,English,Business Line - Home,https://www.thehindubusinessline.com/feeder/default.rss,feed,newspaper,topic,awesome-rss-feeds
+India,india,,Deccan Chronicle - Latest India news | Breaking news | Hyderabad News | World news | Business news | Politics | Technolo,https://www.deccanchronicle.com/feeds.xml,feed,newspaper,topic,awesome-rss-feeds
+India,india,English,Deccan Era,https://deccanera.com/feed/,feed,newspaper,topic,wikidata
+India,india,English,Delvewire,https://delvewire.com/feed.xml,feed,newspaper,topic,wikidata
+India,india,English,Economic Times,https://economictimes.indiatimes.com/rssfeedsdefault.cms,feed,newspaper,topic,awesome-rss-feeds
+India,india,English,Free Press Journal,https://www.freepressjournal.in/stories.rss,feed,newspaper,topic,awesome-rss-feeds
+India,india,English,India News,https://www.dnaindia.com/feeds/india.xml,feed,newspaper,topic,awesome-rss-feeds
+India,india,English,India | The Guardian,https://www.theguardian.com/world/india/rss,feed,newspaper,topic,awesome-rss-feeds
+India,india,English,NDTV News -   Topstories,https://feeds.feedburner.com/ndtvnews-top-stories,feed,newspaper,topic,awesome-rss-feeds
+India,india,English,OpIndia,https://feeds.feedburner.com/opindia,feed,newspaper,topic,awesome-rss-feeds
+India,india,English,Scroll.in,http://feeds.feedburner.com/ScrollinArticles.rss,feed,newspaper,topic,awesome-rss-feeds
+India,india,,SEBI RSS Feed,https://www.sebi.gov.in/sebirss.xml,feed,newspaper,topic,awesome-rss-feeds
+India,india,English,Story Network,https://storynetwork.in/feed/,feed,newspaper,topic,wikidata
+India,india,,Swarajya,https://prod-qt-images.s3.amazonaws.com/production/swarajya/feed.xml,feed,newspaper,topic,awesome-rss-feeds
+India,india,English,TechGenyz,http://feeds.feedburner.com/techgenyz,feed,newspaper,topic,awesome-rss-feeds
+India,india,English,The Hindu - Home,https://www.thehindu.com/feeder/default.rss,feed,newspaper,topic,awesome-rss-feeds
+India,india,English,Top World News- News18.com,https://www.news18.com/commonfeeds/v1/eng/rss/world.xml,feed,newspaper,topic,awesome-rss-feeds
+India,india,Hindi,देश | दैनिक भास्कर,https://www.bhaskar.com/rss-feed/1061/,feed,newspaper,topic,awesome-rss-feeds
+India,india,Gujarati,ઈન્ડિયા | દિવ્ય ભાસ્કર,https://www.divyabhaskar.co.in/rss-feed/1037/,feed,newspaper,topic,awesome-rss-feeds
+Indonesia,indonesia,Indonesian,Republika Online RSS Feed,https://www.republika.co.id/rss/,feed,newspaper,topic,awesome-rss-feeds
+Iran,,,تابناک | TABNAK,https://www.tabnak.ir/fa/rss/allnews,feed,newspaper,topic,awesome-rss-feeds
+Iran,,Persian,خبرگزاری ایسنا | صفحه اصلی |  ISNA News Agency,https://www.isna.ir/rss,feed,newspaper,topic,awesome-rss-feeds
+Iran,,,خبرگزاری باشگاه خبرنگاران | آخرین اخبار ایران و جهان | YJC,https://www.yjc.ir/fa/rss/allnews,feed,newspaper,topic,awesome-rss-feeds
+Iran,,Persian,خبرگزاری خبرآنلاین - آخرین اخبار ایران و جهان | Khabaronline,https://www.khabaronline.ir/rss,feed,newspaper,topic,awesome-rss-feeds
+Iran,,Persian,خبرگزاری مهر | اخبار ایران و جهان | Mehr News Agency,https://www.mehrnews.com/rss,feed,newspaper,topic,awesome-rss-feeds
+Iran,,,عصر ايران,https://www.asriran.com/fa/rss/allnews,feed,newspaper,topic,awesome-rss-feeds
+Ireland,,,All: BreakingNews.ie,https://feeds.breakingnews.ie/bntopstories,feed,newspaper,topic,awesome-rss-feeds
+Ireland,,English,Irish Mirror - Home,https://www.irishmirror.ie/?service=rss,feed,newspaper,topic,awesome-rss-feeds
+Ireland,,English,IrishCentral.com - Top Stories,https://feeds.feedburner.com/IrishCentral,feed,newspaper,topic,awesome-rss-feeds
+Ireland,,,IrishExaminer.com,https://feeds.feedburner.com/ietopstories,feed,newspaper,topic,awesome-rss-feeds
+Ireland,,English,The42,https://www.the42.ie/feed/,feed,newspaper,topic,awesome-rss-feeds
+Ireland,,English,TheJournal.ie,https://www.thejournal.ie/feed/,feed,newspaper,topic,awesome-rss-feeds
+Israel,,,All Israel News,https://allisraelnews.com/feed/atom,feed,newspaper,topic,wikidata
+Israel,,Hebrew,Walla!,https://rss.walla.co.il/feed/1?type=main,feed,newspaper,topic,wikidata
+Italy,,Italian,Adnkronos - ultimoratop,https://www.adnkronos.com/RSS_PrimaPagina.xml,feed,newspaper,topic,awesome-rss-feeds
+Italy,,Italian,Blitz Quotidiano,https://www.blitzquotidiano.it/feed/,feed,newspaper,topic,wikidata
+Italy,,,Il Mattino Web,https://www.ilmattino.it/?sez=XML&args&p=search&args%5Bbox%5D=Home&limit=20&layout=rss,feed,newspaper,topic,awesome-rss-feeds
+Italy,,,Internazionale,https://www.internazionale.it/sitemaps/rss.xml,feed,newspaper,topic,awesome-rss-feeds
+Italy,,English,Italy | The Guardian,https://www.theguardian.com/world/italy/rss,feed,newspaper,topic,awesome-rss-feeds
+Italy,,Italian,La Stampa,https://www.lastampa.it/rss/copertina.xml,feed,newspaper,topic,wikidata
+Italy,,Italian,LaCapitale,https://www.lacapitalenews.it/feed/,feed,newspaper,topic,wikidata
+Italy,,Italian,LegnanoNews,https://www.legnanonews.com/feed/,feed,newspaper,topic,wikidata
+Italy,,Italian,Libero Quotidiano,https://www.liberoquotidiano.it/rss.xml,feed,newspaper,topic,awesome-rss-feeds
+Italy,,,Milan News,https://www.milannews.it/rss/,feed,newspaper,topic,awesome-rss-feeds
+Italy,,,mondoxbox.com,https://feeds.feedburner.com/mondoxbox/mxnews,feed,newspaper,topic,wikidata
+Italy,,Italian,Open,https://www.open.online/feed/,feed,newspaper,topic,wikidata
+Italy,,Italian,Panorama,https://www.panorama.it/feed/gn,feed,newspaper,topic,awesome-rss-feeds
+Italy,,Italian,Repubblica.it > Homepage,https://www.repubblica.it/rss/homepage/rss2.0.xml,feed,newspaper,topic,awesome-rss-feeds
+Italy,,,RSS di   - ANSA.it,https://www.ansa.it/sito/ansait_rss.xml,feed,newspaper,topic,awesome-rss-feeds
+Italy,,English,The Local,https://feeds.thelocal.com/rss/it,feed,newspaper,topic,awesome-rss-feeds
+Italy,,Italian,Wired Italia,https://www.wired.it/feed/rss,feed,newspaper,topic,wikidata
+Japan,japan,English,AUTOMATON WEST,https://automaton-media.com/en/feed/,feed,newspaper,topic,wikidata
+Japan,japan,Japanese,BRIDGE（ブリッジ）テクノロジー＆スタートアップ情報,http://feeds.feedburner.com/SdJapan,feed,newspaper,topic,awesome-rss-feeds
+Japan,japan,Japanese,Choson Sinbo,https://chosonsinbo.com/feed/,feed,newspaper,topic,wikidata
+Japan,japan,Japanese,CNN.co.jp,http://feeds.cnn.co.jp/rss/cnn/cnn.rdf,feed,newspaper,topic,wikidata
+Japan,japan,,Japan Today,https://japantoday.com/feed,feed,newspaper,topic,awesome-rss-feeds
+Japan,japan,Japanese,Kyodo News,https://www.omnycontent.com/d/playlist/6c1d6f91-c940-481f-98bc-af8200beb4a9/b9715a87-f925-4804-a155-af8e003728dc/fc5cf3b3-7c9a-4f1f-97f9-af8e003728fd/podcast.rss,feed,newspaper,topic,wikidata
+Japan,japan,,News On Japan,http://www.newsonjapan.com/rss/top.xml,feed,newspaper,topic,awesome-rss-feeds
+Japan,japan,English,NYT > Japan,https://www.nytimes.com/svc/collections/v1/publish/http://www.nytimes.com/topic/destination/japan/rss.xml,feed,newspaper,topic,awesome-rss-feeds
+Japan,japan,Japanese,Shimbun Akahata,https://www.jcp.or.jp/akahata/index.rdf,feed,newspaper,topic,wikidata
+Japan,japan,Japanese,YuriNavi,https://yurinavi.com/feed/,feed,newspaper,topic,wikidata
+Japan,japan,Japanese,ライブドアニュース - 主要トピックス,https://news.livedoor.com/topics/rss/top.xml,feed,newspaper,topic,awesome-rss-feeds
+Japan,japan,Japanese,朝日新聞デジタル,http://rss.asahi.com/rss/asahi/newsheadlines.rdf,feed,newspaper,topic,awesome-rss-feeds
+Latvia,,English,Meduza,https://meduza.io/rss2/all,feed,newspaper,topic,wikidata
+Mexico,mexico,Spanish,24 Horas,https://24-horas.mx/feed/,feed,newspaper,topic,awesome-rss-feeds
+Mexico,mexico,Spanish,8 Columnas,https://8columnas.com.mx/feed/,feed,newspaper,topic,awesome-rss-feeds
+Mexico,mexico,Spanish,El Financiero,https://www.elfinanciero.com.mx/arc/outboundfeeds/rss/?outputType=xml,feed,newspaper,topic,awesome-rss-feeds
+Mexico,mexico,Spanish,"El Informador :: Noticias de Jalisco, México, Deportes & Entretenimiento",https://www.informador.mx/rss/ultimas-noticias.xml,feed,newspaper,topic,awesome-rss-feeds
+Mexico,mexico,Spanish,ElNorte,https://www.elnorte.com/rss/portada.xml,feed,newspaper,topic,awesome-rss-feeds
+Mexico,mexico,Spanish,Lo último en Vanguardia MX,https://vanguardia.com.mx/rss.xml,feed,newspaper,topic,awesome-rss-feeds
+Mexico,mexico,English,Mexico News Daily,https://mexiconewsdaily.com/feed/,feed,newspaper,topic,awesome-rss-feeds
+Mexico,mexico,English,Mexico | The Guardian,https://www.theguardian.com/world/mexico/rss,feed,newspaper,topic,awesome-rss-feeds
+Mexico,mexico,Spanish,"Portada, El Siglo de Torreón",https://www.elsiglodetorreon.com.mx/index.xml,feed,newspaper,topic,awesome-rss-feeds
+Mexico,mexico,Spanish,Reforma,https://www.reforma.com/rss/portada.xml,feed,newspaper,topic,awesome-rss-feeds
+Mongolia,,English,News.mn,https://news.mn/en/feed/,feed,newspaper,topic,wikidata
+Mongolia,,Mongolian,News.mn,https://news.mn/mng/feed/,feed,newspaper,topic,wikidata
+Nepal,nepal,English,Scriling,https://scriling.com/feed,feed,newspaper,topic,wikidata
+Netherlands,,Dutch,Harderwijkse Zaken,https://www.harderwijksezaken.nl/rss,feed,newspaper,topic,wikidata
+Netherlands,,Dutch,Looopings,https://www.looopings.nl/rss/,feed,newspaper,topic,wikidata
+Netherlands,,Dutch,Oegstgeester Courant,https://www.oegstgeestercourant.nl/rss/feed,feed,newspaper,topic,wikidata
+Netherlands,,Dutch,OpmeerLeeft,https://opmeerleeft.nl/rss?type=nieuws,feed,newspaper,topic,wikidata
+New Zealand,new-zealand,English,GTA BOOM,https://www.gtaboom.com/feed.xml,feed,newspaper,topic,wikidata
+Nigeria,,English,Daily Post Nigeria,https://dailypost.ng/feed/,feed,newspaper,topic,awesome-rss-feeds
+Nigeria,,English,Information Nigeria,https://www.informationng.com/feed,feed,newspaper,topic,awesome-rss-feeds
+Nigeria,,English,Legit.ng,https://www.legit.ng/rss/all.rss,feed,newspaper,topic,awesome-rss-feeds
+Nigeria,,,Nigerian News. Latest Nigeria News. Your online Nigerian Newspaper.,http://feeds.feedburner.com/Nigerianeye,feed,newspaper,topic,awesome-rss-feeds
+Nigeria,,English,Premium Times Nigeria,https://www.premiumtimesng.com/feed,feed,newspaper,topic,awesome-rss-feeds
+Norway,,Norwegian,Bergensavisen,https://www.ba.no/service/rss,feed,newspaper,topic,wikidata
+Norway,,Norwegian,Gamer.no,https://www.gamer.no/rss,feed,newspaper,topic,wikidata
+Norway,,Norwegian,Norge IDAG,https://idag.no/atom.xml,feed,newspaper,topic,wikidata
+Norway,,,Titan,https://www.titan.uio.no/alle-artikler/?vrtx=feed,feed,newspaper,topic,wikidata
+Pakistan,pakistan,English,News Blog,https://newsnblogs.com/feed/,feed,newspaper,topic,awesome-rss-feeds
+Pakistan,pakistan,English,The Nation - Top Stories,https://www.nation.com.pk/rss/top-stories,feed,newspaper,topic,awesome-rss-feeds
+Pakistan,pakistan,English,The News International - Pakistan,https://www.thenews.com.pk/rss/1/1,feed,newspaper,topic,awesome-rss-feeds
+Pakistan,pakistan,Urdu,UrduPoint.com All Urdu News,https://www.urdupoint.com/rss/urdupoint.rss,feed,newspaper,topic,awesome-rss-feeds
+Pakistan,pakistan,English,ایکسپریس اردو,https://www.express.pk/feed/,feed,newspaper,topic,awesome-rss-feeds
+Pakistan,pakistan,English,قومی خبریں,https://jang.com.pk/rss/1/1,feed,newspaper,topic,awesome-rss-feeds
+Palestine,,English,Quds News Network,https://qudsn.co/rss,feed,newspaper,topic,wikidata
+Philippines,philippines,English,Abante Tonite,https://tonite.abante.com.ph/feed/,feed,newspaper,topic,awesome-rss-feeds
+Philippines,philippines,English,BusinessWorld,https://bworldonline.com/feed/,feed,newspaper,topic,awesome-rss-feeds
+Philippines,philippines,English,Current PH,https://currentph.com/feed/,feed,newspaper,topic,awesome-rss-feeds
+Philippines,philippines,English,GMA News Online / News,https://data.gmanews.tv/gno/rss/news/feed.xml,feed,newspaper,topic,awesome-rss-feeds
+Philippines,philippines,English,INQUIRER.net,https://www.inquirer.net/fullfeed/,feed,newspaper,topic,awesome-rss-feeds
+Philippines,philippines,English,Interaksyon,https://interaksyon.philstar.com/feed/,feed,newspaper,topic,awesome-rss-feeds
+Philippines,philippines,,PhilNews.XYZ,https://www.philnews.xyz/feeds/posts/default?alt=rss,feed,newspaper,topic,awesome-rss-feeds
+Philippines,philippines,,"TechPinas : Philippines' Technology News, Tips and Reviews Blog",http://feeds.feedburner.com/Techpinas,feed,newspaper,topic,awesome-rss-feeds
+Philippines,philippines,English,Top Gear: The Philippine authority on cars and the automotive industry,https://www.topgear.com.ph/feed/rss1,feed,newspaper,topic,awesome-rss-feeds
+Philippines,philippines,English,UNBOX PH,https://unbox.ph/feed/,feed,newspaper,topic,awesome-rss-feeds
+Poland,,,Dziennik.pl Dziennik - dziennik.pl,http://rss.dziennik.pl/Dziennik-PL/,feed,newspaper,topic,awesome-rss-feeds
+Poland,,,"GazetaPrawna.pl - biznes, podatki, prawo, finanse, wiadomości, praca",http://rss.gazetaprawna.pl/GazetaPrawna,feed,newspaper,topic,awesome-rss-feeds
+Poland,,Polish,https://www.rp.pl,https://www.rp.pl/rss_main?unknown-old-rss,feed,newspaper,topic,awesome-rss-feeds
+Poland,,Polish,Najnowsze,http://feeds.feedburner.com/wPolitycepl,feed,newspaper,topic,awesome-rss-feeds
+Poland,,Polish,Newsweek Polska,https://www.newsweek.pl/rss.xml,feed,newspaper,topic,awesome-rss-feeds
+Poland,,Polish,RMF24.pl,https://www.rmf24.pl/feed,feed,newspaper,topic,awesome-rss-feeds
+Poland,,Polish,www.wirtualnemedia.pl,https://www.wirtualnemedia.pl/rss/aktualnosci,feed,newspaper,topic,awesome-rss-feeds
+Romania,,Romanian,ActiveNews,https://www.activenews.ro/rss,feed,newspaper,topic,wikidata
+Romania,,Romanian,Bihor Info,https://bihorinfo.ro/rss.xml,feed,newspaper,topic,wikidata
+Romania,,Romanian,Pagina de media,https://www.paginademedia.ro/feed/,feed,newspaper,topic,wikidata
+Russia,,English,Canoner,https://kanoner.com/feed/,feed,newspaper,topic,wikidata
+Russia,,German,Interfax,https://www.interfax.ru/rss,feed,newspaper,topic,wikidata
+Russia,,English,iStories,https://istories.media/rss/all.xml,feed,newspaper,topic,wikidata
+Russia,,English,MediaZona,https://zona.media/rss,feed,newspaper,topic,wikidata
+Russia,,Russian,Mir Fantastiki,https://www.mirf.ru/feed/,feed,newspaper,topic,wikidata
+Russia,,Russian,Novaya Gazeta,https://novayagazeta.ru/feed/rss,feed,newspaper,topic,wikidata
+Russia,,Russian,Vzglyad,https://vz.ru/rss.xml,feed,newspaper,topic,wikidata
+Serbia,,Serbian,play.co.rs,https://play.co.rs/feed/,feed,newspaper,topic,wikidata
+South Africa,south-africa,English,Axios,https://api.axios.com/feed/,feed,newspaper,topic,awesome-rss-feeds
+South Africa,south-africa,English,Moneyweb,https://www.moneyweb.co.za/feed/,feed,newspaper,topic,awesome-rss-feeds
+South Africa,south-africa,English,TechCentral,https://techcentral.co.za/feed/,feed,newspaper,topic,awesome-rss-feeds
+South Africa,south-africa,English,The Citizen,https://www.citizen.co.za/feed/,feed,newspaper,topic,awesome-rss-feeds
+South Africa,south-africa,English,The South African,https://www.thesouthafrican.com/feed/,feed,newspaper,topic,awesome-rss-feeds
+Spain,,Spanish,EL PAÍS: el periódico global,https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada,feed,newspaper,topic,awesome-rss-feeds
+Spain,,,ElDiario.es - ElDiario.es,https://www.eldiario.es/rss/,feed,newspaper,topic,awesome-rss-feeds
+Spain,,,España,https://rss.elconfidencial.com/espana/,feed,newspaper,topic,awesome-rss-feeds
+Spain,,English,Euro Weekly News Spain,https://euroweeklynews.com/feed/,feed,newspaper,topic,awesome-rss-feeds
+Spain,,Spanish,huffingtonpost.es,https://www.huffingtonpost.es/feeds/index.xml,feed,newspaper,topic,awesome-rss-feeds
+Spain,,Spanish,IGN Spain,https://es.ign.com/feed.xml,feed,newspaper,topic,wikidata
+Spain,,Spanish,Portada // expansion,https://e00-expansion.uecdn.es/rss/portada.xml,feed,newspaper,topic,awesome-rss-feeds
+Spain,,English,The Local,https://feeds.thelocal.com/rss/es,feed,newspaper,topic,awesome-rss-feeds
+Switzerland,,French,Mac4Ever,https://www.mac4ever.com/flux/rss/content/actu,feed,newspaper,topic,wikidata
+Switzerland,,French,Mac4Ever,https://www.mac4ever.com/flux/rss/content/dossiers,feed,newspaper,topic,wikidata
+Switzerland,,German,Techgarage,https://techgarage.blog/feed/,feed,newspaper,topic,wikidata
+Switzerland,,French,watson,https://www.watson.ch/api/1.0/rss.xml,feed,newspaper,topic,wikidata
+Switzerland,,French,watson,https://www.watson.ch/fr/api/1.0/rss.xml,feed,newspaper,topic,wikidata
+Ukraine,,Russian,Focus,https://focus.ua/latest/rss-sitemap.xml,feed,newspaper,topic,wikidata
+Ukraine,,Ukrainian,Gazeta.ua,https://gazeta.ua/rss,feed,newspaper,topic,awesome-rss-feeds
+Ukraine,,Russian,Glavred,https://glavred.info/rss/,feed,newspaper,topic,wikidata
+Ukraine,,Russian,Glavred,https://glavred.net/rss/,feed,newspaper,topic,wikidata
+Ukraine,,English,NikVesti,https://nikvesti.com/rss.xml,feed,newspaper,topic,wikidata
+Ukraine,,English,NikVesti,https://nikvesti.com/ru/rss.xml,feed,newspaper,topic,wikidata
+Ukraine,,English,NikVesti,https://nikvesti.com/en/rss.xml,feed,newspaper,topic,wikidata
+Ukraine,,Ukrainian,PMG.ua,https://pmg.ua/rss,feed,newspaper,topic,wikidata
+Ukraine,,Russian,Telegraf,https://telegraf.com.ua/rss,feed,newspaper,topic,wikidata
+Ukraine,,Russian,Telegraf,https://telegraf.com.ua/ukr/rss,feed,newspaper,topic,wikidata
+Ukraine,,Russian,Ukrainian National News,https://unn.ua/rss/news_ru.xml,feed,newspaper,topic,wikidata
+Ukraine,,Ukrainian,Ukrainian National News,https://unn.ua/rss/news_uk.xml,feed,newspaper,topic,wikidata
+Ukraine,,English,Ukrainska Pravda,https://www.pravda.com.ua/rss/,feed,newspaper,topic,wikidata
+Ukraine,,Russian,Гордон - Самые популярные материалы,https://gordonua.com/api/media/out/rss/news-top.xml,feed,newspaper,topic,awesome-rss-feeds
+Ukraine,,,Информационное агентство УНИАН,https://rss.unian.net/site/news_rus.rss,feed,newspaper,topic,awesome-rss-feeds
+Ukraine,,Russian,НВ,https://nv.ua/rss/all.xml,feed,newspaper,topic,awesome-rss-feeds
+Ukraine,,Ukrainian,Новини на tsn.ua,https://tsn.ua/rss/full.rss,feed,newspaper,topic,awesome-rss-feeds
+Ukraine,,Russian,Цензор.НЕТ - Новости,https://assets.censor.net/rss/censor.net/rss_ru_news.xml,feed,newspaper,topic,awesome-rss-feeds
+United Kingdom,,,BBC News - Home,https://feeds.bbci.co.uk/news/rss.xml,feed,newspaper,topic,awesome-rss-feeds
+United Kingdom,,English,Daily Express :: News Feed,http://feeds.feedburner.com/daily-express-news-showbiz,feed,newspaper,topic,awesome-rss-feeds
+United Kingdom,,Yue chinese,Green Bean Media,https://anchor.fm/s/e89e5780/podcast/rss,feed,newspaper,topic,wikidata
+United Kingdom,,,Home | Mail Online,https://www.dailymail.com/home/index.rss,feed,newspaper,topic,awesome-rss-feeds
+United Kingdom,,English,Nintendo Life,https://www.nintendolife.com/feeds/latest,feed,newspaper,topic,wikidata
+United Kingdom,,English,Plant Based News,https://plantbasednews.org/feed/,feed,newspaper,topic,wikidata
+United Kingdom,,English,TechRadar,https://www.techradar.com/feeds.xml,feed,newspaper,topic,wikidata
+United Kingdom,,English,The Independent,https://www.independent.co.uk/news/uk/rss,feed,newspaper,topic,awesome-rss-feeds
+United Kingdom,,English,The Retail Bulletin,https://www.theretailbulletin.com/rss/,feed,newspaper,topic,wikidata
+United Kingdom,,English,the5krunner,https://the5krunner.com/feed/,feed,newspaper,topic,wikidata
+United Kingdom,,English,TheGuardian.com,https://www.theguardian.com/international/rss,feed,newspaper,topic,wikidata
+United Kingdom,,English,VG247,https://www.vg247.com/feed,feed,newspaper,topic,wikidata
+United Kingdom,,English,Video Games Chronicle,https://www.videogameschronicle.com/feed/,feed,newspaper,topic,wikidata
+United Kingdom,,English,World news | The Guardian,https://www.theguardian.com/world/rss,feed,newspaper,topic,awesome-rss-feeds
+United States,united-states,,404 Media,https://www.404media.co/rss/,feed,newspaper,topic,wikidata
+United States,united-states,English,Al-Monitor,https://www.al-monitor.com/rss,feed,newspaper,topic,wikidata
+United States,united-states,English,China Digital Times,https://chinadigitaltimes.net/chinese/feed,feed,newspaper,topic,wikidata
+United States,united-states,English,CLT Daily,https://feed.ausha.co/2EWnnI58p2JL,feed,newspaper,topic,wikidata
+United States,united-states,English,FOX News,https://moxie.foxnews.com/google-publisher/latest.xml,feed,newspaper,topic,awesome-rss-feeds
+United States,united-states,English,gamerescape.com,https://gamerescape.com/feed/,feed,newspaper,topic,wikidata
+United States,united-states,English,gameskinny.com,https://www.gameskinny.com/feed/,feed,newspaper,topic,wikidata
+United States,united-states,English,Greater Greater Washington,https://ggwash.org/rss,feed,newspaper,topic,wikidata
+United States,united-states,,Hell Gate,https://hellgatenyc.com/all-posts/rss/,feed,newspaper,topic,wikidata
+United States,united-states,English,Kotaku,https://kotaku.com/feed,feed,newspaper,topic,wikidata
+United States,united-states,English,New Mexico In Depth,https://nmindepth.com/feed/,feed,newspaper,topic,wikidata
+United States,united-states,American english,North Dakota Monitor,https://northdakotamonitor.com/feed/localFeed/,feed,newspaper,topic,wikidata
+United States,united-states,English,nytimes.com,https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml,feed,newspaper,topic,wikidata
+United States,united-states,English,operationsports.com,https://www.operationsports.com/feed/,feed,newspaper,topic,wikidata
+United States,united-states,English,Our Daily Bread,https://api.experience.odb.org/devotionals/feed/?country=US,feed,newspaper,topic,wikidata
+United States,united-states,English,Playbook,https://rss.politico.com/playbook.xml,feed,newspaper,topic,awesome-rss-feeds
+United States,united-states,English,Rest of World,https://restofworld.org/feed/latest,feed,newspaper,topic,wikidata
+United States,united-states,English,San José Spotlight,https://sanjosespotlight.com/feed/,feed,newspaper,topic,wikidata
+United States,united-states,English,Santa Fe Reporter,https://sfreporter.com/api/rss/content.rss,feed,newspaper,topic,wikidata
+United States,united-states,English,SharpPost,https://ruibao.news/rss/,feed,newspaper,topic,wikidata
+United States,united-states,English,Steam Deck HQ,https://steamdeckhq.com/feed/,feed,newspaper,topic,wikidata
+United States,united-states,English,The Athletic,https://www.nytimes.com/athletic/rss/news/,feed,newspaper,topic,wikidata
+United States,united-states,English,The Daily Memphian,https://dailymemphian.com/feed,feed,newspaper,topic,wikidata
+United States,united-states,English,The Intercept,https://theintercept.com/feed/?rss,feed,newspaper,topic,wikidata
+United States,united-states,English,The Verge,https://www.theverge.com/rss/index.xml,feed,newspaper,topic,wikidata
+United States,united-states,English,Unbiasable,https://unbiasable.com/rss.xml,feed,newspaper,topic,wikidata
+United States,united-states,English,Unicorn Riot,https://unicornriot.ninja/feed/,feed,newspaper,topic,wikidata
+United States,united-states,English,US Top News and Analysis,https://www.cnbc.com/id/100003114/device/rss/rss.html,feed,newspaper,topic,awesome-rss-feeds
+United States,united-states,English,Washington Business Journal,"https://rss.bizjournals.com/feed/2c976b9e9ab38dbe5a468eeb848e17dc76188c19/2102?market=washington&selectortype=channel&selectorvalue=1,6,2,3,4,13,17,5,9,10,18,7,11,12,14,15,8,16",feed,newspaper,topic,wikidata
+United States,united-states,English,World & Nation,https://www.latimes.com/world-nation/rss2.0.xml,feed,newspaper,topic,awesome-rss-feeds
+United States,united-states,English,"World News - Breaking News, Top Stories",https://chaski.huffpost.com/us/auto/vertical/world-news,feed,newspaper,topic,awesome-rss-feeds
+United States,united-states,English,Zeteo,https://zeteo.com/feed,feed,newspaper,topic,wikidata
+,,German,Adventure-Treff,https://www.adventure-treff.de/adventure-treff-rss.php,feed,newspaper,topic,wikidata
+,,English,Android Authority,http://feed.androidauthority.com/,feed,newspaper,topic,wikidata
+,,English,Beach Metro community news,https://beachmetro.com/feed/,feed,newspaper,topic,wikidata
+,,English,Ceowire,https://ceowire.co/rss.xml,feed,newspaper,topic,wikidata
+,,Czech,City by Bike,https://mestemnakole.cz/category/english/feed/,feed,newspaper,topic,wikidata
+,,,COYOTE,https://www.coyotemedia.org/latest/rss/,feed,newspaper,topic,wikidata
+,,German,der Freitag,https://www.freitag.de/@@RSS,feed,newspaper,topic,wikidata
+,,Turkish,DonanimHaber,https://www.donanimhaber.com/rss/tum/,feed,newspaper,topic,wikidata
+,,English,Droid Life,https://www.droid-life.com/feed/,feed,newspaper,topic,wikidata
+,,English,Entomology Today,https://entomologytoday.org/feed/,feed,newspaper,topic,wikidata
+,,Spanish,Estadio Deportivo,https://www.estadiodeportivo.com/sitemaps/rss.xml,feed,newspaper,topic,wikidata
+,,English,Fightmag,https://www.fightmag.com/feed/,feed,newspaper,topic,wikidata
+,,English,Focus,https://focusnewspaper.com/feed/,feed,newspaper,topic,wikidata
+,,American english,Game Rant,https://gamerant.com/feed/,feed,newspaper,topic,wikidata
+,,French,GamerGen,https://gamergen.com/rss,feed,newspaper,topic,wikidata
+,,English,gaming-age.com,https://feeds.feedburner.com/GamingAge,feed,newspaper,topic,wikidata
+,,English,GamingOnLinux,https://www.gamingonlinux.com/article_rss.php,feed,newspaper,topic,wikidata
+,,Polish,Gram.pl,https://www.gram.pl/rss/content.xml,feed,newspaper,topic,wikidata
+,,English,Greenwich Wire,https://greenwichwire.co.uk/feed/,feed,newspaper,topic,wikidata
+,,Italian,il Post,https://www.ilpost.it/feed,feed,newspaper,topic,wikidata
+,,French,Jeuxvideo.com,https://www.jeuxvideo.com/rss/rss.xml,feed,newspaper,topic,wikidata
+,,Ukrainian,Judicial and Legal Newspaper,https://sud.ua/rss/rss_news_uk.xml,feed,newspaper,topic,wikidata
+,,Russian,Judicial and Legal Newspaper,https://sud.ua/rss/rss_news.xml,feed,newspaper,topic,wikidata
+,,Russian,Kherson News,https://kherson-news.ru/rss.xml,feed,newspaper,topic,wikidata
+,,English,Linuxiac,https://linuxiac.com/feed/,feed,newspaper,topic,wikidata
+,,English,Lobsters,https://lobste.rs/rss,feed,newspaper,topic,wikidata
+,,German,Mein MMO,https://mein-mmo.de/feed/,feed,newspaper,topic,wikidata
+,,Italian,Multiplayer.it,https://multiplayer.it/feed/rss/homepage/,feed,newspaper,topic,wikidata
+,,English,Music Business Worldwide,https://www.musicbusinessworldwide.com/feed/,feed,newspaper,topic,wikidata
+,,English,Natural News,https://www.naturalnews.com/rss.xml,feed,newspaper,topic,wikidata
+,,British english,New Light of Myanmar,https://www.gnlm.com.mm/feed/,feed,newspaper,topic,wikidata
+,,Russian,News Channel 24,https://24tv.ua/rss/,feed,newspaper,topic,wikidata
+,,English,Pocket Tactics,https://www.pockettactics.com/mainrss.xml,feed,newspaper,topic,wikidata
+,,English,Pure Xbox,https://www.purexbox.com/feeds/latest,feed,newspaper,topic,wikidata
+,,English,Push Square,https://www.pushsquare.com/feeds/latest,feed,newspaper,topic,wikidata
+,,English,Rog Reviews,https://www.rogreviews.com/feed/,feed,newspaper,topic,wikidata
+,,English,Shelterforce,https://shelterforce.org/feed/,feed,newspaper,topic,wikidata
+,,English,Siliconera,https://www.siliconera.com/feed/,feed,newspaper,topic,wikidata
+,,English,Slashdot,https://rss.slashdot.org/Slashdot/slashdotMain,feed,newspaper,topic,wikidata
+,,Italian,Spaziogames.it,https://www.spaziogames.it/feed,feed,newspaper,topic,wikidata
+,,Italian,Spaziogames.it,https://www.thegamesmachine.it/feed/,feed,newspaper,topic,wikidata
+,,English,SVG,https://www.svg.com/feed/,feed,newspaper,topic,wikidata
+,,English,Synapse,https://synapse.ucsf.edu/rss.xml,feed,newspaper,topic,wikidata
+,,Turkish,The Cradle,https://thecradle.co/feed,feed,newspaper,topic,wikidata
+,,English,The Escapist,https://www.escapistmagazine.com/feed/,feed,newspaper,topic,wikidata
+,,,The Lever,https://www.levernews.com/rss/,feed,newspaper,topic,wikidata
+,,English,The San Francisco Standard,https://sfstandard.com/feed,feed,newspaper,topic,wikidata
+,,English,Times of San Diego,https://timesofsandiego.com/feed/,feed,newspaper,topic,wikidata
+,,English,Tjen Folket Media,https://tjen-folket.no/feed/,feed,newspaper,topic,wikidata
+,,German,Vice,https://www.vice.com/de/feed/,feed,newspaper,topic,wikidata
+,,English,Videogameszone.de,https://www.videogameszone.de/feed.cfm,feed,newspaper,topic,wikidata
+,,English,Wargamer,https://www.wargamer.com/mainrss.xml,feed,newspaper,topic,wikidata
+,,French,YAPPARI,https://yappari.fr/rss.xml,feed,newspaper,topic,wikidata
+Brazil,brazil,Portuguese,Times Brasil,https://timesbrasil.com.br/feed/,feed,tv,topic,wikidata
+Chile,chile,Spanish,Radio Bío-Bío,https://feeds.feedburner.com/radiobiobio/NNeJ,feed,tv,topic,wikidata
+Czech Republic,,Czech,Czech Radio Hradec Králové,https://hradec.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,MAFRA,https://servis.idnes.cz/rss.aspx,feed,tv,topic,wikidata
+Czech Republic,,Czech,Radio Prague International,https://cesky.radio.cz/rcz-rss/cz,feed,tv,topic,wikidata
+Czech Republic,,German,Radio Prague International,https://deutsch.radio.cz/rcz-rss/de,feed,tv,topic,wikidata
+Czech Republic,,English,Radio Prague International,https://english.radio.cz/rcz-rss/en,feed,tv,topic,wikidata
+Czech Republic,,Spanish,Radio Prague International,https://espanol.radio.cz/rcz-rss/es,feed,tv,topic,wikidata
+Czech Republic,,French,Radio Prague International,https://francais.radio.cz/rcz-rss/fr,feed,tv,topic,wikidata
+Czech Republic,,Russian,Radio Prague International,https://ruski.radio.cz/rcz-rss/ru,feed,tv,topic,wikidata
+Czech Republic,,Ukrainian,Radio Prague International,https://ukraina.radio.cz/rcz-rss/ua,feed,tv,topic,wikidata
+Czech Republic,,Czech,Radio Proglas,https://www.proglas.cz/?rss=1,feed,tv,topic,wikidata
+Czech Republic,,Czech,Radio Relax,https://radio-relax.cz/new/feed/,feed,tv,topic,wikidata
+Czech Republic,,Czech,Rádio 7,https://radio7.cz/?format=feed&type=rss,feed,tv,topic,wikidata
+Czech Republic,,Czech,Rádio DAB Praha,https://praha.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,Óčko Star,https://ocko.tv/rss.aspx,feed,tv,topic,wikidata
+Czech Republic,,Czech,Český rozhlas Brno,https://brno.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,Český rozhlas D-dur,https://d-dur.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,Český rozhlas Dvojka,https://dvojka.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,Český rozhlas Jazz,https://jazz.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,Český rozhlas Karlovy Vary,https://vary.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,Český rozhlas Liberec,https://liberec.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,Český rozhlas Olomouc,https://olomouc.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,Český rozhlas Ostrava,https://ostrava.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,Český rozhlas Pardubice,https://pardubice.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,Český rozhlas Plus,https://plus.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,Český rozhlas Plzeň,https://plzen.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,Český rozhlas Radio Wave,https://wave.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,Český rozhlas Radiožurnál,https://radiozurnal.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,Český rozhlas Radiožurnál Sport,https://sport.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,Český rozhlas Rádio Junior,https://junior.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,Český rozhlas Sever,https://sever.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,Český rozhlas Střední Čechy,https://strednicechy.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,Český rozhlas Vltava,https://vltava.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,Český rozhlas Vysočina,https://vysocina.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,Český rozhlas Zlín,https://zlin.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,Český rozhlas České Budějovice,https://budejovice.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,ČT art,https://art.ceskatelevize.cz/rss.xml,feed,tv,topic,wikidata
+Czech Republic,,Czech,ČT24,https://ct24.ceskatelevize.cz/rss,feed,tv,topic,wikidata
+France,,French,Radio Calade,https://www.radio-calade.fr/category/podcast/feed/,feed,tv,topic,wikidata
+France,,French,Radio Pulsar,https://www.radio-pulsar.org/feed/,feed,tv,topic,wikidata
+France,,French,RT en français,https://rtenfrancais.tv/rss,feed,tv,topic,wikidata
+Germany,,German,Broadcasting Combine Saxony,https://www.rundfunkkombinat.de/feed/,feed,tv,topic,wikidata
+Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/film-serie-100.rss,feed,tv,topic,wikidata
+Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/umwelt-104.rss,feed,tv,topic,wikidata
+Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/buehne-100.rss,feed,tv,topic,wikidata
+Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/psychologie-100.rss,feed,tv,topic,wikidata
+Germany,,German,Deutschlandfunk,https://www.deutschlandfunk.de/politikportal-100.rss,feed,tv,topic,wikidata
+Germany,,German,Deutschlandfunk,https://www.deutschlandfunk.de/nachrichten-100.rss,feed,tv,topic,wikidata
+Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/philosophie-104.rss,feed,tv,topic,wikidata
+Germany,,German,Deutschlandfunk,https://www.deutschlandfunk.de/wissen-106.rss,feed,tv,topic,wikidata
+Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/meinung-debatte-100.rss,feed,tv,topic,wikidata
+Germany,,German,Deutschlandfunk,https://www.deutschlandfunk.de/wirtschaft-106.rss,feed,tv,topic,wikidata
+Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/geschichte-136.rss,feed,tv,topic,wikidata
+Germany,,German,MDF.1,http://www.mdf1.de/feeds/index.rss,feed,tv,topic,wikidata
+Germany,,German,Radio Blau,https://www.radioblau.de/feed/,feed,tv,topic,wikidata
+Germany,,German,Radio CORAX,https://cba.media/podcast/tagesaktuelles-programm/feed,feed,tv,topic,wikidata
+Germany,,German,Radio CORAX,https://www.freie-radios.net/portal/podcast.php?radio=38&rss,feed,tv,topic,wikidata
+Germany,,German,Radio Ramasuri,http://feeds.feedburner.com/RadioRamasuri,feed,tv,topic,wikidata
+Greece,,Greek,Open TV,https://www.tvopen.gr/rss,feed,tv,topic,wikidata
+Jordan,,Arabic,Al-Mamlaka,https://almamlakatv.com/rss.xml,feed,tv,topic,wikidata
+Lebanon,,Arabic,Al-Manar,https://www.almanar.com.lb/rss,feed,tv,topic,wikidata
+Lithuania,,,Lithuanian National Radio and Television,https://www.lrt.lt/?rss,feed,tv,topic,wikidata
+Moldova,,Romanian,Jurnal TV,https://www.jurnaltv.md/rss/ro/all,feed,tv,topic,wikidata
+Norway,,,Norwegian Broadcasting Corporation,https://www.nrk.no/toppsaker.rss,feed,tv,topic,wikidata
+Norway,,,NRK Sápmi,https://www.nrk.no/sapmi/nrk-sapmi-_-aarjelsaemien-1.12132134.rss,feed,tv,topic,wikidata
+Norway,,,NRK Sápmi,https://www.nrk.no/sapmi/nrk-sapmi-_-norsk-1.13205589.rss,feed,tv,topic,wikidata
+Norway,,,NRK Sápmi,https://www.nrk.no/sapmi/oddasat.rss,feed,tv,topic,wikidata
+Norway,,,NRK Troms og Finnmark,https://www.nrk.no/tromsogfinnmark/siste.rss,feed,tv,topic,wikidata
+Norway,,,NRK Troms og Finnmark,https://www.nrk.no/tromsogfinnmark/toppsaker.rss,feed,tv,topic,wikidata
+Norway,,English,Voice of Tibet,https://feeds.feedburner.com/VoiceOfTibet,feed,tv,topic,wikidata
+Qatar,,Arabic,Al Jazeera Mubasher,https://www.aljazeeramubasher.net/rss.xml,feed,tv,topic,wikidata
+Romania,,French,TeenNick,https://www.nickalive.net/feeds/posts/default?alt=rss,feed,tv,topic,wikidata
+Russia,,,Zvezda,https://tvzvezda.ru/export/rss.xml,feed,tv,topic,wikidata
+Singapore,,English,CNA,https://www.channelnewsasia.com/api/v1/rss-outbound-feed?_format=xml,feed,tv,topic,wikidata
+Singapore,,English,CNA,https://www.channelnewsasia.com/api/v1/rss-outbound-feed?_format=xml&category=6511,feed,tv,topic,wikidata
+Turkey,,Turkish,Bursa TV,https://www.bursatv.com.tr/rss/,feed,tv,topic,wikidata
+Turkey,,Turkish,Halk TV,https://halktv.com.tr/export/rss,feed,tv,topic,wikidata
+Ukraine,,,Radio Maximum,https://maximum.fm/rssAll.xml,feed,tv,topic,wikidata
+United States,united-states,English,Crunchyroll,https://feeds.feedburner.com/crunchyroll/rss,feed,tv,topic,wikidata
+United States,united-states,American english,PBS News Hour,https://www.pbs.org/newshour/feeds/rss/economy,feed,tv,topic,wikidata
+United States,united-states,American english,PBS News Hour,https://www.pbs.org/newshour/feeds/rss/education,feed,tv,topic,wikidata
+United States,united-states,American english,PBS News Hour,https://www.pbs.org/newshour/feeds/rss/headlines,feed,tv,topic,wikidata
+United States,united-states,American english,PBS News Hour,https://www.pbs.org/newshour/feeds/rss/politics,feed,tv,topic,wikidata
+United States,united-states,English,The Florida Channel,https://thefloridachannel.org/videos/feed/,feed,tv,topic,wikidata
+United States,united-states,English,WRBL,https://www.wrbl.com/feed/,feed,tv,topic,wikidata
+Vatican City,,English,Vatican News,https://www.vaticannews.va/en.rss.xml,feed,tv,topic,wikidata
+,,French,28 minutes,https://www.arteradio.com/xml_sound_emission?emissionname=%2228%20Minutes%22,feed,tv,topic,wikidata
+,,English,All In with Chris Hayes,https://feeds.simplecast.com/K5Wu8vub,feed,tv,topic,wikidata
+,,Czech,At the Round Table,https://anchor.fm/s/af56ab8/podcast/rss,feed,tv,topic,wikidata
+,,French,BACKSEAT,https://anchor.fm/s/63c5f5cc/podcast/rss,feed,tv,topic,wikidata
+,,,China Uncensored,https://www.youtube.com/feeds/videos.xml?channel_id=UCgFP46yVT-GG4o1TgXn-04Q,feed,tv,topic,wikidata
+,,Swedish,Dialogiskt,https://feeds.acast.com/public/shows/b6e3d2c3-c84d-490e-bf23-f4f5b1bc9175,feed,tv,topic,wikidata
+,,English,Fakehub Originals,https://www.fakehub.com/feed,feed,tv,topic,wikidata
+,,,heute-show,https://www.zdf.de/rss/zdf/comedy/heute-show,feed,tv,topic,wikidata
+,,English,Hybrid Broadcast Broadband TV,https://www.hbbtv.org/feed/,feed,tv,topic,wikidata
+,,,MaiThink X – The Show,https://www.zdf.de/rss/zdf/show/mai-think-x-die-show,feed,tv,topic,wikidata
+,,English,Question Period,https://www.omnycontent.com/d/playlist/4809bc8a-e41a-405c-93da-a8cf011df2f4/b2e0b85d-0ef4-41cf-ad91-a9f900e9141f/4b380a07-d6c4-4aa0-882c-a9f900e9142d/podcast.rss,feed,tv,topic,wikidata
+,,,rbb24,https://www.rbb-online.de/exporte/NUR-DER-BSC.xml/feed=tsrss.xml,feed,tv,topic,wikidata
+,,,rbb24,https://www.rbb-online.de/exporte/regionalfeeds/nachrichten_bar.xml/feed=tsrss.xml,feed,tv,topic,wikidata
+,,,rbb24,https://www.rbb-online.de/exporte/regionalfeeds/nachrichten_ee.xml/feed=tsrss.xml,feed,tv,topic,wikidata
+,,,rbb24,https://www.rbb-online.de/exporte/regionalfeeds/nachrichten_hvl.xml/feed=tsrss.xml,feed,tv,topic,wikidata
+,,,rbb24,https://www.rbb-online.de/exporte/regionalfeeds/nachrichten_lds.xml/feed=tsrss.xml,feed,tv,topic,wikidata
+,,,rbb24,https://www.rbb-online.de/exporte/regionalfeeds/nachrichten_los.xml/feed=tsrss.xml,feed,tv,topic,wikidata
+,,,rbb24,https://www.rbb-online.de/exporte/regionalfeeds/nachrichten_mol.xml/feed=tsrss.xml,feed,tv,topic,wikidata
+,,,rbb24,https://www.rbb-online.de/exporte/regionalfeeds/nachrichten_ohv.xml/feed=tsrss.xml,feed,tv,topic,wikidata
+,,,rbb24,https://www.rbb-online.de/exporte/regionalfeeds/nachrichten_opr.xml/feed=tsrss.xml,feed,tv,topic,wikidata
+,,,rbb24,https://www.rbb-online.de/exporte/regionalfeeds/nachrichten_pm.xml/feed=tsrss.xml,feed,tv,topic,wikidata
+,,,rbb24,https://www.rbb-online.de/exporte/regionalfeeds/nachrichten_um.xml/feed=tsrss.xml,feed,tv,topic,wikidata
+,,,rbb24,https://www.rbb24.de/aktuell/index.xml/feed=rss.xml,feed,tv,topic,wikidata
+,,,rbb24,https://www.rbb24.de/kultur/index.xml/feed=rss.xml,feed,tv,topic,wikidata
+,,,rbb24,https://www.rbb24.de/panorama/index.xml/feed=rss.xml,feed,tv,topic,wikidata
+,,,rbb24,https://www.rbb24.de/politik/index.xml/feed=rss.xml,feed,tv,topic,wikidata
+,,,rbb24,https://www.rbb24.de/sport/index.xml/feed=rss.xml,feed,tv,topic,wikidata
+,,,rbb24,https://www.rbb24.de/wirtschaft/index.xml/feed=rss.xml,feed,tv,topic,wikidata
+,,English,Really American,https://feeds.megaphone.fm/VJJET3007346842,feed,tv,topic,wikidata
+,,English,SModcast,http://feeds.feedburner.com/SModcasts,feed,tv,topic,wikidata
+,,American english,The Circuit,https://www.omnycontent.com/d/playlist/e73c998e-6e60-432f-8610-ae210140c5b1/5fcb25d0-ece4-45e4-93f6-b01900d5e2ff/3d8551fb-ccf9-49ef-b51c-b01900d636c8/podcast.rss,feed,tv,topic,wikidata
+,,English,The David Rubenstein Show,https://www.omnycontent.com/d/playlist/e73c998e-6e60-432f-8610-ae210140c5b1/4d56c12f-2316-44f8-bc9a-ae3c0003206b/b3927dcf-9c18-47af-9b1c-ae3c00032087/podcast.rss,feed,tv,topic,wikidata
+,,French,Underscore_,https://feeds.acast.com/public/shows/43160adc-fadd-4764-b93f-aa1ca93f22bf,feed,tv,topic,wikidata
+,,English,Washington Week with The Atlantic,http://feeds.pbs.org/pbs/weta/washingtonweek-audio,feed,tv,topic,wikidata
+,,English,When It Hits the Fan,https://podcasts.files.bbci.co.uk/m001q6gr.rss,feed,tv,topic,wikidata
+Algeria,,,National Meteorological Office,https://ametvigilance.meteo.dz/rss/rss_meteo_dz.xml,feed,government,topic,wikidata
+Argentina,argentina,Spanish,Faculty of Astronomical and Geophysical Sciences,https://www.fcaglp.unlp.edu.ar/index.php/feed/,feed,government,topic,wikidata
+Canada,canada,English,Prime Minister of Canada,https://www.pm.gc.ca/en/news.rss,feed,government,topic,wikidata
+Canada,canada,French,Prime Minister of Canada,https://www.pm.gc.ca/fr/nouvelles.rss,feed,government,topic,wikidata
+Canada,canada,English,Prime Minister of Canada,https://www.pm.gc.ca/en/media.rss,feed,government,topic,wikidata
+Canada,canada,French,Prime Minister of Canada,https://www.pm.gc.ca/fr/medias.rss,feed,government,topic,wikidata
+Cuba,,Spanish,Ministry of Industry of Cuba,https://www.mindus.gob.cu/es/rss/news,feed,government,topic,wikidata
+Czech Republic,,Czech,Adamov,http://www.adamovcb.eu/www/obecadamov/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Agentura Pro Zdravotnický Výzkum České Republiky,https://www.azvcr.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Albrechtice,https://www.obecalbrechtice.cz/rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Antikomplex,https://antikomplex.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Bakov nad Jizerou,https://www.bakovnj.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Bačice,https://www.bacice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Bechyně,https://www.mestobechyne.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Bednárec,http://www.bednarec.cz/www/obecbednarec/fs/wrs-rss/rss_obec-bednarec-oficialni-stranky-obce.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Benetice,https://benetice.net/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Benešov u Semil,https://www.benesovusemil.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Biskupice,https://obecbiskupice.eu/rss/all.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Biskupice-Pulkov,https://www.biskupice-pulkov.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Bohuňovice,https://www.bohunovice.net/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Borek,https://obecborek.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Borotín,http://www.borotin.cz/www/obecborotin/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Borová,https://borovaunachoda.cz/rss/all.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Bošovice,https://www.obec-bosovice.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Božetice,http://www.bozetice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Bradlec,https://www.bradlec.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Brloh,https://www.obecbrloh.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Brno-Bosonohy,https://www.bosonohy.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Brno-Ivanovice,https://www.mcivanovice.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Brno-Slatina,https://www.mcslatina.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Bukov,https://www.bukov.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Butoves,https://www.butoves.cz/?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Bílina,https://www.bilina.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Bílovice nad Svitavou,https://www.bilovicens.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Bělušice,https://obecbelusice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Bělá,https://www.belasm.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Běstovice,https://www.bestovice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Břestek,https://brestek.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Březno,https://www.obecbrezno.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Březolupy,https://brezolupy.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Březí,https://www.brezi.eu/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Břežany I,https://www.brezany1.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Bříšťany,http://bristany.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Centre for International Cooperation in Education,https://www.dzs.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Cerhenice,https://cerhenice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Cerhovice,http://www.cerhovice.cz/www/mestyscerhovice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Chleby,https://obec-chleby.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Chlum,https://www.chlum-blatna.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Chobot,https://www.obecchobot.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Chocnějovice,http://www.obecchocnejovice.eud.cz/www/obecchocnejovice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Chotoviny,http://www.chotoviny.cz/www/obecchotoviny/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,,Chotěboř,https://www.chotebor.cz/data/4,feed,government,topic,wikidata
+Czech Republic,,Czech,Choťovice,https://www.obec-chotovice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Chrudim,https://www.chrudim.eu/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Crhov,https://obeccrhov.cz/rss/all.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Czech Geological Survey,https://cgs.gov.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,,Czech Office of Surveying and Cadastre,https://www.cuzk.gov.cz/?rss=RSS,feed,government,topic,wikidata
+Czech Republic,,Czech,Czech Science Foundation,https://gacr.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,,Desná,https://www.obecdesna.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Dobronice u Bechyně,https://www.dobronice.cz/www/obecdobronice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Dolní Bousov,https://dolni-bousov.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Dolní Chvatliny,https://www.dolnichvatliny.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Dolní Hořice,http://www.dolnihorice.cz/www/obecdolnihorice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Dolní Vilímeč,https://web4.dolnivilimec.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Dolní Věstonice,http://www.obecdolnivestonice.cz/www/obecdolnivestonice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Dolní Žďár,https://www.dolnizdar.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Doubek,https://obecdoubek.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Dražice,http://www.obecdrazice.cz/www/obecdrazice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Drhovice,https://www.obecdrhovice.cz/www/obecdrhovice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Dubičné,http://www.dubicne.cz/www/obecdubicne/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Dubné,https://www.dubne.cz/www/obecdubne/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Dubovice,http://www.dubovice.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Dvory,http://www.dvory-veleliby.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Dvůr Králové nad Labem,https://www.mudk.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Dyjákovice,https://www.dyjakovice.cz/?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Dětřichov,https://www.obecdetrichov.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Dřevěnice,http://www.drevenice.org/www/obecdrevenice/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Dřínov,https://www.drinov.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Dřísy,https://www.drisy.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,,Electrotechnical Association of the Czech Republic,https://www.electroindustry.cz/rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Energy Regulatory Office,https://eru.gov.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,English,European Union Agency for the Space Programme,https://www.euspa.europa.eu/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Hamry nad Sázavou,https://hamryns.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Hartmanice,http://www.obechartmanice.cz/www/obechartmanice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Haškovcova Lhota,https://www.haskovcovalhota.cz/www/obechaskovcovalhota/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Hejnice,https://www.mestohejnice.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Heřmanov,https://www.hermanov.info/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Heřmanov,https://www.hermanov.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Heřmanovice,https://www.hermanovice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Hlavice,http://www.obechlavice.cz/index.php/cz/?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Hlincová Hora,http://www.hlincovahora.cz/www/obechlincovahora/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Hlohovčice,https://www.hlohovcice.cz/?feed=rss2,feed,government,topic,wikidata
+Czech Republic,,Czech,Hlučín,https://www.hlucin.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Hodkovice nad Mohelkou,https://www.hodkovicenm.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Hodonice,http://www.obechodonice.bechynsko.cz/www/obechodonice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Holotín,https://obecholotin.cz/rss/all.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Holín,https://holin.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Horní Bukovina,https://www.hornibukovina.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Horní Jiřetín,http://www.hornijiretin.cz/www/hornijiretin/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Horní Řepčice,https://hornirepcice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Horušice,https://obechorusice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Hostín,https://www.hostin.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Hořešovice,https://www.horesovice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Hoštice,https://obechostice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Hradce,http://www.hradce.cz/www/obechradce/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Hradištko,https://www.hradistko.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,,Hradiště,https://www.obec-hradiste.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Hrazany,https://www.obechrazany.cz/www/obechrazany/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Hrušová,http://hrusova.cz/index.php?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Husinec,https://www.husinec.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Hvozdec,https://www.obechvozdec.cz/www/obechvozdec/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Jankovice,https://jankovice.net/feed/,feed,government,topic,wikidata
+Czech Republic,,,Jarošov,http://www.obecjarosov.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Jedlany,https://www.jedlany.cz/www/obecjedlany/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Jetětice,http://www.jetetice.cz/www/obecjetetice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Jindřichův Hradec,https://www.jh.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Jivno,http://www.jivno.cz/www/obecjivno/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Jiřetín pod Bukovou,https://www.jiretinpb.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Jílovice,https://obec-jilovice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Jíloviště,https://jiloviste.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Kadaň,https://www.mesto-kadan.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Kaliště,https://obec-kaliste.cz/remote/rss.php?tp=4&id=-1,feed,government,topic,wikidata
+Czech Republic,,Czech,Kamenná,http://www.oukamenna.cz/www/obeckamenna/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Kamenná,https://kamenna-tr.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Karlovice,https://www.karlovice-sedmihorky.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Karviná,https://www.karvina.cz/rss/cs,feed,government,topic,wikidata
+Czech Republic,,Czech,Katov,https://www.katov.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Kašnice,https://www.kasnice.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Kladky,https://obeckladky.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Kladruby,https://www.kladruby.info/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Klenová,http://www.klenova.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Klášter Hradiště nad Jizerou,https://www.klasterhradistenj.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Kobylnice,http://www.obeckobylnice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Koclířov,https://www.koclirov.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Kojetín,https://www.kojetin.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Koldín,https://www.koldin.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,,Komárovice,https://www.komarovice.cz/export/rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Koruna,https://www.obec-koruna.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Korytná,https://www.korytna.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Kosořín,https://kosorin.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Kostelec u Holešova,https://www.kostelecuholesova.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Kouty,https://obec-kouty.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Krucemburk,https://www.krucemburk.cz/rss.rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Kunčina Ves,https://www.kuncinaves.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Kutrovice,http://www.kutrovice.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Kuřim,https://www.kurim.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Kuřimany,https://www.kurimany.cz/www/obeckurimany/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Květnice,https://www.kvetnice.eu/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Květná,https://www.kvetna.cz/?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Kyjov,https://www.mestokyjov.cz/rss/cs,feed,government,topic,wikidata
+Czech Republic,,Czech,Kácov,https://www.kacov.cz/rss.php,feed,government,topic,wikidata
+Czech Republic,,Czech,Křenovy,https://www.krenovy.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Křečkov,http://www.kreckov.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Křešín,http://www.oukresin.cz/index.php?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Křižanov,http://www.obeckrizanov.eud.cz/www/obeckrizanov/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Křižínkov,https://www.krizinkov.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Labská Stráň,http://www.labskastran.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Lažany,http://www.obeclazany.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Ledeč nad Sázavou,https://www.ledecns.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,,Leština,http://www.obeclestina.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Lhota-Vlasenice,http://www.lhota-vlasenice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Lhotka,https://oulhotka.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Libavské Údolí,https://www.libavskeudoli.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,,Libchavy,https://www.libchavy.cz/data/65,feed,government,topic,wikidata
+Czech Republic,,Czech,Libice nad Doubravou,https://www.libicend.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Libochovičky,http://www.libochovicky.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Librantice,https://www.librantice.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Libraries in Prostějov,https://knihovnapv.webnode.cz/rss/all.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Libuň,https://libun.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Libčany,https://www.libcany.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Lipová,https://www.lipova-obec.cz/feed,feed,government,topic,wikidata
+Czech Republic,,Czech,Lipí,https://www.lipi.cz/www/obeclipi/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Litovel,https://www.litovel.eu/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Lom,http://www.obeclom.eud.cz/www/obeclom/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Lomy,https://www.obec-lomy.cz/cs/?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Loukov,https://loukov.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Louny,https://www.mulouny.cz/rss.php,feed,government,topic,wikidata
+Czech Republic,,Czech,Louňovice pod Blaníkem,https://www.lounovicepodblanikem.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,,Lozice,http://www.lozice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Lubná,https://obeclubna.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Luhačovice,https://www.luhacovice.eu/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Luka,https://obecluka.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Lukavec,https://www.lukavec.info/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Luženičky,https://luzenicky.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Lužice,http://www.luziceuhodonina.cz/www/obecluzice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Lysá nad Labem,https://www.mestolysa.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Lásenice,https://www.lasenice.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Lázně Libverda,https://www.laznelibverda.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Líbeznice,https://www.libeznice.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Líšeň,https://www.brno-lisen.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Makov,https://makovukunstatu.cz/rss/all.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Mačkov,https://www.mackov.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Mažice,http://www.mazice.cz/www/obecmazice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Metylovice,https://metylovice.cz/?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Meziříčí,http://www.obecmezirici.cz/www/obecmezirici/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Miletín,https://www.miletin.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Milíkov,http://www.obecmilikov.cz/rss/rss-aktuality-cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Mladeč,https://www.mladec.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Mladá Vožice,https://www.mu-vozice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,,Mlázovice,https://www.mlazovice.cz/rss/,feed,government,topic,wikidata
+Czech Republic,,Czech,Mníšek pod Brdy,https://www.mnisek.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Mojné,https://www.mojne.cz/www/obecmojne/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Moravany,https://obec-moravany.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Moraveč,https://obecmoravec.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Moravská Třebová,https://www.moravskatrebova.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Mrlínek,https://www.mrlinek.eu/?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Municipal Library,https://www.kostomlaty-knihovna.cz/index.php?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Municipal Library,https://knihovna-repiste.cz/?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,,Municipal Library,https://www.doubrava.cz/rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Municipal Library,https://psary.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Municipal library,https://www.jistebnice.cz/www/mestojistebnice/fs/wrs-rss/rss_uvod.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Municipal Library,https://mesto.strazov.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,,Municipal Library Borovnice,https://www.borovnice.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Municipal Library Drozdov,https://www.obecdrozdov.eu/www/obecdrozdov/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Municipal Library in Koněprusy,https://koneprusy.cz/www/obeckoneprusy/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Municipal Library in Libomyšl,https://www.libomysl-be.cz/www/obeclibomysl/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Municipal Library in Nedrahovice,https://www.nedrahovice.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Municipal Library in Pavlovice,http://www.obecpavlovice.cz/?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Municipal Library Jimramov,https://jimramov.cz/?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Municipal Library of Jablonec nad Nisou,https://knihovna.mestojablonec.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Municipal Library Osek,https://www.obecosek.eud.cz/www/obecosek/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Municipal Library Všelibice,https://www.vselibice.cz/?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Municipal Police of Brno,https://www.mpb.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Municipal Police of Přerov,https://www.mpprerov.eu/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Mysliboř,http://myslibor.imunis.cz/edeska/feed/rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Myslotín,https://www.myslotin.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Myštice,https://www.obecmystice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Městské lesy Doksy,https://lesydoksy.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Městské muzeum Frýdlant,https://www.mesto-frydlant.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,National Cyber and Information Security Agency,https://nukib.gov.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Nechvalín,https://www.nechvalin.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Nemojov,https://nemojov.com/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Nemyšl,https://www.nemysl.cz/www/obecnemysl/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Nepomuk,https://nepomuk-pb.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Nesehnutí,https://nesehnuti.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Nezvěstice,https://www.nezvestice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Nosálov,http://www.nosalov.cz/www/obecnosalov/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Nová Ves,http://www.novaves-so.cz/index.php?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Nová Ves nad Popelkou,https://novavesnadpopelkou.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Nová Ves u Mladé Vožice,https://www.obec-nova-ves.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Nové Město na Moravě,https://www.nmnm.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,,Nový Hrádek,https://www.novy-hradek.cz/rss.php,feed,government,topic,wikidata
+Czech Republic,,Czech,Níhov,https://www.nihov.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Office for Personal Data Protection,https://uoou.gov.cz/feed/cs-rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Ohrazenice,https://ohrazenice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Okna,https://obecokna.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,,Okrouhlá,https://www.ouokrouhla.cz/blog-feed.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Olbramice,https://www.obecolbramice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Oleško,http://www.olesko.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Olešnice,https://www.olesnice-obec.cz/www/obecolesnice/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Olešná,https://www.ouolesna.cz/www/obecolesna/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Olešná,http://www.olesna-be.cz/www/obecolesnabe/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Olomouc,https://www.olomouc.eu/administrace/action/rss.php?rss=aktualityolomouceu,feed,government,topic,wikidata
+Czech Republic,,Czech,Olší,https://www.olsi.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Olší,https://obecolsi.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,OpenAlt,https://www.openalt.org/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Ostrata,https://www.ostrata.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Ostrovánky,https://www.ostrovanky.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Ostrožská Nová Ves,https://onves.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Oudoleň,https://www.oudolen.cz/rss.rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Oznice,https://www.oznice.cz/rss.php,feed,government,topic,wikidata
+Czech Republic,,Czech,Paseky nad Jizerou,https://www.paseky.cz/?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Pavlice,http://www.pavlice.cz/?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Petrovice,https://www.oupetrovice.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Pilníkov,https://www.pilnikov.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,English,Platform of European Memory and Conscience,https://www.memoryandconscience.eu/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Plchov,https://www.plchov.cz/www/obecplchov/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Pleše,https://www.obecplese.cz/www/obecplese/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Podluhy,https://obecpodluhy.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Podolí I,https://www.podoli1.cz/www/obecpodoli/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Pohnání,http://www.pohnani.cz/www/obecpohnani/fs/wrs-rss/rss_vychozi-novy.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Pohoří,https://obecpohori.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Polička,https://www.policka.org/rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Potštejn,https://potstejn.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Prague 11,https://www.praha11.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Prague 7,https://www.praha7.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Proboštov,https://www.ouprobostov.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Proruby,https://proruby.webnode.cz/rss/all.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Proseč,https://www.mestoprosec.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Prostějov,https://www.prostejov.eu/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Prušánky,https://obecprusanky.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Prštice,https://www.prstice.cz/www/obecprstice/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Ptýrov,https://www.obec-ptyrov.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Písečná,https://www.obecpisecna.cz/rss/rss-aktuality-cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Pístina,https://www.pistina.cz/www/obecpistina/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Pňov-Předhradí,https://www.pnov-predhradi.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Přerov,https://www.prerov.eu/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Příšovice,https://prisovice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Radenín,http://www.radenin.cz/www/obecradenin/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Radiměř,https://www.obec-radimer.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Radostná pod Kozákovem,https://radostna.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Radětice,https://www.radetice.cz/www/obecradetice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Ralsko,https://mestoralsko.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Rodná,https://www.rodna.eu/www/obecrodna/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Rohatsko municipal office,https://www.rohatsko.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Rokytnice nad Jizerou,https://www.mesto-rokytnice.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Rosice,https://www.rosice.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Rozstání,http://www.rozstani.eu/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Roztoky u Jilemnice,https://www.roztoky-u-jilemnice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Rožnov pod Radhoštěm,https://www.roznov.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Rudíkov,https://rudikov.webnode.cz/rss/all.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Rusava,https://www.rusava.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Rychvald,https://rychvald.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Rýmařov,https://www.rymarov.cz/?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Samšina,http://www.samsina.nasweb.eu/www/obecsamsina/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Sběř,https://obec-sber.cz/index.php/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Sedlčany,https://www.mesto-sedlcany.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Senorady,http://www.senorady.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Skryje,http://www.obecskryje.cz/www/obecskryje/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Slabčice,https://www.slabcice.cz/www/obecslabcice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Slatina,https://www.obec-slatina.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Slatina nad Zdobnicí,https://www.slatinanz.cz/www/obecslatinanadzdobnici/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Slavkov u Brna,https://www.slavkov.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Slavětín nad Metují,http://www.slavetinnadmetuji.cz/www/obecslavetinnadmetuji/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Slověnice,https://www.slovenice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,,Smrček,http://www.obecsmrcek.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Snovídky,http://www.snovidky.eu/index.php?option=com_content&view=featured&Itemid=2037&format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Sobkovice,https://sobkovice.info/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Sokoleč,https://www.sokolec.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Sousedovice,https://sousedovice.info/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Srbice,https://www.srbice.cz/www/obecsrbice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Staré Hodějovice,http://www.starehodejovice.cz/www/obecstarehodejovice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Starý Kolín,https://www.starykolin.eu/feed/,feed,government,topic,wikidata
+Czech Republic,,,State Veterinary Administration,https://en.svs.gov.cz/?dl_name=rss,feed,government,topic,wikidata
+Czech Republic,,,Strakov,https://www.strakov.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Stráž nad Nisou,https://www.straznadnisou.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Strážkovice,http://www.strazkovice.cz/www/obecstrazkovice/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Stádlec,https://www.stadlec.eu/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Suchodol,http://www.obecsuchodol.cz/www/obecsuchodol/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Suchá Loz,https://www.suchaloz.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Sudice,https://www.obecsudice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Sudoměřice,https://www.obecsudomerice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Sudoměřice u Tábora,http://www.sudomericeutabora.cz/www/obecsudomericeutabora/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Svatý Jiří,https://www.svaty-jiri.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Svatý Mikuláš,https://www.svatymikulas.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Svijany,https://www.obecsvijany.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Svitavy,https://www.svitavy.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Svojetice,https://svojetice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Svrabov,http://www.svrabov.cz/www/obecsvrabov/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Svrkyně,http://www.svrkyne.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Světlá,https://www.obecsvetla.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Syřenov,https://syrenov.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Sádek,https://www.obec-sadek.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Tachov,https://obectachov.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Tanvald,https://www.tanvald.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,English,Telč,https://www.telc.eu/rss/,feed,government,topic,wikidata
+Czech Republic,,Czech,Thanks That We Can,https://dikyzemuzem.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Tichá,https://www.ticha.cz/rss.php,feed,government,topic,wikidata
+Czech Republic,,Czech,Tlumačov,https://www.tlumacov.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Trojanovice,https://www.trojanovice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Trutnov,https://www.trutnov.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Tupesy,https://www.tupesy.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Turnov,https://www.turnov.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Týnec nad Sázavou,https://www.mestotynec.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Týniště nad Orlicí,https://www.tyniste.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Těšetice,https://www.tesetice.cz/rss.php,feed,government,topic,wikidata
+Czech Republic,,Czech,Třebohostice,https://www.obectrebohostice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,,Třebětín,https://www.trebetin.cz/blog/x5feed.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Ubušínek,https://www.ubusinek.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Uzenice,https://obec-uzenice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Uzeničky,https://obec-uzenicky.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Vejprty,https://www.vejprty.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Velenov,https://www.velenov.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Velká Chyška,https://velkachyska.cz/rss/all.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Velké Janovice,https://velkejanovice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Velké Němčice,https://www.velkenemcice.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Vendolí,https://obecvendoli.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Vestec,http://www.obecvestec.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Vestec,https://vestec.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Vevčice,https://vevcice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Veřovice,https://www.verovice.cz/rss.php,feed,government,topic,wikidata
+Czech Republic,,Czech,Vidov,http://www.vidov.cz/www/obecvidov/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Vikantice,https://www.obecvikantice.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,,Vintířov,https://www.vintirov.cz/_includes/rss_notams.php?language=CS,feed,government,topic,wikidata
+Czech Republic,,Czech,Višňové,https://www.visnove.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Vlastibořice,https://vlastiborice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Vlkanov,https://www.vlkanov.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Vlkanov,https://vlkanov.com/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Vlksice,https://www.obecvlksice.cz/www/obecvlksice/fs/wrs-rss/rss_vychozi-novy.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Volenice,https://www.obecvolenice.eud.cz/www/obecvolenice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Vonoklasy,https://www.vonoklasy.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Vracov,https://www.mestovracov.cz/feed,feed,government,topic,wikidata
+Czech Republic,,Czech,Vracovice,https://www.obecvracovice.cz/?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Vrbno pod Pradědem,https://www.vrbnopp.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Vrbová Lhota,https://www.vrbova-lhota.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Vrčeň,https://www.vrcen.cz/rss/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Vršovka,http://www.vrsovka.cz/www/obecvrsovka/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Vysoké Mýto,https://www.vysoke-myto.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Vyžlovka,https://vyzlovka.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Všestudy,http://vsestudy-obec.cz/index.php/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Zahořany,https://www.zahorany.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Zalužany,https://www.obeczaluzany.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Zastávka,https://www.zastavka.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Zbelítov,http://www.zbelitov.cz/www/obeczbelitov/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Zběšičky,http://www.obeczbesicky.cz/www/obeczbesicky/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Zdíkov,http://www.zdikov.cz/www/obeczdikov/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Zeleneč,https://www.zelenec.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Zhoř,https://www.obec-zhor.cz/www/obeczhor/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Zlátenka,https://www.zlatenka.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Zubčice,https://www.zubcice.cz/www/obeczubcice/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Zvánovice,https://www.obeczvanovice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Zvíkov,http://www.zvikovulisova.cz/www/obeczvikovulisova/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Újezdec,https://www.obec-ujezdec.cz/www/obecujezdec/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Úmyslovice,http://www.umyslovice.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Úsilov,https://usilov.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Ústup,https://obec-ustup.webnode.cz/rss/all.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Útěchov,https://www.utechov.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Úvaly,https://www.mestouvaly.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Čakov,http://www.cakov.cz/www/obeccakov/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Čankov,http://www.endora.cz/feed,feed,government,topic,wikidata
+Czech Republic,,Czech,Častolovice,http://www.ou-castolovice.cz/?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Častrov,https://castrov.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Čelákovice,https://www.celakovice.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Čenkov u Bechyně,http://www.cenkov.cz/www/obeccenkov/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Čermná,https://www.cermna.cz/index.php?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Černiv,https://cerniv.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,,Černá Voda,https://www.obeccernavoda.cz/data/14,feed,government,topic,wikidata
+Czech Republic,,Czech,Černíč,https://www.cernic.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Černýšovice,http://www.obeccernysovice.cz/www/obeccernysovice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Česká Kamenice,https://ceska-kamenice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,České Heřmanice,https://www.ceskehermanice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Slovak,Český ekologický ústav,https://www.ceu.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Čkyně,http://www.ckyne.cz/www/obecckyne/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Řečice,https://www.obecrecice.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Římov,http://www.rimov.cz/www/obecrimov/fs/wrs-rss/rss_cz.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Škvořetice,http://www.obecskvoretice.cz/www/obecskvoretice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Šlapanice,https://www.slapanice.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Šošůvka,https://sosuvka.com/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Štíhlice,https://www.stihlice.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Štěkeň,https://steken.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Štětí,https://www.steti.cz/?format=feed&type=rss,feed,government,topic,wikidata
+Czech Republic,,Czech,Šumperk,https://www.sumperk.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Želešice,https://www.zelesice.eu/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Ženklava,https://www.zenklava.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Žerůtky,https://www.obeczerutky.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Žichlínek,https://zichlinek.eu/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Židlochovice,https://www.zidlochovice.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Žítková,https://www.zitkova.cz/rss.xml,feed,government,topic,wikidata
+Czech Republic,,Czech,Žďár,https://www.obec-zdar.eu/feed/,feed,government,topic,wikidata
+France,,French,Académie Française,https://www.academie-francaise.fr/rss.xml,feed,government,topic,wikidata
+France,,French,Public Sénat,https://www.publicsenat.fr/feed,feed,government,topic,wikidata
+Germany,,German,Altenholz,https://altenholz.de/?format=feed&type=rss,feed,government,topic,wikidata
+Germany,,German,"Antifaschistische Informations-, Dokumentations- und Archivstelle München",https://www.aida-archiv.de/feed/,feed,government,topic,wikidata
+Germany,,,"Antifaschistische Informations-, Dokumentations- und Archivstelle München",https://www.aida-archiv.de/feed/atom/,feed,government,topic,wikidata
+Germany,,German,"Association of advice centers for those affected by right-wing, racist and anti-Semitic violence",https://verband-brg.de/feed/,feed,government,topic,wikidata
+Germany,,German,Bargteheide,https://www.bargteheide.de/media/rss/Bargteheideaktuell.xml,feed,government,topic,wikidata
+Germany,,German,City administration of Mannheim,https://www.mannheim.de/de/rss/nachrichten,feed,government,topic,wikidata
+Germany,,German,City administration of Mannheim,https://www.mannheim.de/de/rss/pressemeldungen,feed,government,topic,wikidata
+Germany,,German,City administration of Mannheim,https://www.mannheim.de/de/rss/veranstaltungen,feed,government,topic,wikidata
+Germany,,German,Elmshorn,https://www.elmshorn.de/media/rss/BekanntmachungenStadtElmshorn.xml,feed,government,topic,wikidata
+Germany,,German,Eutin,https://www.vg-eutin-suesel.de/media/rss/presseeutin.xml,feed,government,topic,wikidata
+Germany,,German,"Federal Ministry for the Environment, Climate Protection, Nature Conservation and Nuclear Safety",https://www.bundesumweltministerium.de/meldungen.rss,feed,government,topic,wikidata
+Germany,,German,"Federal Ministry for the Environment, Climate Protection, Nature Conservation and Nuclear Safety",https://www.bundesumweltministerium.de/index.php?type=708,feed,government,topic,wikidata
+Germany,,German,"Federal Ministry for the Environment, Climate Protection, Nature Conservation and Nuclear Safety",https://www.bundesumweltministerium.de/index.php?type=704,feed,government,topic,wikidata
+Germany,,German,"Federal Ministry for the Environment, Climate Protection, Nature Conservation and Nuclear Safety",https://www.bundesumweltministerium.de/index.php?type=705,feed,government,topic,wikidata
+Germany,,German,"Federal Ministry for the Environment, Climate Protection, Nature Conservation and Nuclear Safety",https://www.bundesumweltministerium.de/uvp.rss,feed,government,topic,wikidata
+Germany,,German,"Federal Ministry for the Environment, Climate Protection, Nature Conservation and Nuclear Safety",https://www.bundesumweltministerium.de/events.rss,feed,government,topic,wikidata
+Germany,,German,Federal Ministry of Health of Germany,https://www.bundesgesundheitsministerium.de/meldungen.xml,feed,government,topic,wikidata
+Germany,,German,Federal Ministry of Health of Germany,https://www.bundesgesundheitsministerium.de/pressemitteilungen.xml,feed,government,topic,wikidata
+Germany,,German,Geesthacht,https://www.geesthacht.de/media/rss/Aktuelles.xml,feed,government,topic,wikidata
+Germany,,German,German Bundestag,https://www.bundestag.de/static/appdata/includes/rss/pressemitteilungen.rss,feed,government,topic,wikidata
+Germany,,German,German Bundestag,https://www.bundestag.de/static/appdata/includes/rss/tagesordnungen.rss,feed,government,topic,wikidata
+Germany,,German,German Bundestag,https://www.bundestag.de/static/appdata/includes/rss/aktuellethemen.rss,feed,government,topic,wikidata
+Germany,,German,Handewitt,https://www.gemeinde-handewitt.de/de/fb-rss-feed/rss.xml,feed,government,topic,wikidata
+Germany,,German,Heiligenhafen,https://www.heiligenhafen.de/aktuelles/?type=9818,feed,government,topic,wikidata
+Germany,,German,Lower Saxony (Germany). Umweltministerium,https://www.umwelt.niedersachsen.de/rss.php,feed,government,topic,wikidata
+Germany,,German,"Lower Saxony Ministry of Food, Agriculture and Consumer Protection",https://www.ml.niedersachsen.de/rss.php,feed,government,topic,wikidata
+Germany,,German,Lower Saxony Ministry of Science and Culture,https://www.mwk.niedersachsen.de/rss.php,feed,government,topic,wikidata
+Germany,,German,Lower Saxony State Archive,https://nla.niedersachsen.de/rss.php,feed,government,topic,wikidata
+Germany,,German,Lower Saxony State Office for Consumer Protection and Food Safety,https://www.laves.niedersachsen.de/rss.php,feed,government,topic,wikidata
+Germany,,German,Preetz,https://www.preetz.de/media/rss/news.xml,feed,government,topic,wikidata
+Germany,,German,Ratzeburg,https://www.ratzeburg.de/media/rss/Pressemitteilungen.xml,feed,government,topic,wikidata
+Germany,,German,Rendsburg,https://www.rendsburg.de/aktuelles?type=9818,feed,government,topic,wikidata
+Germany,,German,Schenefeld,https://www.stadt-schenefeld.de/nachrichten-der-stadt-schenefeld/rss.xml,feed,government,topic,wikidata
+Germany,,German,Schleswig-Flensburg District,https://www.schleswig-flensburg.de/media/rss/AmtlicheBekanntmachungen.xml,feed,government,topic,wikidata
+Germany,,German,Scientific services of the German Bundestag,https://www.bundestag.de/static/appdata/includes/rss/wissenschaftlichedienste.rss,feed,government,topic,wikidata
+Germany,,German,"State Office for Mining, Energy and Geology",https://www.lbeg.niedersachsen.de/rss.php,feed,government,topic,wikidata
+Germany,,German,Sylt,https://gemeinde-sylt.de/feed/,feed,government,topic,wikidata
+Germany,,English,Trufi Association,https://www.trufi-association.org/feed/,feed,government,topic,wikidata
+Greece,,,Center for the Greek Language,https://greeklanguage.gr/feed/atom/,feed,government,topic,wikidata
+Iceland,,,Environment Agency of Iceland,https://ust.is/extensions/News/GetRSSFeed.aspx?FeedID=dc5a7b26-4868-42e3-88b5-5d9b3764e3fe,feed,government,topic,wikidata
+Japan,japan,Japanese,Cabinet Office,https://www.cao.go.jp/rss/news.rdf,feed,government,topic,wikidata
+Japan,japan,,Consumer Affairs Agency,https://www.caa.go.jp/news.rss,feed,government,topic,wikidata
+Japan,japan,Japanese,Financial Services Agency,https://www.fsa.go.jp/fsaNewsListAll_rss2.xml,feed,government,topic,wikidata
+Japan,japan,,Hiroshima Prefectural Archives,https://www.pref.hiroshima.lg.jp/rss/10/site-209.xml,feed,government,topic,wikidata
+Japan,japan,Japanese,Japan Expressway Holding and Debt Repayment Agency,https://www.jehdra.go.jp/rss/news.rss,feed,government,topic,wikidata
+Japan,japan,Japanese,"Ministry of Agriculture, Forestry and Fisheries",https://www.maff.go.jp/rss.xml,feed,government,topic,wikidata
+Japan,japan,Japanese,"Ministry of Economy, Trade and Industry",https://www.meti.go.jp/ml_index_release_atom.xml,feed,government,topic,wikidata
+Japan,japan,Japanese,Ministry of Finance of Japan,https://www.mof.go.jp/news.rss,feed,government,topic,wikidata
+Japan,japan,Japanese,"Ministry of Health, Labour and Welfare",https://www.mhlw.go.jp/stf/news.rdf,feed,government,topic,wikidata
+Japan,japan,,Ministry of Internal Affairs and Communications,https://www.soumu.go.jp/news.rdf,feed,government,topic,wikidata
+Japan,japan,Japanese,"Ministry of Land, Infrastructure, Transport and Tourism",https://www.mlit.go.jp/pressrelease.rdf,feed,government,topic,wikidata
+Japan,japan,,National Diet Library,https://www.ndl.go.jp/rss/hp/search-news.xml?tag=News,feed,government,topic,wikidata
+Lumina,,English,Light Square,https://lightsquare.org/feed/atom,feed,government,topic,wikidata
+Malta,,English,Heritage Malta,https://heritagemalta.mt/feed/,feed,government,topic,wikidata
+Norway,,English,Office of the Prime Minister,https://www.regjeringen.no/en/rss/Rss/2581966/?owner=875,feed,government,topic,wikidata
+Norway,,Norwegian,Office of the Prime Minister,https://www.regjeringen.no/no/rss/Rss/2581966/?owner=875,feed,government,topic,wikidata
+Norway,,,Sámi Parliament of Norway,https://sametinget.no/ArtikkelRSS.ashx?NyhetsKategoriId=9&Spraak=Lulesamisk,feed,government,topic,wikidata
+Norway,,,Sámi Parliament of Norway,https://sametinget.no/ArtikkelRSS.ashx?NyhetsKategoriId=9&Spraak=Norsk,feed,government,topic,wikidata
+Norway,,,Sámi Parliament of Norway,https://sametinget.no/ArtikkelRSS.ashx?NyhetsKategoriId=9&Spraak=S%C3%B8rsamisk,feed,government,topic,wikidata
+Norway,,,Sámi Parliament of Norway,https://sametinget.no/ArtikkelRSS.ashx?NyhetsKategoriId=9&Spraak=Samisk,feed,government,topic,wikidata
+Philippines,philippines,English,Subic Bay Metropolitan Authority,https://www.mysubicbay.com.ph/rss.xml,feed,government,topic,wikidata
+Poland,,Polish,Panoptykon Foundation,https://panoptykon.org/rss.xml,feed,government,topic,wikidata
+Portugal,,Portuguese,Ferreira do Alentejo,https://ferreiradoalentejo.pt/feed/,feed,government,topic,wikidata
+Russia,,,Conflict Intelligence Team,https://notes.citeam.org/data/rss,feed,government,topic,wikidata
+Russia,,,Ministry of Foreign Affairs of the Russian Federation,https://www.mid.ru/en/rss.php,feed,government,topic,wikidata
+Russia,,,Ministry of Foreign Affairs of the Russian Federation,https://www.mid.ru/ru/rss.php,feed,government,topic,wikidata
+Spain,,Catalan,Son Servera,https://www.sonservera.es/portal/RSS_Noticias.jsp?codResi=1&codbusqueda=170&language=ca,feed,government,topic,wikidata
+Sweden,,Swedish,Dals-Ed Municipality,https://www.dalsed.se/rss/,feed,government,topic,wikidata
+Sweden,,Swedish,Ljusdal Municipality,https://www.ljusdal.se/4.19618b314ae81f501e2c0e2/12.19618b314ae81f501e2c155.portlet?state=rss&sv.contenttype=text/xml;charset=UTF-8,feed,government,topic,wikidata
+Sweden,,Swedish,Swedish Agency for Non-Proliferation and Export Controls,https://isp.se/rss/nyheter-isp/,feed,government,topic,wikidata
+Sweden,,,Swedish-Korean Association,https://svenskkoreanska.se/dw/feed.php,feed,government,topic,wikidata
+Ukraine,,Ukrainian,Ukrainian Code,https://ukrainiancode.org/feed/,feed,government,topic,wikidata
+United States,united-states,English,American Civil Liberties Union,https://www.aclu.org/feed,feed,government,topic,wikidata
+United States,united-states,English,Electronic Frontier Foundation,https://www.eff.org/rss/updates.xml,feed,government,topic,wikidata
+United States,united-states,English,Montgomery County Planning Department,https://montgomeryplanning.org/feed/,feed,government,topic,wikidata
+United States,united-states,English,Montgomery Parks,https://montgomeryparks.org/feed/,feed,government,topic,wikidata
+United States,united-states,English,National Aeronautics and Space Administration,https://www.nasa.gov/news-release/feed/,feed,government,topic,wikidata
+United States,united-states,English,National Aeronautics and Space Administration,https://www.nasa.gov/learning-resources/feed/,feed,government,topic,wikidata
+United States,united-states,English,National Aeronautics and Space Administration,https://www.nasa.gov/feeds/iotd-feed,feed,government,topic,wikidata
+United States,united-states,English,National Centers for Environmental Information,https://www.ncei.noaa.gov/news.xml,feed,government,topic,wikidata
+United States,united-states,English,United States Air Force,https://www.af.mil/DesktopModules/ArticleCS/RSS.ashx?ContentType=1&Site=1&isdashboardselected=0&max=20,feed,government,topic,wikidata
+United States,united-states,English,United States Army Corps of Engineers,https://www.army.mil/rss/static/129.xml,feed,government,topic,wikidata
+United States,united-states,English,United States Geological Survey,https://www.usgs.gov/news/all/feed,feed,government,topic,wikidata
+United States,united-states,English,University of Washington Department of Sociology,https://soc.washington.edu/news.xml,feed,government,topic,wikidata
+,,English,Progressive Alliance of Socialists and Democrats,https://www.socialistsanddemocrats.eu/rss.xml,feed,government,topic,wikidata
+Afghanistan,,,Bakhtar Institute of Higher Education,https://www.bakhtar.edu.af/blog-feed.xml,feed,university,topic,wikidata
+Albania,,,Polis University,https://universitetipolis.edu.al/feed/,feed,university,topic,wikidata
+Albania,,,University of Sports,https://ust.edu.al/feed/,feed,university,topic,wikidata
+Algeria,,Arabic,Higher National Veterinary School,https://www.ensv.dz/feed/,feed,university,topic,wikidata
+Algeria,,French,Mouloud Mammeri University of Tizi Ouzou,https://www.ummto.dz/feed/,feed,university,topic,wikidata
+Algeria,,Arabic,Saad Dahlab University of Blida 1,https://www.univ-blida.dz/feed/,feed,university,topic,wikidata
+Algeria,,Arabic,University of Ahmed Draia Adrar,https://www.univ-adrar.edu.dz/feed/,feed,university,topic,wikidata
+Algeria,,Arabic,University of Béchar,https://www.univ-bechar.dz/Ar/index.php/feed/,feed,university,topic,wikidata
+Algeria,,Arabic,University of Laghouat,https://lagh-univ.dz/feed/,feed,university,topic,wikidata
+Algeria,,Arabic,Université Djillali Liabes,https://www.univ-sba.dz/feed/,feed,university,topic,wikidata
+Algeria,,French,Université Mohamed El Bachir El Ibrahimi de Bordj Bou Arréridj,https://www.univ-bba.dz/index.php?format=feed&type=rss,feed,university,topic,wikidata
+Argentina,argentina,Spanish,National Technological University – Mendoza Regional Faculty,https://www4.frm.utn.edu.ar/feed/,feed,university,topic,wikidata
+Argentina,argentina,Spanish,"Universidad Nacional de La Plata, Facultad de Ciencias Veterinarias",https://www.fcv.unlp.edu.ar/index.php/feed/,feed,university,topic,wikidata
+Armenia,,English,Agribusiness Teaching Center,https://icare.am/feed/,feed,university,topic,wikidata
+Armenia,,Amharic,Armenian National Agrarian University,https://anau.am/feed/,feed,university,topic,wikidata
+Austria,,German,Philosophisch-Theologische Hochschule Heiligenkreuz,https://www.hochschule-heiligenkreuz.at/feed/,feed,university,topic,wikidata
+Austria,,German,Seeburg Castle University,https://www.uni-seeburg.at/feed/,feed,university,topic,wikidata
+Austria,,,University of Innsbruck,https://www.uibk.ac.at/de/newsroom/video/video.atom,feed,university,topic,wikidata
+Austria,,,University of Innsbruck,https://www.uibk.ac.at/en/newsroom/news.atom,feed,university,topic,wikidata
+Austria,,,University of Innsbruck,https://www.uibk.ac.at/de/newsroom/unileben/unileben.atom,feed,university,topic,wikidata
+Austria,,,University of Innsbruck,https://www.uibk.ac.at/de/newsroom/audio/audio.atom,feed,university,topic,wikidata
+Austria,,German,University of Innsbruck,https://www.uibk.ac.at/newsroom/pressemitteilungen.rss,feed,university,topic,wikidata
+Azerbaijan,,Azerbaijani,Azerbaijan State University of Culture and Arts,https://admiu.edu.az/feed/,feed,university,topic,wikidata
+Bahrain,,English,Ahlia University,https://www.ahlia.edu.bh/feed/,feed,university,topic,wikidata
+Bahrain,,English,University College of Bahrain,https://ucb.edu.bh/feed/,feed,university,topic,wikidata
+Bangladesh,bangladesh,English,Jamia Rahmania Arabia,https://jamiarahmaniaarabia.com/feed/,feed,university,topic,wikidata
+Belarus,,Russian,Belarusian State Academy of Arts,https://bdam.by/feed/,feed,university,topic,wikidata
+Belarus,,Russian,Brest State A.S. Pushkin University,https://www.brsu.by/rss.xml,feed,university,topic,wikidata
+Belarus,,Russian,Francisk Scorina Homiel State University,https://gsu.by/rss.xml,feed,university,topic,wikidata
+Belarus,,Russian,Paval Sukhi State Technical University of Homiel,https://www.gstu.by/rss.xml,feed,university,topic,wikidata
+Belarus,,Russian,Viciebsk State Medical University,https://www.vsmu.by/?format=feed&type=rss,feed,university,topic,wikidata
+Belgium,,,Université libre de Bruxelles,https://www.ulb.be/adminsite/webservices/export_rss.jsp?NOMBRE=10&CODE_RUBRIQUE=1571625036018525&LANGUE=0,feed,university,topic,wikidata
+Belize,,English,Galen University,https://www.galen.edu.bz/feed/,feed,university,topic,wikidata
+Belize,,,"St. John's College, Belize",https://www.sjc.edu.bz/blog-feed.xml,feed,university,topic,wikidata
+Bhutan,,English,Sherubtse College,https://www.sherubtse.edu.bt/feed/,feed,university,topic,wikidata
+Bolivia,bolivia,Spanish,Royal and Pontifical Higher University of San Francisco Xavier of Chuquisaca,https://usfx.bo/feed/,feed,university,topic,wikidata
+Bolivia,bolivia,Spanish,Unidad Académica Campesina-Carmen Pampa,https://uac-cp.edu.bo/feed/,feed,university,topic,wikidata
+Bolivia,bolivia,Spanish,Universidad Católica Boliviana San Pablo,https://www.ucb.edu.bo/feed/,feed,university,topic,wikidata
+Bosnia and Herzegovina,,,Slobomir University,https://spu.ba/feed/,feed,university,topic,wikidata
+Bosnia and Herzegovina,,,University of Tuzla,http://untz.ba/feed/,feed,university,topic,wikidata
+Bosnia and Herzegovina,,,University of Zenica,https://unze.ba/feed/,feed,university,topic,wikidata
+Botswana,botswana,English,University of Botswana,https://www.ub.bw/rss.xml,feed,university,topic,wikidata
+Brazil,brazil,Portuguese,Catholic University of Petropolis,https://ucp.br/feed/,feed,university,topic,wikidata
+Brazil,brazil,Portuguese,Escola de Arquitetura da Universidade Federal de Minas Gerais,https://www.arq.ufmg.br/ea/feed/,feed,university,topic,wikidata
+Brazil,brazil,Portuguese,Faculdade de Arquitetura da Universidade Federal da Bahia,https://arquitetura.ufba.br/rss.xml,feed,university,topic,wikidata
+Brazil,brazil,Portuguese,Fluminense Federal University,https://www.uff.br/feed/,feed,university,topic,wikidata
+Brazil,brazil,Portuguese,"Institute of Astronomy, Geophysics and Atmospheric Sciences",https://iag.usp.br/rss.xml,feed,university,topic,wikidata
+Brazil,brazil,Portuguese,Jesuit School of Philosophy and Theology,https://faculdadejesuita.edu.br/feed/,feed,university,topic,wikidata
+Brazil,brazil,Portuguese,Ponta Grossa State University,https://www.uepg.br/feed/,feed,university,topic,wikidata
+Brazil,brazil,Portuguese,Universidade de Santa Cruz do Sul,https://www.unisc.br/pt/?format=feed&type=rss,feed,university,topic,wikidata
+Brazil,brazil,Portuguese,Universidade Estadual do Vale do Acaraú,https://www.uva.ce.gov.br/feed/,feed,university,topic,wikidata
+Brazil,brazil,Portuguese,Universidade Federal de Mato Grosso do Sul,https://www.ufms.br/feed/,feed,university,topic,wikidata
+Brazil,brazil,Portuguese,Universidade Federal de Santa Maria,https://www.ufsm.br/feed,feed,university,topic,wikidata
+Brunei,,English,Universiti Brunei Darussalam,https://ubd.edu.bn/feed/,feed,university,topic,wikidata
+Bulgaria,,Bulgarian,Nikola Vaptsarov Naval Academy,https://www.naval-acad.bg/feed,feed,university,topic,wikidata
+Bulgaria,,Bulgarian,Plovdiv University,https://uni-plovdiv.bg/rss/,feed,university,topic,wikidata
+Bulgaria,,Bulgarian,Shumen University,https://www.shu.bg/feed/,feed,university,topic,wikidata
+Bulgaria,,Bulgarian,Sofia Medical University,https://mu-sofia.bg/feed/,feed,university,topic,wikidata
+Bulgaria,,Bulgarian,University of Food Technologies,https://uft-plovdiv.bg/feed/,feed,university,topic,wikidata
+Bulgaria,,English,Varna University of Management,https://vum.bg/feed/,feed,university,topic,wikidata
+Canada,canada,English,Canadian Securities Institute,https://www.csi.ca/en/feed,feed,university,topic,wikidata
+Canada,canada,English,Capernwray Harbour Bible School,https://capernwray.ca/feed/,feed,university,topic,wikidata
+Canada,canada,English,Higher Education Quality Council of Ontario,https://heqco.ca/feed/,feed,university,topic,wikidata
+Canada,canada,English,Kingswood University,https://www.kingswood.edu/feed,feed,university,topic,wikidata
+Canada,canada,,Maritime Christian College,https://www.mccpei.com/blog-feed.xml,feed,university,topic,wikidata
+Canada,canada,English,Metalworks Institute,https://metalworksinstitute.com/feed/,feed,university,topic,wikidata
+Canada,canada,English,Network in Canadian History and Environment,https://niche-canada.org/feed/,feed,university,topic,wikidata
+Canada,canada,English,Ontario Institute for Studies in Education,https://www.oise.utoronto.ca/rss.xml,feed,university,topic,wikidata
+Canada,canada,English,Seven Generations Education Institute,https://www.7generations.org/feed/,feed,university,topic,wikidata
+Canada,canada,,St. Stephen's University,https://www.ssu.ca/blog-feed.xml,feed,university,topic,wikidata
+Canada,canada,English,Thorneloe University,http://www.thorneloe.ca/feed,feed,university,topic,wikidata
+Canada,canada,English,Trinity Western University,https://www.twu.ca/rss.xml,feed,university,topic,wikidata
+Chile,chile,Spanish,Universidad de los Andes,https://www.uandes.cl/feed/,feed,university,topic,wikidata
+Chile,chile,Spanish,"University for the Arts, Sciences, and Communication",https://www.uniacc.cl/feed/,feed,university,topic,wikidata
+Colombia,colombia,Spanish,Autonomous University of Colombia,https://soyautonoma.com/feed/,feed,university,topic,wikidata
+Colombia,colombia,Spanish,Catholic University of Manizales,https://www.ucm.edu.co/feed/,feed,university,topic,wikidata
+Colombia,colombia,Spanish,El Bosque University,https://www.unbosque.edu.co/rss.xml,feed,university,topic,wikidata
+Colombia,colombia,Spanish,Maria Cano University Foundation,https://www.fumc.edu.co/feed/,feed,university,topic,wikidata
+Colombia,colombia,Spanish,Universidad de la Costa,https://www.cuc.edu.co/feed,feed,university,topic,wikidata
+Colombia,colombia,Spanish,Universidad de San Buenaventura,https://usb.edu.co/feed/,feed,university,topic,wikidata
+Colombia,colombia,Spanish,Universidad del Sinú,https://unisinucartagena.edu.co/feed/,feed,university,topic,wikidata
+Colombia,colombia,Spanish,University of Nariño,https://www.udenar.edu.co/feed/,feed,university,topic,wikidata
+Costa Rica,costa-rica,Spanish,EARTH University,https://www.earth.ac.cr/feed/,feed,university,topic,wikidata
+Costa Rica,costa-rica,Spanish,Fidélitas University,https://ufidelitas.ac.cr/feed/,feed,university,topic,wikidata
+Costa Rica,costa-rica,Spanish,Latin University of Costa Rica,https://www.ulatina.ac.cr/rss.xml,feed,university,topic,wikidata
+Costa Rica,costa-rica,English,University for Peace,https://upeace.org/feed/,feed,university,topic,wikidata
+Croatia,,Croatian,National and University Library in Zagreb,https://nsk.hr/feed/,feed,university,topic,wikidata
+Croatia,,Croatian,University of Osijek,https://www.unios.hr/feed/,feed,university,topic,wikidata
+Cuba,,Spanish,"University ""Marta Abreu"" of Las Villas",https://www.uclv.edu.cu/feed/,feed,university,topic,wikidata
+Cyprus,,Greek,Cyprus College,https://cycollege.ac.cy/el/feed/,feed,university,topic,wikidata
+Czech Republic,,Czech,ARCHIP,https://www.archip.eu/feed/,feed,university,topic,wikidata
+Czech Republic,,Czech,Association Of Research Organizations,https://www.avo.cz/feed/,feed,university,topic,wikidata
+Czech Republic,,Czech,Boleslav Tecla Observatory in Moravská Třebová,https://www.autovylet.cz/feed/,feed,university,topic,wikidata
+Czech Republic,,,"Brno University of Technology, Central Library",https://www.vut.cz/rss/uk/aktuality-f29435,feed,university,topic,wikidata
+Czech Republic,,Czech,Czech Academy of Sciences,https://www.avcr.cz/rss/feed-news-cs-veda-a-vyzkum.rss,feed,university,topic,wikidata
+Czech Republic,,Czech,Czech Chamber of Authorized Engineers and Technicians Active in Construction,https://www.ckait.cz/rss.xml,feed,university,topic,wikidata
+Czech Republic,,Czech,Czech Chemical Society,https://www.csch.cz/feed/,feed,university,topic,wikidata
+Czech Republic,,English,"Czech Institute of Informatics, Robotics and Cybernetics",https://www.ciirc.cvut.cz/en/feed/,feed,university,topic,wikidata
+Czech Republic,,Czech,Czech Pedagogical Research Association,https://capv.cz/feed/,feed,university,topic,wikidata
+Czech Republic,,Czech,Czech Sports Journalists Club,https://www.ksn.cz/feed/,feed,university,topic,wikidata
+Czech Republic,,Czech,Czech Travel Press,http://www.czechtravelpress.cz/cs/?do=facebooklogin&format=feed&type=rss,feed,university,topic,wikidata
+Czech Republic,,Czech,FZU - Institute of Physics of the Czech Academy of Sciences,https://www.fzu.cz/rss.xml,feed,university,topic,wikidata
+Czech Republic,,Czech,Institute of Atmospheric Physics AS CR,https://www.ufa.cas.cz/feed/,feed,university,topic,wikidata
+Czech Republic,,Czech,Institute of Geophysics,https://www.ig.cas.cz/feed/,feed,university,topic,wikidata
+Czech Republic,,Czech,Institute of Photonics and Electronics of the Czech Academy of Sciences,https://www.ufe.cz/feed/,feed,university,topic,wikidata
+Czech Republic,,Czech,Institute of Physics of Materials,https://www.ipm.cz/feed/,feed,university,topic,wikidata
+Czech Republic,,Czech,Institute of Physiology of the Czech Academy of Sciences,https://fgu.cas.cz/feed/,feed,university,topic,wikidata
+Czech Republic,,Czech,"Palacky University in Olomouc, Palacky University Library",https://www.knihovna.upol.cz/rss.xml,feed,university,topic,wikidata
+Czech Republic,,Czech,Palacký University Olomouc,http://www.upol.cz/rss.xml,feed,university,topic,wikidata
+Czech Republic,,Czech,Pan-European University (Prague),https://www.peuni.cz/feed/,feed,university,topic,wikidata
+Czech Republic,,Czech,Pardubice observatory,https://www.astropardubice.cz/feed/,feed,university,topic,wikidata
+Czech Republic,,Czech,Plzeň observatory and planetarium,https://www.hvr.cz/feed/,feed,university,topic,wikidata
+Czech Republic,,Czech,Prague University of Economics and Business,https://www.vse.cz/feed/,feed,university,topic,wikidata
+Czech Republic,,Czech,Research Institute of Brewing and Malting,https://beerresearch.cz/feed/,feed,university,topic,wikidata
+Czech Republic,,Multiple languages,Silva Tarouca Research Institute for Landscape and Ornamental Gardening,https://vuk.gov.cz/feed/,feed,university,topic,wikidata
+Czech Republic,,Multiple languages,Survey of the Field Excavations,https://www.arub.cz/feed/,feed,university,topic,wikidata
+Czech Republic,,Czech,Technical University of Liberec,https://www.tul.cz/feed/,feed,university,topic,wikidata
+Czech Republic,,Czech,Tomas Baťa University in Zlín,https://www.utb.cz/feed/,feed,university,topic,wikidata
+Czech Republic,,Czech,University of Chemistry and Technology,http://www.vscht.cz/feed.xml,feed,university,topic,wikidata
+Czech Republic,,Czech,Veterinary Research Institute,https://www.vri.cz/feed/,feed,university,topic,wikidata
+Czech Republic,,Czech,VSB – Technical University of Ostrava,https://info.sso.vsb.cz/cz.vsb.edison.info.web/rss?orgUnitId=1,feed,university,topic,wikidata
+Democratic Republic of the Congo,,French,"National Institute of Arts, Kinshasa",https://www.inakinshasa.com/feed/,feed,university,topic,wikidata
+Denmark,,Danish,Selandia - Center for Business Education,https://sceu.dk/feed/,feed,university,topic,wikidata
+Denmark,,Danish,University College South Denmark,https://www.ucsyd.dk/rss.xml,feed,university,topic,wikidata
+Dominican Republic,,Spanish,Dominican Adventist University,https://www.unad.edu.do/feed/,feed,university,topic,wikidata
+Dominican Republic,,,Universidad APEC,https://unapec.edu.do/rss,feed,university,topic,wikidata
+Dominican Republic,,Spanish,Universidad Experimental Félix Adam,https://unefa.edu.do/feed/,feed,university,topic,wikidata
+Ecuador,ecuador,Spanish,Universidad Católica de Cuenca,https://www.ucacue.edu.ec/feed/,feed,university,topic,wikidata
+Ecuador,ecuador,Spanish,Universidad Católica de Santiago de Guayaquil,https://www.ucsg.edu.ec/feed/,feed,university,topic,wikidata
+Ecuador,ecuador,Spanish,Universidad de las Fuerzas Armadas - ESPE,https://www.espe.edu.ec/feed/,feed,university,topic,wikidata
+Ecuador,ecuador,Spanish,UTE University,https://ute.edu.ec/feed/,feed,university,topic,wikidata
+Egypt,,English,Aswan University,https://aswu.edu.eg/feed/,feed,university,topic,wikidata
+Egypt,,French,Institut Français d'Archéologie Orientale,https://www.ifao.egnet.net/rss,feed,university,topic,wikidata
+Egypt,,English,Nahda University,https://www.nub.edu.eg/feed/,feed,university,topic,wikidata
+Egypt,,English,Nile University,https://www.nu.edu.eg/rss.xml,feed,university,topic,wikidata
+Egypt,,English,Sinai University,https://su.edu.eg/feed/,feed,university,topic,wikidata
+El Salvador,el-salvador,Spanish,Catholic University of El Salvador,https://catolica.edu.sv/feed/,feed,university,topic,wikidata
+El Salvador,el-salvador,Spanish,Escuela Superior de Economia y Negocios,https://www.esen.edu.sv/feed/,feed,university,topic,wikidata
+El Salvador,el-salvador,Spanish,Universidad Pedagógica de El Salvador,https://www.pedagogica.edu.sv/feed/,feed,university,topic,wikidata
+Estonia,,,Estonian Academy of Arts,https://www.artun.ee/et/feed/,feed,university,topic,wikidata
+Ethiopia,ethiopia,English,Addis Continental Institute of Public Health,https://addiscontinental.edu.et/feed/,feed,university,topic,wikidata
+Ethiopia,ethiopia,English,Haramaya University,https://www.haramaya.edu.et/feed/,feed,university,topic,wikidata
+France,,French,Cifacom,https://www.cifacom.com/rss.xml,feed,university,topic,wikidata
+France,,,Claude Bernard University Lyon 1,http://feeds.feedburner.com/UnivLyon1,feed,university,topic,wikidata
+France,,French,French National Institute of Health and Medical Research,https://www.inserm.fr/feed/,feed,university,topic,wikidata
+France,,French,La contemporaine,https://www.lacontemporaine.fr/fr/feed/,feed,university,topic,wikidata
+France,,French,National Center for Scientific Research,https://lejournal.cnrs.fr/rss,feed,university,topic,wikidata
+France,,English,National Center for Scientific Research,https://news.cnrs.fr/rss,feed,university,topic,wikidata
+France,,,Paris 12 University,https://www.u-pec.fr/adminsite/webservices/export_rss.jsp,feed,university,topic,wikidata
+France,,,Paris Institute of Political Studies,https://www.sciencespo.fr/fr/news-rss.xml,feed,university,topic,wikidata
+France,,French,Polytechnic University of Hauts-de-France,https://www.uphf.fr/rss.xml,feed,university,topic,wikidata
+France,,French,Société des Langues Néo-Latines,https://neolatines.com/slnl/?feed=rss2,feed,university,topic,wikidata
+France,,,Sorbonne Nouvelle-Paris 3,https://www.sorbonne-nouvelle.fr/adminsite/webservices/export_rss.jsp?NOMBRE=10&CODE_RUBRIQUE=&LANGUE=0#KLINK,feed,university,topic,wikidata
+France,,French,University of Limoges,https://www.unilim.fr/feed/,feed,university,topic,wikidata
+France,,French,University of Technology of Compiègne,https://www.utc.fr/feed/,feed,university,topic,wikidata
+France,,,Université de technologie de Belfort-Montbéliard,https://www.utbm.fr/sitemap.rss,feed,university,topic,wikidata
+France,,French,École des technologies numériques avancées,http://feeds.feedburner.com/blogetna,feed,university,topic,wikidata
+Gabon,,French,Université Omar Bongo,https://univuob.org/feed/,feed,university,topic,wikidata
+Georgia,,,Georgian Institute of Public Affairs,https://gipa.ge/rss.xml,feed,university,topic,wikidata
+Germany,,German,DHBW Karlsruhe,https://www.karlsruhe.dhbw.de/startseite?type=100,feed,university,topic,wikidata
+Germany,,German,Furtwangen University,https://www.hs-furtwangen.de/rss.xml,feed,university,topic,wikidata
+Germany,,,German Aerospace Center,https://www.dlr.de/++api++/@@rss?portal_type=News%20Item&research_domains=66f6efdd47b8405284299cad52f7f736&Language=de,feed,university,topic,wikidata
+Germany,,,German Aerospace Center,https://www.dlr.de/++api++/@@rss?portal_type=News%20Item&research_domains=807701e3af15477599eb38800b5d18d6&Language=de,feed,university,topic,wikidata
+Germany,,,German Aerospace Center,https://www.dlr.de/++api++/@@rss?portal_type=News%20Item&research_domains=50b21fd4954549a7b1bd317f078f4f31&Language=de,feed,university,topic,wikidata
+Germany,,,German Aerospace Center,https://www.dlr.de/++api++/@@rss?portal_type=News%20Item&research_domains=0a65b8491e3447dba8e36e1fa48ce5e0&Language=de,feed,university,topic,wikidata
+Germany,,German,Leibniz Centre for Contemporary History,https://zzf-potsdam.de/rss,feed,university,topic,wikidata
+Germany,,German,Martin Luther University Halle-Wittenberg,https://www.uni-halle.de/rss.de.php,feed,university,topic,wikidata
+Germany,,German,Technical University of Dortmund,https://www.tu-dortmund.de/fileadmin/meldungen.xml,feed,university,topic,wikidata
+Germany,,German,University of Bremen,https://www.uni-bremen.de/rss.xml,feed,university,topic,wikidata
+Ghana,,English,Ghana-India Kofi Annan Centre of Excellence in ICT,https://gi-kace.gov.gh/feed/,feed,university,topic,wikidata
+Ghana,,English,"University of Media, Arts and Communication",https://unimac.edu.gh/feed/,feed,university,topic,wikidata
+Greece,,Greek,Aristotle University of Thessaloniki,https://www.auth.gr/feed/,feed,university,topic,wikidata
+Greece,,Greek,Harokopio University of Athens,https://www.hua.gr/feed/,feed,university,topic,wikidata
+Greece,,Greek,Panteion University,https://www.panteion.gr/feed/,feed,university,topic,wikidata
+Greece,,English,Technical University of Crete,https://www.tuc.gr/el/index.php?id=2785&type=9818,feed,university,topic,wikidata
+Greece,,English,University of the Aegean,https://www.aegean.edu/feed/,feed,university,topic,wikidata
+Greece,,Greek,University of the Aegean,https://www.aegean.gr/rss.xml,feed,university,topic,wikidata
+Greece,,Greek,University of Western Macedonia,https://www.uowm.gr/feed/,feed,university,topic,wikidata
+Guatemala,guatemala,Spanish,Universidad del Istmo,https://unis.edu.gt/feed/,feed,university,topic,wikidata
+Guatemala,guatemala,,Universidad Mesoamericana,https://www.umes.edu.gt/blog-feed.xml,feed,university,topic,wikidata
+Hungary,,Hungarian,Corvinus University of Budapest,https://www.uni-corvinus.hu/feed/,feed,university,topic,wikidata
+Hungary,,English,Corvinus University of Budapest,https://www.uni-corvinus.hu/feed/?lang=en,feed,university,topic,wikidata
+Hungary,,Hungarian,Debrecen Reformed Theological University,https://drhe.hu/feed/,feed,university,topic,wikidata
+Hungary,,Hungarian,Lutheran Theological University,https://uni.lutheran.hu/feed/,feed,university,topic,wikidata
+Hungary,,,Széchenyi István University,https://uni.sze.hu/blog-feed.xml,feed,university,topic,wikidata
+Iceland,,,Iceland University of the Arts,https://www.lhi.is/feed/,feed,university,topic,wikidata
+India,india,English,Adarsh College,https://agieducation.org/feed/,feed,university,topic,wikidata
+India,india,English,Centre for Development Studies,https://cds.edu/feed/,feed,university,topic,wikidata
+India,india,English,Dr. Panjabrao Deshmukh Krishi Vidyapeeth,https://www.pdkv.ac.in/?feed=rss2,feed,university,topic,wikidata
+India,india,Indonesian,Dumkal College,https://dumkalcollege.org/feed/,feed,university,topic,wikidata
+India,india,English,I. K. Gujral Punjab Technical University,https://ptu.ac.in/feed/,feed,university,topic,wikidata
+India,india,English,Institute of Public Enterprise,https://www.ipeindia.org/feed/,feed,university,topic,wikidata
+India,india,Vietnamese,Krishna Chandra College,https://www.theawp.org/feed,feed,university,topic,wikidata
+India,india,English,Martin Luther Christian University,https://www.mlcuniv.in/feed/,feed,university,topic,wikidata
+India,india,English,RIMT University,https://rimt.ac.in/feed/,feed,university,topic,wikidata
+India,india,English,RKSD College of Pharmacy,https://rksdcollegeofpharmacy.com/feed/,feed,university,topic,wikidata
+India,india,English,School of Communication and Management Studies,https://scmsgroup.org/feed/,feed,university,topic,wikidata
+India,india,English,Sethu Institute of Technology,https://sethu.ac.in/feed/,feed,university,topic,wikidata
+India,india,English,Shri Lal Bahadur Shastri National Sanskrit University,https://www.slbsrsv.ac.in/rss.xml,feed,university,topic,wikidata
+India,india,English,Shri Mata Vaishno Devi University,https://smvdu.ac.in/feed/,feed,university,topic,wikidata
+India,india,English,Sri Chandrasekharendra Saraswathi Viswa Mahavidyalaya,https://kanchiuniv.ac.in/feed/,feed,university,topic,wikidata
+India,india,English,Sri Sri University,https://srisriuniversity.edu.in/feed/,feed,university,topic,wikidata
+India,india,English,SRM Nightingale School,https://srmnightingaleschool.edu.in/feed/,feed,university,topic,wikidata
+India,india,English,Tumkur University,https://tumkuruniversity.ac.in/feed/,feed,university,topic,wikidata
+India,india,Kannada,"University of Agricultural Sciences, Dharwad",https://uasd.edu/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,English,Ambon State Polytechnic,https://polnam.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,English,Bandung Institute of Indonesian Arts and Culture,https://isbi.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,English,Dharma Andalas University,https://unidha.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,Indonesian,Diponegoro University,https://undip.ac.id/feed,feed,university,topic,wikidata
+Indonesia,indonesia,English,Electronic Engineering Polytechnic Institute of Surabaya,https://www.pens.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,Indonesian,Gadjah Mada University,https://ugm.ac.id/id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,English,Hasanuddin University,https://www.unhas.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,Indonesian,IPB University,https://www.ipb.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,Indonesian,Multimedia Nusantara University,https://www.umn.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,English,Nommensen HKBP University,https://uhn.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,English,Politeknik Negeri Bandung,https://www.polban.ac.id/en/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,Indonesian,Politeknik Negeri Bandung,https://www.polban.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,Indonesian,Politeknik Negeri Jember,https://polije.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,English,Polytechnic of Lampung State,https://polinela.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,Indonesian,Purbaya Polytechnic Institute,https://purbaya.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,English,Riau University,https://unri.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,English,Sam Ratulangi University,https://www.unsrat.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,English,Satya Wacana Christian University,https://www.uksw.edu/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,English,Sebelas Maret University,https://uns.ac.id/feed,feed,university,topic,wikidata
+Indonesia,indonesia,English,State Islamic University of North Sumatra,https://uinsu.ac.id/index.php/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,Indonesian,State Islamic University of Sultan Syarif Kasim II,https://www.uin-suska.ac.id/feed.xml,feed,university,topic,wikidata
+Indonesia,indonesia,English,State Polytechnic of Creative Media,https://polimedia.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,Indonesian,State Polytechnic of Medan,https://polmed.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,English,STMIK Pontianak,https://www.stmikpontianak.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,English,Universitas Dhyana Pura,https://undhirabali.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,Indonesian,Universitas Islam Negeri Antasari,https://www.uin-antasari.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,English,Universitas Islam Negeri Raden Fatah Palembang,https://radenfatah.ac.id/index.php/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,English,Universitas Pasundan,https://www.unpas.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,English,University of Bengkulu,https://www.unib.ac.id/feed/,feed,university,topic,wikidata
+Indonesia,indonesia,Indonesian,University of Bunda Mulia,https://www.ubm.ac.id/feed/,feed,university,topic,wikidata
+Iran,,Persian,International University of Chabahar,https://iuc.ac.ir/feed/,feed,university,topic,wikidata
+Iran,,Persian,Iran University of Science and Technology,https://idea.iust.ac.ir/rss.php?sid=1&slc_lang=1,feed,university,topic,wikidata
+Iran,,Persian,Kharazmi University,https://khu.ac.ir/rss.php?sid=1&slc_lang=1,feed,university,topic,wikidata
+Iran,,Persian,Sari Agricultural Sciences and Natural Resources University,https://sanru.ac.ir/feed/,feed,university,topic,wikidata
+Iran,,Persian,Shahed University,https://shahed.ac.ir/feed/,feed,university,topic,wikidata
+Iran,,Persian,Shomal University,https://shomal.ac.ir/feed/,feed,university,topic,wikidata
+Iran,,Persian,Sirjan University of Technology,https://sirjantech.ac.ir/feed/,feed,university,topic,wikidata
+Iraq,,Arabic,Islamic University of Najaf,https://iunajaf.edu.iq/feed/,feed,university,topic,wikidata
+Iraq,,Arabic,University of Diyala,https://uodiyala.edu.iq/feed/,feed,university,topic,wikidata
+Iraq,,Arabic,University of Thi Qar,https://utq.edu.iq/feed/,feed,university,topic,wikidata
+Ireland,,English,"American College, Dublin",https://acd.iamu.edu/feed/,feed,university,topic,wikidata
+Ireland,,English,Church of Ireland Theological Institute,https://www.theologicalinstitute.ie/rss/news,feed,university,topic,wikidata
+Ireland,,English,Leinster School of Music & Drama,https://www.griffith.ie/feed.xml,feed,university,topic,wikidata
+Ireland,,English,University of Limerick,https://www.ul.ie/rss.xml,feed,university,topic,wikidata
+Israel,,,Institute for National Security Studies,https://feeds.captivate.fm/ed6841ce-17ac-4139-adaa/,feed,university,topic,wikidata
+Israel,,Hebrew,Rena Costa Center for Yiddish Studies,https://hebrew-literature.biu.ac.il/taxonomy/term/2279/feed,feed,university,topic,wikidata
+Italy,,English,Alta Scuola Politecnica,https://www.asp-poli.it/feed/,feed,university,topic,wikidata
+Italy,,Italian,Consorzio ICoN,https://www.italicon.education/it/rss.xml,feed,university,topic,wikidata
+Italy,,English,Lay Centre at Foyer Unitas,https://laycentre.org/feed/,feed,university,topic,wikidata
+Italy,,English,Parthenope University of Naples,https://orienta.uniparthenope.it/feed/,feed,university,topic,wikidata
+Italy,,English,Polimoda,https://www.polimoda.com/feed/,feed,university,topic,wikidata
+Italy,,Italian,San Pietro a Majella Conservatory of Music,https://www.sanpietroamajella.it/feed/,feed,university,topic,wikidata
+Italy,,Italian,Theological University of Northern Italy – Turin Campus,https://www.teologiatorino.it/feed/,feed,university,topic,wikidata
+Italy,,Italian,University of L'Aquila,https://www.univaq.it/rss.xml,feed,university,topic,wikidata
+Italy,,Italian,University of Messina,https://www.unime.it/rss.xml,feed,university,topic,wikidata
+Ivory Coast,,French,Félix Houphouët Boigny University,https://w.univ-fhb.edu.ci/feed/,feed,university,topic,wikidata
+Jamaica,,English,University of the Commonwealth Caribbean,http://www.ucc.edu.jm/rss.xml,feed,university,topic,wikidata
+Japan,japan,Japanese,Fukuoka University,https://www.fukuoka-u.ac.jp/rss/news.xml,feed,university,topic,wikidata
+Japan,japan,,Fukushima University,https://www.fukushima-u.ac.jp/atom.xml,feed,university,topic,wikidata
+Japan,japan,,Gifu Shotoku Gakuen University,http://www.shotoku.ac.jp/atom.xml,feed,university,topic,wikidata
+Japan,japan,Japanese,Hachinohe Institute of Technology,https://www.hi-tech.ac.jp/feed,feed,university,topic,wikidata
+Japan,japan,Japanese,Hirosaki University,https://www.hirosaki-u.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,Japanese,Hitotsubashi University,https://www.hit-u.ac.jp/feed,feed,university,topic,wikidata
+Japan,japan,Japanese,Hokkai School of Commerce,https://www.hokkai.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,Japanese,Institute of Advanced Media Arts and Sciences,https://www.iamas.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,Japanese,Ishikawa Prefectural Nursing University,https://www.ishikawa-nu.ac.jp/feed,feed,university,topic,wikidata
+Japan,japan,Japanese,Iwate Medical University,https://www.iwate-med.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,Japanese,Japanese Red Cross Toyota College of Nursing,https://www.rctoyota.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,Japanese,Jikei University School of Medicine,https://www.jikei.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,,Josai International University,https://www.jiu.ac.jp/RSS.rdf,feed,university,topic,wikidata
+Japan,japan,Japanese,Kaichi International University,https://www.kaichi.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,Japanese,Kansai University of Social Welfare,https://www.kusw.ac.jp/feed,feed,university,topic,wikidata
+Japan,japan,,Kawasaki City College of Nursing,https://www.kawasaki-cn.ac.jp/atom.xml,feed,university,topic,wikidata
+Japan,japan,Japanese,Kobe City College of Nursing,https://www.kobe-ccn.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,Japanese,Kokugakuin University,https://www.kokugakuin.ac.jp/feed,feed,university,topic,wikidata
+Japan,japan,,Kushiro Public University of Economics,https://www.kushiro-pu.ac.jp/news/rss.xml,feed,university,topic,wikidata
+Japan,japan,Japanese,Kyoto City University of Arts,https://www.kcua.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,,Kyoto Seika University,https://www.kyoto-seika.ac.jp/rss.xml,feed,university,topic,wikidata
+Japan,japan,Japanese,Kyushu Institute of Design,https://www.design.kyushu-u.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,Japanese,Kyushu Institute of Technology,https://www.kyutech.ac.jp/rss2.xml,feed,university,topic,wikidata
+Japan,japan,Japanese,Kyushu International University,https://www.kiu.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,,Maebashi Institute of Technology,https://www.maebashi-it.ac.jp/atom.xml,feed,university,topic,wikidata
+Japan,japan,,Miyagi University,https://www.myu.ac.jp/rss,feed,university,topic,wikidata
+Japan,japan,Japanese,Miyazaki Prefectural Nursing University,https://www.mpu.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,Japanese,Miyazaki Sangyo-keiei University,https://www.miyasankei-u.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,Japanese,Nagoya Sangyo University,https://www.nagoya-su.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,Japanese,Nagoya University of Commerce & Business,https://www.nucba.ac.jp/en/rss2.xml,feed,university,topic,wikidata
+Japan,japan,,Nayoro City University,http://www.nayoro.ac.jp/rss/feed.rss,feed,university,topic,wikidata
+Japan,japan,Japanese,Nihon Bunka University,https://nihonbunka-u.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,Japanese,Niigata Seiryo University,https://www.n-seiryo.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,Japanese,Okinawa Prefectural University of Arts,https://www.okigei.ac.jp/feed,feed,university,topic,wikidata
+Japan,japan,Japanese,Otaru University of Commerce,https://english.otaru-uc.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,Japanese,Otaru University of Commerce,https://www.otaru-uc.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,Japanese,Rakuno Gakuen University,https://www.rakuno.ac.jp/feed,feed,university,topic,wikidata
+Japan,japan,Japanese,Rissho University Museum,https://www.ris.ac.jp/museum/news/rss.xml,feed,university,topic,wikidata
+Japan,japan,Japanese,Sapporo Gakuin University,https://www.sgu.ac.jp:443/rss.xml,feed,university,topic,wikidata
+Japan,japan,Japanese,Shimonoseki City University,http://www.shimonoseki-cu.ac.jp/feed,feed,university,topic,wikidata
+Japan,japan,,Shiraume Gakuen College,https://daigaku.shiraume.ac.jp/atom.xml,feed,university,topic,wikidata
+Japan,japan,Japanese,Shoin University,https://www.shoin-u.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,Japanese,Shumei University,https://www.shumei-u.ac.jp/feed,feed,university,topic,wikidata
+Japan,japan,Japanese,Suzuka University of Medical Science,https://www.suzuka-u.ac.jp/feed,feed,university,topic,wikidata
+Japan,japan,Japanese,The Institute of Statistical Mathematics,https://www.ism.ac.jp/ura/press/rss.rss,feed,university,topic,wikidata
+Japan,japan,Japanese,The Japanese Red Cross Kyushu International College of Nursing,https://www.jrckicn.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,Japanese,Toho College of Music,https://www.toho-music.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,,Tokyo University of Marine Science and Technology,https://www.kaiyodai.ac.jp/rss.xml,feed,university,topic,wikidata
+Japan,japan,Japanese,Uekusa University,https://www.uekusa.ac.jp/feed/,feed,university,topic,wikidata
+Japan,japan,,University of Human Environments,https://www.uhe.ac.jp/atom.xml,feed,university,topic,wikidata
+Japan,japan,,University of Miyazaki,https://www.miyazaki-u.ac.jp/newsrelease/atom.xml,feed,university,topic,wikidata
+Japan,japan,Japanese,University of Yamanashi,https://www.yamanashi.ac.jp/feed,feed,university,topic,wikidata
+Japan,japan,Japanese,Yamagata Prefectural University of Health Sciences,https://www.yachts.ac.jp/rss2.xml,feed,university,topic,wikidata
+Japan,japan,Japanese,Yamanashi Eiwa College,https://www.yamanashi-eiwa.ac.jp/feed/,feed,university,topic,wikidata
+Jordan,,Arabic,Amman Arab University,https://www.aau.edu.jo/rss.xml,feed,university,topic,wikidata
+Jordan,,English,Middle East University,https://www.meu.edu.jo/feed/,feed,university,topic,wikidata
+Jordan,,Arabic,Tafila Technical University,https://www.ttu.edu.jo/feed/,feed,university,topic,wikidata
+Kazakhstan,,English,Caspian Public University,https://cu.edu.kz/en/feed/,feed,university,topic,wikidata
+Kazakhstan,,,Karaganda State Technical University,https://www.kstu.kz/feed/,feed,university,topic,wikidata
+Kazakhstan,,Russian,Kazakh Leading Academy of Architecture and Construction,https://iec.edu.kz/feed/,feed,university,topic,wikidata
+Kazakhstan,,Russian,Kazakh National Academy of Arts,https://kaznai.kz/feed/,feed,university,topic,wikidata
+Kazakhstan,,Kazakh,Semey Medical University,https://smu.edu.kz/feed/,feed,university,topic,wikidata
+Kenya,kenya,English,Adventist University of Africa,https://www.aua.ac.ke/feed/,feed,university,topic,wikidata
+Kenya,kenya,English,Africa Nazarene University,https://www.anu.ac.ke/feed/,feed,university,topic,wikidata
+Kenya,kenya,English,Kenya Methodist University,https://kemu.ac.ke/feed,feed,university,topic,wikidata
+Kenya,kenya,English,Machakos Institute of Technology,https://www.mit.ac.ke/feed/,feed,university,topic,wikidata
+Latvia,,,Daugavpils University,https://du.lv/feed/,feed,university,topic,wikidata
+Latvia,,,Latvia University of Life Sciences and Technologies,https://www.lbtu.lv/lv/rss.xml,feed,university,topic,wikidata
+Lebanon,,English,American University of Technology,https://www.aut.edu/feed/,feed,university,topic,wikidata
+Libya,,English,Libyan International University,https://limu.edu.ly/feed/,feed,university,topic,wikidata
+Libya,,Arabic,Omar Al-Mukhtar University,https://omu.edu.ly/feed,feed,university,topic,wikidata
+Lithuania,,,Kaunas University of Technology,https://ktu.edu/feed/,feed,university,topic,wikidata
+Lithuania,,,Lithuanian Sports University,https://www.lsu.lt/feed/,feed,university,topic,wikidata
+Malawi,malawi,English,University of Malawi,https://unima.ecampus.ac.mw/feed/,feed,university,topic,wikidata
+Malaysia,malaysia,English,Al-Madinah International University,https://www.mediu.edu.my/feed/,feed,university,topic,wikidata
+Malaysia,malaysia,English,INTI International University,https://newinti.edu.my/feed/,feed,university,topic,wikidata
+Malaysia,malaysia,English,Multimedia University,https://www.mmu.edu.my/feed/,feed,university,topic,wikidata
+Malaysia,malaysia,English,Sultan Idris Education University,https://www.upsi.edu.my/feed/,feed,university,topic,wikidata
+Malaysia,malaysia,English,Universiti Malaysia Terengganu,https://www.umt.edu.my/feed/,feed,university,topic,wikidata
+Mauritania,,Arabic,Modern University of Chinguitt,https://umchinguitt.org/feed/,feed,university,topic,wikidata
+Mauritius,,English,Open University of Mauritius,https://open.ac.mu/feed/,feed,university,topic,wikidata
+Mexico,mexico,Spanish,Autonomous University of Baja California,https://www.uabc.mx/feed/,feed,university,topic,wikidata
+Mexico,mexico,Spanish,Benemérita Universidad Autónoma de Puebla,https://www.buap.mx/rss.xml,feed,university,topic,wikidata
+Mexico,mexico,Spanish,Chapingo Autonomous University,https://chapingo.mx/feed/,feed,university,topic,wikidata
+Mexico,mexico,,La Salle University of Chihuahua,https://www.ulsachihuahua.edu.mx/blog-feed.xml,feed,university,topic,wikidata
+Mexico,mexico,Spanish,Technological Institute of Querétaro,https://queretaro.tecnm.mx/feed/,feed,university,topic,wikidata
+Mexico,mexico,English,Universidad Anáhuac Xalapa,https://www.anahuac.mx/rss.xml,feed,university,topic,wikidata
+Mexico,mexico,Spanish,Universidad Autónoma Agraria Antonio Narro,https://www.uaaan.edu.mx/feed/,feed,university,topic,wikidata
+Mexico,mexico,Spanish,Universidad Autónoma Metropolitana Unidad Xochimilco,https://www.xoc.uam.mx/feed/,feed,university,topic,wikidata
+Mexico,mexico,Spanish,Universidad de Sonora,https://www.unison.mx/feed/,feed,university,topic,wikidata
+Mexico,mexico,Spanish,Universidad Madero de Puebla,https://umad.edu.mx/feed/,feed,university,topic,wikidata
+Mexico,mexico,Spanish,Universidad Mesoamericana de San Agustín,https://umsa.edu.mx/feed/,feed,university,topic,wikidata
+Mexico,mexico,Spanish,Universidad Popular de la Chontalpa,https://upch.mx/feed/,feed,university,topic,wikidata
+Mexico,mexico,Spanish,Universidad Tecnológica Emiliano Zapata,https://www.utez.edu.mx/feed/,feed,university,topic,wikidata
+Mexico,mexico,Spanish,Universidad Vasco de Quiroga,https://www.uvaq.edu.mx:443/feed/,feed,university,topic,wikidata
+Moldova,,English,Academy of Economic Studies of Moldova,https://ase.md/feed/,feed,university,topic,wikidata
+Moldova,,Russian,Bogdan Petriceicu Hasdeu State University,https://www.usch.md/feed/,feed,university,topic,wikidata
+Moldova,,Romanian,Ion Creangă Pedagogical State University,https://upsc.md/feed/,feed,university,topic,wikidata
+Montenegro,,Serbian,"Faculty for Information technology, Podgorica",http://fit.unimediteran.net/feed/,feed,university,topic,wikidata
+Morocco,,French,National School of Agriculture of Meknes,https://www.enameknes.ac.ma/feed/,feed,university,topic,wikidata
+Morocco,,Arabic,University of al-Qarawiyyin,http://uaq.ma/index.php?format=feed&type=rss,feed,university,topic,wikidata
+Mozambique,mozambique,Portuguese,Eduardo Mondlane University,https://uem.mz/feed/,feed,university,topic,wikidata
+Nepal,nepal,English,Lumbini Buddha University,https://lbu.edu.np/feed/,feed,university,topic,wikidata
+Nepal,nepal,English,Pokhara University,https://pu.edu.np/feed/,feed,university,topic,wikidata
+Netherlands,,English,Maastricht University,https://www.maastrichtuniversity.nl/rss.xml,feed,university,topic,wikidata
+Nicaragua,nicaragua,English,Ave Maria University-Latin American Campus,https://keiseruniversity.edu.ni/feed/,feed,university,topic,wikidata
+Nicaragua,nicaragua,Spanish,National Autonomous University of Nicaragua,https://www.unan.edu.ni/index.php/feed,feed,university,topic,wikidata
+Nicaragua,nicaragua,Spanish,National Autonomous University of Nicaragua,https://www.unanleon.edu.ni/feed/,feed,university,topic,wikidata
+Nicaragua,nicaragua,Spanish,UNAN,https://www.una.edu.ni/feed/,feed,university,topic,wikidata
+Nicaragua,nicaragua,Spanish,Universidad de Ciencias Comerciales,https://ucc.edu.ni/feed/,feed,university,topic,wikidata
+Nigeria,,English,"Adamawa State University, Mubi",https://adsu.edu.ng/feed/,feed,university,topic,wikidata
+Nigeria,,English,"Al-Hikmah University, Ilorin",https://alhikmahuniversity.edu.ng/feed/,feed,university,topic,wikidata
+Nigeria,,English,Ebonyi State University,https://ebsu.edu.ng/feed/,feed,university,topic,wikidata
+Nigeria,,English,Ekiti State University,https://eksu.edu.ng/feed/,feed,university,topic,wikidata
+Nigeria,,English,Federal University of Lafia,https://fulafia.edu.ng/feed/,feed,university,topic,wikidata
+Nigeria,,English,Kaduna State University,https://kasu.edu.ng/feed/,feed,university,topic,wikidata
+Nigeria,,English,Lagos Business School,https://www.lbs.edu.ng/feed/,feed,university,topic,wikidata
+Nigeria,,English,Madonna University,https://www.madonnauniversity.edu.ng/feed/,feed,university,topic,wikidata
+Nigeria,,English,Northwest University,https://nwu.edu.ng/web/feed/,feed,university,topic,wikidata
+Nigeria,,English,Osun State University,https://uniosun.edu.ng/feed/,feed,university,topic,wikidata
+Nigeria,,English,University of Lagos,https://unilag.edu.ng/feed/,feed,university,topic,wikidata
+Nigeria,,English,University of Nigeria,https://www.unn.edu.ng/feed/,feed,university,topic,wikidata
+North Macedonia,,,Faculty of Agricultural Science and Food in Skopje,https://ukim.edu.mk/feed/,feed,university,topic,wikidata
+North Macedonia,,,Goce Delčev University of Štip,https://www.ugd.edu.mk/feed/,feed,university,topic,wikidata
+Oman,,English,German University of Technology in Oman,https://www.gutech.edu.om/feed/,feed,university,topic,wikidata
+Oman,,,University Of Nizwa,https://www.unizwa.edu.om/rss.xml,feed,university,topic,wikidata
+Pakistan,pakistan,English,Ayub School of Nursing,https://ayubmed.edu.pk/feed/,feed,university,topic,wikidata
+Pakistan,pakistan,English,Balochistan University of Engineering and Technology,https://www.buetk.edu.pk/feed/,feed,university,topic,wikidata
+Pakistan,pakistan,English,CECOS University of IT and Emerging Sciences,https://cecos.edu.pk/feed/,feed,university,topic,wikidata
+Pakistan,pakistan,English,Hajvery University,https://hup.edu.pk/feed/,feed,university,topic,wikidata
+Pakistan,pakistan,English,Kinnaird College for Women,https://kinnaird.edu.pk/feed/,feed,university,topic,wikidata
+Pakistan,pakistan,English,Lahore Leads University,https://leads.edu.pk/feed/,feed,university,topic,wikidata
+Pakistan,pakistan,English,Mirpur University of Science and Technology,https://must.edu.pk/feed/,feed,university,topic,wikidata
+Pakistan,pakistan,English,Mohammad Ali Jinnah University,https://jinnah.edu/feed/,feed,university,topic,wikidata
+Pakistan,pakistan,English,Qarshi University,https://qu.edu.pk/feed/,feed,university,topic,wikidata
+Palestine,,English,Al-Quds University,https://www.alquds.edu/en/feed/,feed,university,topic,wikidata
+Paraguay,paraguay,Spanish,"Universidad Católica ""Nuestra Señora de la Asunción""",https://universidadcatolica.edu.py/feed/,feed,university,topic,wikidata
+Paraguay,paraguay,Spanish,Universidad Nacional de Itapúa,https://uni.edu.py/feed/,feed,university,topic,wikidata
+People's Republic of China,china,English,University of Macau,https://www.um.edu.mo/feed/,feed,university,topic,wikidata
+Peru,peru,Spanish,Catholic University of Trujillo,https://uct.edu.pe/feed/,feed,university,topic,wikidata
+Peru,peru,Spanish,Private University of the North,https://www.upn.edu.pe/rss.xml,feed,university,topic,wikidata
+Peru,peru,Spanish,Universidad Científica del Perú,https://ucp.edu.pe/feed/,feed,university,topic,wikidata
+Peru,peru,Spanish,Universidad Inca Garcilaso de la Vega,https://uigv.edu.pe/feed/,feed,university,topic,wikidata
+Peru,peru,Spanish,Universidad Privada San Juan Bautista S.A.C.,https://www.upsjb.edu.pe/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,Aklan State University,https://asu.edu.ph/online/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,Angelicum College,https://www.angelicum.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,Ateneo de Zamboanga University,https://adzu.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,Aurora State College of Technology,https://www.ascot.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,Bataan Peninsula State University,https://www.bpsu.edu.ph/index.php?format=feed&type=rss,feed,university,topic,wikidata
+Philippines,philippines,English,Bohol Island State University,https://bisu.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,Cebu Institute of Technology – University,https://cit.edu/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,Cebu Normal University,https://cnu.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,Central Mindanao University,http://www.cmu.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,,Colegio de San Pascual Baylon,https://www.cspb.edu.ph/blog-feed.xml,feed,university,topic,wikidata
+Philippines,philippines,English,De La Salle University College of Liberal Arts,https://www.dlsu.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,Eastern Visayas State University,https://www.evsu.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,First Asia Institute of Technology and Humanities,https://www.firstasia.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,,Foundation University,https://www.foundationu.edu.ph/blog-feed.xml,feed,university,topic,wikidata
+Philippines,philippines,English,General de Jesus College,https://gendejesus.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,La Consolacion College–Bacolod,https://lcc.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,Lyceum-Northwestern University,https://lyceum.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,Notre Dame of Midsayap College,https://www.ndmc.edu.ph/rss.xml,feed,university,topic,wikidata
+Philippines,philippines,English,Nueva Ecija University of Science and Technology,https://neust.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,Palawan State University,https://psu.palawan.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,Polytechnic State University of Bicol,https://cspc.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,Quezon City University,https://qcu.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,"Riverside College, Inc.",https://www.riverside.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,Rizal Technological University,https://www.rtu.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,Saint Mary's University,https://smu.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,Silliman University College of Arts and Sciences,https://su.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,"St. Michael's College, Iligan City",https://smciligan.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,St. Paul University Philippines,https://spup.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,University of Luzon,https://ul.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,University of Northern Philippines,https://unp.edu.ph/feed/,feed,university,topic,wikidata
+Philippines,philippines,English,University of Southeastern Philippines,https://usep.edu.ph/feed/,feed,university,topic,wikidata
+Poland,,Polish,University of Silesia in Katowice,https://us.edu.pl/feed/,feed,university,topic,wikidata
+Poland,,Polish,University of Warsaw,https://www.uw.edu.pl/feed/,feed,university,topic,wikidata
+Poland,,English,University of Wrocław,https://uwr.edu.pl/en/feed/,feed,university,topic,wikidata
+Poland,,Polish,University of Wrocław,https://uwr.edu.pl/feed/,feed,university,topic,wikidata
+Poland,,Polish,Warsaw University of Technology,https://www.pw.edu.pl/rss.xml,feed,university,topic,wikidata
+Portugal,,Portuguese,Instituto Superior Técnico,https://tecnico.ulisboa.pt/pt/feed/,feed,university,topic,wikidata
+Portugal,,Portuguese,Lisbon School of Economics and Management,https://www.iseg.ulisboa.pt/feed/,feed,university,topic,wikidata
+Qatar,,English,Texas A&M University at Qatar,https://www.qatar.tamu.edu/feed,feed,university,topic,wikidata
+Romania,,Romanian,Carol Davila University of Medicine and Pharmacy,https://umfcd.ro/feed/,feed,university,topic,wikidata
+Romania,,Romanian,Constantin Brâncuși University,https://www.utgjiu.ro/feed/,feed,university,topic,wikidata
+Romania,,Romanian,George Enescu University of Arts,https://www.arteiasi.ro/feed/,feed,university,topic,wikidata
+Romania,,Romanian,Iuliu Hațieganu University of Medicine and Pharmacy,https://umfcluj.ro/feed/,feed,university,topic,wikidata
+Romania,,Romanian,National University of Music Bucharest,https://www.unmb.ro/feed/,feed,university,topic,wikidata
+Romania,,Romanian,Politehnica University of Bucharest,https://upb.ro/feed/,feed,university,topic,wikidata
+Romania,,Romanian,Romanian-American University,https://www.rau.ro/feed/,feed,university,topic,wikidata
+Romania,,Romanian,Stefan cel Mare University of Suceava,https://usv.ro/feed/,feed,university,topic,wikidata
+Romania,,Romanian,Tibiscus University of Timișoara,https://tibiscus.ro/feed/,feed,university,topic,wikidata
+Romania,,Romanian,Victor Babeș University of Medicine and Pharmacy,https://www.umft.ro/ro/feed/,feed,university,topic,wikidata
+Russia,,Russian,Astrakhan State Medical University,https://astgmu.ru/feed/,feed,university,topic,wikidata
+Russia,,Russian,Baltic State Technical University,https://voenmeh.ru/feed/,feed,university,topic,wikidata
+Russia,,Russian,Dagestan State Agricultural Academy,https://xn--80aaiac8g.xn--p1ai/?format=feed&type=rss,feed,university,topic,wikidata
+Russia,,,Gorno-Altaisk State University,https://gasu.ru/university/news/rss.php,feed,university,topic,wikidata
+Russia,,Russian,Ivanovo State Power Engineering University,http://www.ispu.ru/rss.xml,feed,university,topic,wikidata
+Russia,,Russian,K.G. Razumovsky Moscow State University of Technology and Management,https://mgutm.ru/feed/,feed,university,topic,wikidata
+Russia,,Russian,Kalashnikov Izhevsk State Technical University,https://istu.ru/rss,feed,university,topic,wikidata
+Russia,,Russian,Komsomolsk-on-Amur state university,https://knastu.ru/news/rss,feed,university,topic,wikidata
+Russia,,Russian,"Lesgaft National State University of Physical Education, Sport and Health",https://lesgaft.spb.ru/ru/rss.xml,feed,university,topic,wikidata
+Russia,,Russian,Pacific State Medical University,https://tgmu.ru/feed/,feed,university,topic,wikidata
+Russia,,Russian,Russian State Hydrometeorological University,https://www.rshu.ru/rss.xml,feed,university,topic,wikidata
+Russia,,,Udmurt State University,https://udsu.ru/news.xml,feed,university,topic,wikidata
+Russia,,Russian,Volgograd Municipal Institute of Arts,http://new.serebryakovka.ru/feed/,feed,university,topic,wikidata
+Russia,,,Volgograd State University,https://www.volsu.ru/index.php?rss=y,feed,university,topic,wikidata
+Rwanda,,English,Kigali Independent University ULK,https://ulk.ac.rw/feed/,feed,university,topic,wikidata
+Saudi Arabia,,,King Saud University,https://ksu.edu.sa/rss.xml,feed,university,topic,wikidata
+Serbia,,English,"Academy of Arts, Belgrade",https://akademijaumetnosti.edu.rs/feed/,feed,university,topic,wikidata
+Serbia,,Serbian,Faculty of Sport and Tourism,https://www.tims.edu.rs/feed/,feed,university,topic,wikidata
+Serbia,,Serbian,"Faculty of Transport and Communications, University of Belgrade",https://www.sf.bg.ac.rs/index.php/sr-rs/?format=feed&type=rss,feed,university,topic,wikidata
+Serbia,,,International University of Novi Pazar,https://uninp.edu.rs/feed/,feed,university,topic,wikidata
+Singapore,,English,Singapore Raffles Music College,https://srmc.edu.sg/feed/,feed,university,topic,wikidata
+Slovakia,,Slovak,Slovak Medical University,https://eszu.sk/feed/,feed,university,topic,wikidata
+Slovenia,,English,Euro-Mediterranean University of Slovenia,https://emuni.si/feed/,feed,university,topic,wikidata
+Somalia,somalia,English,Amoud University,https://amouduniversity.org/feed/,feed,university,topic,wikidata
+Somalia,somalia,English,East Africa University,https://eau.edu.so/feed/,feed,university,topic,wikidata
+Somalia,somalia,English,Puntland State University,https://psu.edu.so/feed/,feed,university,topic,wikidata
+South Africa,south-africa,English,College of Magic,https://www.collegeofmagic.com/feed/,feed,university,topic,wikidata
+South Africa,south-africa,English,Mangosuthu University of Technology,https://www.mut.ac.za/feed/,feed,university,topic,wikidata
+South Africa,south-africa,,Nelson Mandela University,https://news.mandela.ac.za/news?rss=news,feed,university,topic,wikidata
+South Africa,south-africa,English,Stenden University South Africa,https://stenden.ac.za/feed/,feed,university,topic,wikidata
+South Africa,south-africa,English,Vaal University of Technology,https://vut.ac.za/feed/,feed,university,topic,wikidata
+Spain,,Catalan,CERCA Institute,https://cerca.cat/feed/,feed,university,topic,wikidata
+Sri Lanka,sri-lanka,English,"Advanced Technological Institute, Sri Lanka",http://www.sliate.ac.lk/?format=feed&type=rss,feed,university,topic,wikidata
+Sri Lanka,sri-lanka,English,Open University of Sri Lanka,https://ou.ac.lk/feed/,feed,university,topic,wikidata
+Sri Lanka,sri-lanka,English,Rajarata University of Sri Lanka,https://www.rjt.ac.lk/feed/,feed,university,topic,wikidata
+Sri Lanka,sri-lanka,English,Sabaragamuwa University of Sri Lanka,https://www.sab.ac.lk/rss.xml,feed,university,topic,wikidata
+Sri Lanka,sri-lanka,English,University of Colombo School of Computing,https://ucsc.cmb.ac.lk/feed/,feed,university,topic,wikidata
+Sri Lanka,sri-lanka,English,University of Sri Jayewardenepura,https://www.sjp.ac.lk/feed/,feed,university,topic,wikidata
+Suriname,,Dutch,Anton de Kom University of Suriname,https://www.uvs.edu/feed/,feed,university,topic,wikidata
+Sweden,,,Konstfack,https://site106.reachmee.com/Public/rssfeed/external.ashx?id=9&InstallationID=I008&CustomerName=konstfack&lang=SE,feed,university,topic,wikidata
+Sweden,,Swedish,Luleå University of Technology,https://www.ltu.se/4.110defe1188bd8d55c026619/12.110defe1188bd8d55c026626.portlet?state=rss&sv.contenttype=text/xml;charset=UTF-8,feed,university,topic,wikidata
+Sweden,,English,Umeå University,https://www.umu.se/en/news/all-news/rssnews/?id=10421084,feed,university,topic,wikidata
+Sweden,,English,Umeå University,https://www.umu.se/nyheter/alla-nyheter/rssnews/?id=10421080,feed,university,topic,wikidata
+Switzerland,,English,Geneva Graduate Institute,https://www.graduateinstitute.ch/rss.xml,feed,university,topic,wikidata
+Switzerland,,English,Les Roches International School of Hotel Management,https://lesroches.edu/feed/,feed,university,topic,wikidata
+Switzerland,,German,State-independent Theological University of Basel,https://sthbasel.ch/feed/,feed,university,topic,wikidata
+Switzerland,,Italian,Università della Svizzera italiana,https://www.usi.ch/rss.xml,feed,university,topic,wikidata
+Syria,,Arabic,Homs University,https://homs-univ.edu.sy/feed/,feed,university,topic,wikidata
+Taiwan,taiwan,Chinese,"College of Music, National Taiwan Normal University",https://www.musicollege.ntnu.edu.tw/index.php/feed/,feed,university,topic,wikidata
+Taiwan,taiwan,Chinese,National Pingtung University of Science and Technology,https://wp.npust.edu.tw/feed/,feed,university,topic,wikidata
+Tajikistan,,,Agricultural University of Tajikistan,http://www.tajagroun.tj/?format=feed&type=rss,feed,university,topic,wikidata
+Tajikistan,,English,"Tajikistan State University of Law, Business, & Politics",http://tsulbp.tj/en/feed,feed,university,topic,wikidata
+Tanzania,tanzania,English,COSECSA,https://www.cosecsa.org/feed/,feed,university,topic,wikidata
+Tanzania,tanzania,English,Muhimbili University of Health and Allied Sciences,https://muhas.ac.tz/feed/,feed,university,topic,wikidata
+Thailand,thailand,Thai,Kasem Bundit University,https://kbu.ac.th/feed/,feed,university,topic,wikidata
+Thailand,thailand,Thai,Mahamakut Buddhist University,https://www.mbu.ac.th/feed/,feed,university,topic,wikidata
+Thailand,thailand,Thai,Naresuan University,https://www.nu.ac.th/?feed=rss2,feed,university,topic,wikidata
+Thailand,thailand,Thai,Pibulsongkram Rajabhat University,https://psru.ac.th/index.php/feed/,feed,university,topic,wikidata
+Thailand,thailand,Thai,Princess of Naradhiwas University,https://www.pnu.ac.th/feed/,feed,university,topic,wikidata
+Thailand,thailand,Thai,Sakon Nakhon Rajabhat University,https://www.snru.ac.th/feed/,feed,university,topic,wikidata
+Thailand,thailand,English,Sisaket Rajabhat University,https://www.sskru.ac.th/feed/,feed,university,topic,wikidata
+Thailand,thailand,Thai,Sripatum University,https://www.spu.ac.th/feed/,feed,university,topic,wikidata
+Thailand,thailand,English,Stamford International University,https://www.stamford.edu/feed/,feed,university,topic,wikidata
+Thailand,thailand,Thai,University of the Thai Chamber of Commerce,https://www.utcc.ac.th/feed/,feed,university,topic,wikidata
+Trinidad and Tobago,,English,"College of Science, Technology and Applied Arts of Trinidad and Tobago",https://costaatt.edu.tt/feed/,feed,university,topic,wikidata
+Trinidad and Tobago,,English,University of the Southern Caribbean,https://usc.edu.tt/feed/,feed,university,topic,wikidata
+Turkey,,English,Bilkent Laboratory and International School,https://blis.k12.tr/feed/,feed,university,topic,wikidata
+Turkey,,Turkish,Sinop University,https://www.sinop.edu.tr/feed/,feed,university,topic,wikidata
+Uganda,uganda,English,Bishop Stuart University,https://www.bsu.ac.ug/feed/,feed,university,topic,wikidata
+Uganda,uganda,English,Gulu University,https://gu.ac.ug/feed/,feed,university,topic,wikidata
+Uganda,uganda,English,Mountains of the Moon University,https://mmu.ac.ug/feed/,feed,university,topic,wikidata
+Uganda,uganda,English,Nkumba University,https://nkumbauniversity.ac.ug/feed/,feed,university,topic,wikidata
+Uganda,uganda,English,Uganda Management Institute,https://umi.ac.ug/feed/,feed,university,topic,wikidata
+Ukraine,,English,Bogdan Khmelnitsky Melitopol State Pedagogical University,https://mdpu.org.ua/feed/,feed,university,topic,wikidata
+Ukraine,,Ukrainian,Danylo Halytsky Lviv National Medical University,https://new.meduniv.lviv.ua/feed/,feed,university,topic,wikidata
+Ukraine,,Ukrainian,Dnipro Institute of Infrastructure and Transport,https://ust.edu.ua/feed/,feed,university,topic,wikidata
+Ukraine,,Ukrainian,Dnipro State University of Internal Affairs,https://dduvs.edu.ua/feed/,feed,university,topic,wikidata
+Ukraine,,Russian,Donetsk Railway Transport Institute,http://drti.donbass.com/feed/,feed,university,topic,wikidata
+Ukraine,,Ukrainian,Kamianets-Podilskyi Ivan Ohiienko National University,https://kpnu.edu.ua/feed/,feed,university,topic,wikidata
+Ukraine,,Ukrainian,Kharkiv Polytechnic Institute,https://www.kpi.kharkov.ua/ukr/feed/,feed,university,topic,wikidata
+Ukraine,,English,Kyiv Aviation University,https://nau.edu.ua/en/feed.rss,feed,university,topic,wikidata
+Ukraine,,Russian,Kyiv Aviation University,https://nau.edu.ua/feed.rss,feed,university,topic,wikidata
+Ukraine,,Ukrainian,Kyiv University of Law,https://kup.edu.ua/feed/,feed,university,topic,wikidata
+Ukraine,,Russian,Lugansk National Agrarian University,http://lgau.ru/feed/,feed,university,topic,wikidata
+Ukraine,,Ukrainian,Lviv Polytechnic,https://lpnu.ua/rss.xml,feed,university,topic,wikidata
+Ukraine,,Ukrainian,Mykolayiv State Agrarian University,https://www.mnau.edu.ua/feed/,feed,university,topic,wikidata
+Ukraine,,Ukrainian,National Academy of Legal Sciences of Ukraine,https://nals.com.ua/feed,feed,university,topic,wikidata
+Ukraine,,Ukrainian,O.M.Beketov National University of Urban Economy in Kharkiv,https://www.kname.edu.ua/?format=feed&type=rss,feed,university,topic,wikidata
+Ukraine,,Ukrainian,Prydniprovska State Academy of Civil Engineering and Architecture,https://pgasa.dp.ua/feed/,feed,university,topic,wikidata
+Ukraine,,,Ternopil Ivan Puluj National Technical University,https://tntu.edu.ua/rss.php?t=news&l=uk,feed,university,topic,wikidata
+Ukraine,,Ukrainian,Ukrainian State University of Railway Transport,https://kart.edu.ua/feed,feed,university,topic,wikidata
+Ukraine,,,"University of Kyiv Faculty of Radio Physics, Electronics and Computer Systems",https://rex.knu.ua/feed/,feed,university,topic,wikidata
+Ukraine,,Ukrainian,West Ukrainian National University,https://www.wunu.edu.ua/rss.xml?mod=rss,feed,university,topic,wikidata
+United Arab Emirates,,English,American University of Sharjah,https://www.aus.edu/rss.xml,feed,university,topic,wikidata
+United Arab Emirates,,English,Khalifa University,https://www.ku.ac.ae/feed/,feed,university,topic,wikidata
+United Kingdom,,Polish,Polish University Abroad,https://puno.ac.uk/feed/,feed,university,topic,wikidata
+United Kingdom,,English,University of Chichester,https://www.chi.ac.uk/feed/,feed,university,topic,wikidata
+United Kingdom,,English,University of Manchester,https://www.manchester.ac.uk/about/news/tagfeed/en/tags/headlines,feed,university,topic,wikidata
+United States,united-states,English,Abraham Lincoln University,https://alu.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Adams State University,https://www.adams.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Breyer State University,https://breyerstate.com/feed/,feed,university,topic,wikidata
+United States,united-states,English,California Intercontinental University,https://caluniversity.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Calvary University,https://www.calvary.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Calvin University,https://calvin.edu/rss.xml,feed,university,topic,wikidata
+United States,united-states,English,Caribbean University,https://caribbean.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,City Vision University,https://www.cityvision.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Claremont Lincoln University,https://claremontlincoln.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Cleary University,https://www.cleary.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Committee on International Relations,https://cir.uchicago.edu/rss.xml,feed,university,topic,wikidata
+United States,united-states,English,Coppin State University,https://www.coppin.edu/rss.xml,feed,university,topic,wikidata
+United States,united-states,English,Creighton University,http://www.creighton.edu/rss.xml,feed,university,topic,wikidata
+United States,united-states,English,CSU–Global Campus,https://csuglobal.edu/feed,feed,university,topic,wikidata
+United States,united-states,English,Davenport University,https://www.davenport.edu/rss.xml,feed,university,topic,wikidata
+United States,united-states,English,Dominican University,https://www.dom.edu/rss.xml,feed,university,topic,wikidata
+United States,united-states,English,Drury University,https://www.drury.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Emerging Pathogens Institute,https://epi.ufl.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Fairleigh Dickinson University,https://www.fdu.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Fielding Graduate University,https://www.fielding.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Friends University,https://www.friends.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Georgia College & State University,https://www.gcsu.edu/rss.xml,feed,university,topic,wikidata
+United States,united-states,English,Georgia Southern University-Armstrong Campus,https://www.georgiasouthern.edu/feed,feed,university,topic,wikidata
+United States,united-states,English,Graham School of Continuing Liberal and Professional Studies,https://graham.uchicago.edu/feed/,feed,university,topic,wikidata
+United States,united-states,,Illinois College of Optometry,https://www.ico.edu/blog-feed.xml,feed,university,topic,wikidata
+United States,united-states,English,Institute for the Psychological Sciences,https://divinemercy.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Iowa State University College of Business,https://www.ivybusiness.iastate.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Jackson State University,https://www.jsums.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Lawton Chiles Legal Information Center,https://law.ufl.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Lincoln University,https://lincolnuca.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Marshall University,https://www.marshall.edu/feed/,feed,university,topic,wikidata
+United States,united-states,,Martin University,https://www.martin.edu/blog-feed.xml,feed,university,topic,wikidata
+United States,united-states,English,Midland University,https://www.midlandu.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Mildred Elley,https://www.mildred-elley.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Milwaukee Career College,https://mkecc.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Missouri Baptist University,https://www.mobap.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,MIT Media Lab,https://www.media.mit.edu/feed.rss,feed,university,topic,wikidata
+United States,united-states,English,Mount Madonna Institute,https://mountmadonna.org/feed/,feed,university,topic,wikidata
+United States,united-states,English,Mount Vernon Nazarene University,https://mvnu.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,National Agricultural Law Center,https://nationalaglawcenter.org/feed/,feed,university,topic,wikidata
+United States,united-states,,National Institute of Mental Health,https://www.nimh.nih.gov/site-info/index-rss.atom,feed,university,topic,wikidata
+United States,united-states,English,Newcomb–Tulane College,https://college.tulane.edu/rss.xml,feed,university,topic,wikidata
+United States,united-states,English,North American University,https://www.na.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Northeast Ohio Medical University,https://www.neomed.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Northwestern State University,https://www.nsula.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Oikos University,https://www.oikos.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Oklahoma State System of Higher Education,https://okhighered.org/feed/,feed,university,topic,wikidata
+United States,united-states,English,Pensacola State College,https://pensacolastate.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Pittsburgh Institute of Mortuary Science,https://pims.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Point Loma Nazarene University,https://www.pointloma.edu/rss.xml,feed,university,topic,wikidata
+United States,united-states,English,Queens University of Charlotte,https://www.queens.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Robert M. La Follette School of Public Affairs,https://lafollette.wisc.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Robert Morris University,https://www.rmu.edu/rss.xml,feed,university,topic,wikidata
+United States,united-states,English,Russell Sage Foundation,https://www.russellsage.org/rss.xml,feed,university,topic,wikidata
+United States,united-states,English,Rutgers University–Newark,https://www.newark.rutgers.edu/rss.xml,feed,university,topic,wikidata
+United States,united-states,English,Saint Peter's University,https://www.saintpeters.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Saint Vladimir's Orthodox Theological Seminary,https://www.svots.edu/rss.xml,feed,university,topic,wikidata
+United States,united-states,English,San Francisco State University,https://www.sfsu.edu/rss.xml,feed,university,topic,wikidata
+United States,united-states,Spanish,School of Plastic Arts of Puerto Rico,https://eap.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Sophie Davis School of Biomedical Education,https://medicine.cuny.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,South Coast College,https://southcoastcollege.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Southern California Coastal Water Research Project,https://www.sccwrp.org/feed/,feed,university,topic,wikidata
+United States,united-states,English,Stevenson University,https://www.stevenson.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Sul Ross State University,https://www.sulross.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Tulane University,https://tulane.edu/rss.xml,feed,university,topic,wikidata
+United States,united-states,English,Tulane University School of Liberal Arts,https://liberalarts.tulane.edu/rss.xml,feed,university,topic,wikidata
+United States,united-states,English,Tulane University School of Social Work,https://sse.tulane.edu/rss.xml,feed,university,topic,wikidata
+United States,united-states,English,UF Innovate | Sid Martin Biotech,https://innovate.research.ufl.edu/feed/,feed,university,topic,wikidata
+United States,united-states,Spanish,Universidad del Sagrado Corazón,https://www.sagrado.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,University of Florida Cancer and Genetics Research Complex,https://ufgi.ufl.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,University of Florida forensic science distance education program,https://forensicscience.ufl.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,University of Florida pharmaceutical chemistry distance education program,https://pharmchem.cop.ufl.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,University of Illinois Springfield,https://www.uis.edu/rss.xml,feed,university,topic,wikidata
+United States,united-states,English,"University of Maryland, Baltimore County",https://umbc.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,University of San Francisco,https://www.usfca.edu/rss.xml,feed,university,topic,wikidata
+United States,united-states,English,University of Texas at Dallas,https://www.utdallas.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,University of the Potomac,https://potomac.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,University of Tulsa,https://tulsahurricane.com/api/v2/rss/xml,feed,university,topic,wikidata
+United States,united-states,English,University of Washington Astrobiology Program,https://depts.washington.edu/astrobio/wordpress/feed/,feed,university,topic,wikidata
+United States,united-states,English,University of Washington School of Aquatic and Fishery Sciences,https://fish.uw.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,University of Washington Stroum Center for Jewish Studies,https://jewishstudies.washington.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,University of Washington Tech Policy Lab,https://techpolicylab.uw.edu/news/feed/,feed,university,topic,wikidata
+United States,united-states,English,UPRRP College of Natural Sciences,https://natsci.uprrp.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Washington University in St. Louis,https://washu.edu/feed/,feed,university,topic,wikidata
+Uruguay,uruguay,Spanish,University Latin American Center for Human Economy,https://universidad.claeh.edu.uy/feed/,feed,university,topic,wikidata
+Venezuela,venezuela,Spanish,Universidad Bicentenaria de Aragua,https://uba.edu.ve/feed/,feed,university,topic,wikidata
+Venezuela,venezuela,Spanish,Universidad Gran Mariscal de Ayacucho,https://ugma.terna.net/Noticias.php?type=rss,feed,university,topic,wikidata
+Venezuela,venezuela,Spanish,Universidad Nacional Experimental Rafael María Baralt,https://unermb.web.ve/feed/,feed,university,topic,wikidata
+Venezuela,venezuela,Spanish,Universidad Pedagógica Experimental Libertador,https://upel.edu.ve/feed/,feed,university,topic,wikidata
+Venezuela,venezuela,Spanish,Universidad Tecnológica del Centro,http://portal.unitec.edu.ve/rss.xml,feed,university,topic,wikidata
+Vietnam,vietnam,Vietnamese,Da Nang University of Science and Technology,https://khuongtramhuong.com/feed/,feed,university,topic,wikidata
+Vietnam,vietnam,Vietnamese,Quang Binh University,https://qbu.edu.vn/feed/,feed,university,topic,wikidata
+Vietnam,vietnam,English,Saigon University,https://www.sgu.edu.vn/feed/,feed,university,topic,wikidata
+Vietnam,vietnam,Vietnamese,University of Languages and International Studies,https://ulis.vnu.edu.vn/feed/,feed,university,topic,wikidata
+Yemen,,Arabic,Hadhramout University,https://hu.edu.ye/feed,feed,university,topic,wikidata
+Yemen,,English,University of Science and Technology in Sana'a - Yemen,https://ust.edu.ye/feed/,feed,university,topic,wikidata
+Zambia,zambia,English,Copperbelt University,https://cbu.ecampus.edu.zm/feed/,feed,university,topic,wikidata
+Zimbabwe,zimbabwe,English,Great Zimbabwe University,https://www.gzu.ac.zw/feed/,feed,university,topic,wikidata
+,,English,"California University of Management and Sciences, Virginia",https://calums.edu/feed/,feed,university,topic,wikidata
+,,,Cavan Institute,https://www.cavaninstitute.ie/blog-feed.xml,feed,university,topic,wikidata
+,,English,Eunice European University,https://eunice-university.eu/feed/,feed,university,topic,wikidata
+,,English,Kenan Institute for Ethics,https://kenan.ethics.duke.edu/feed/,feed,university,topic,wikidata
+,,English,Madrasah In'aamiyyah,https://alinaam.co.za/feed/,feed,university,topic,wikidata
