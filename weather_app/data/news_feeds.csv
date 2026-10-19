@@ -193,6 +193,7 @@ Czech Republic,,,Seznam Zprávy,https://www.seznamzpravy.cz/rss,feed,newspaper,t
 Czech Republic,,Czech,Sport,https://isport.blesk.cz/rss,feed,newspaper,topic,wikidata
 Czech Republic,,English,Transitions Online,https://tol.org/feed,feed,newspaper,topic,wikidata
 Denmark,,Danish,Dagens.dk,https://www.dagens.dk/feed,feed,newspaper,topic,wikidata
+Denmark,,Swedish,inputmag.dk,https://www.inputmag.dk/feed/,feed,newspaper,topic,wikidata
 Finland,,Finnish,Lentoposti.fi,https://www.lentoposti.fi/lentoposti_rss.xml,feed,newspaper,topic,wikidata
 Finland,,Finnish,Seurakuntalainen,https://www.seurakuntalainen.fi/feed/,feed,newspaper,topic,wikidata
 France,,,Franceinfo - Les Titres,https://www.franceinfo.fr/titres.rss,feed,newspaper,topic,awesome-rss-feeds
@@ -223,7 +224,6 @@ Germany,,German,Direkte Aktion,https://direkteaktion.org/feed/atom/,feed,newspap
 Germany,,Russian,Echo,https://echofm.online/feed,feed,newspaper,topic,wikidata
 Germany,,German,Eurogamer Germany,https://www.eurogamer.de/feed,feed,newspaper,topic,wikidata
 Germany,,German,Junge Freiheit,https://jungefreiheit.de/feed/,feed,newspaper,topic,wikidata
-Germany,,German,Kontext weekly,https://www.kontextwochenzeitung.de/feed.rss,feed,newspaper,topic,wikidata
 Germany,,German,netzpolitik.org,https://netzpolitik.org/feed/,feed,newspaper,topic,wikidata
 Germany,,German,netzpolitik.org,https://netzpolitik.org/feed/atom/,feed,newspaper,topic,wikidata
 Germany,,English,Ruptly,https://alert.ruptly.tv/feed/rss,feed,newspaper,topic,wikidata
@@ -273,7 +273,7 @@ Ireland,,,IrishExaminer.com,https://feeds.feedburner.com/ietopstories,feed,newsp
 Ireland,,English,The42,https://www.the42.ie/feed/,feed,newspaper,topic,awesome-rss-feeds
 Ireland,,English,TheJournal.ie,https://www.thejournal.ie/feed/,feed,newspaper,topic,awesome-rss-feeds
 Israel,,,All Israel News,https://allisraelnews.com/feed/atom,feed,newspaper,topic,wikidata
-Israel,,Hebrew,Walla!,https://rss.walla.co.il/feed/1?type=main,feed,newspaper,topic,wikidata
+Israel,,Hebrew,Walla!,https://www.walla.co.il/rss/homepagetaste,feed,newspaper,topic,wikidata
 Italy,,Italian,Adnkronos - ultimoratop,https://www.adnkronos.com/RSS_PrimaPagina.xml,feed,newspaper,topic,awesome-rss-feeds
 Italy,,Italian,Blitz Quotidiano,https://www.blitzquotidiano.it/feed/,feed,newspaper,topic,wikidata
 Italy,,,Il Mattino Web,https://www.ilmattino.it/?sez=XML&args&p=search&args%5Bbox%5D=Home&limit=20&layout=rss,feed,newspaper,topic,awesome-rss-feeds
@@ -338,7 +338,6 @@ Pakistan,pakistan,Urdu,UrduPoint.com All Urdu News,https://www.urdupoint.com/rss
 Pakistan,pakistan,English,ایکسپریس اردو,https://www.express.pk/feed/,feed,newspaper,topic,awesome-rss-feeds
 Pakistan,pakistan,English,قومی خبریں,https://jang.com.pk/rss/1/1,feed,newspaper,topic,awesome-rss-feeds
 Palestine,,English,Quds News Network,https://qudsn.co/rss,feed,newspaper,topic,wikidata
-Philippines,philippines,English,Abante Tonite,https://tonite.abante.com.ph/feed/,feed,newspaper,topic,awesome-rss-feeds
 Philippines,philippines,English,BusinessWorld,https://bworldonline.com/feed/,feed,newspaper,topic,awesome-rss-feeds
 Philippines,philippines,English,Current PH,https://currentph.com/feed/,feed,newspaper,topic,awesome-rss-feeds
 Philippines,philippines,English,GMA News Online / News,https://data.gmanews.tv/gno/rss/news/feed.xml,feed,newspaper,topic,awesome-rss-feeds
@@ -385,7 +384,6 @@ Switzerland,,German,Techgarage,https://techgarage.blog/feed/,feed,newspaper,topi
 Switzerland,,French,watson,https://www.watson.ch/api/1.0/rss.xml,feed,newspaper,topic,wikidata
 Switzerland,,French,watson,https://www.watson.ch/fr/api/1.0/rss.xml,feed,newspaper,topic,wikidata
 Ukraine,,Russian,Focus,https://focus.ua/latest/rss-sitemap.xml,feed,newspaper,topic,wikidata
-Ukraine,,Ukrainian,Gazeta.ua,https://gazeta.ua/rss,feed,newspaper,topic,awesome-rss-feeds
 Ukraine,,Russian,Glavred,https://glavred.info/rss/,feed,newspaper,topic,wikidata
 Ukraine,,Russian,Glavred,https://glavred.net/rss/,feed,newspaper,topic,wikidata
 Ukraine,,English,NikVesti,https://nikvesti.com/rss.xml,feed,newspaper,topic,wikidata
@@ -401,6 +399,7 @@ Ukraine,,Russian,Гордон - Самые популярные материал
 Ukraine,,,Информационное агентство УНИАН,https://rss.unian.net/site/news_rus.rss,feed,newspaper,topic,awesome-rss-feeds
 Ukraine,,Russian,НВ,https://nv.ua/rss/all.xml,feed,newspaper,topic,awesome-rss-feeds
 Ukraine,,Ukrainian,Новини на tsn.ua,https://tsn.ua/rss/full.rss,feed,newspaper,topic,awesome-rss-feeds
+Ukraine,,Russian,Последние новости на сайте korrespondent.net,http://k.img.com.ua/rss/ru/all_news2.0.xml,feed,newspaper,topic,awesome-rss-feeds
 Ukraine,,Russian,Цензор.НЕТ - Новости,https://assets.censor.net/rss/censor.net/rss_ru_news.xml,feed,newspaper,topic,awesome-rss-feeds
 United Kingdom,,,BBC News - Home,https://feeds.bbci.co.uk/news/rss.xml,feed,newspaper,topic,awesome-rss-feeds
 United Kingdom,,English,Daily Express :: News Feed,http://feeds.feedburner.com/daily-express-news-showbiz,feed,newspaper,topic,awesome-rss-feeds
@@ -437,7 +436,7 @@ United States,united-states,English,San José Spotlight,https://sanjosespotlight
 United States,united-states,English,Santa Fe Reporter,https://sfreporter.com/api/rss/content.rss,feed,newspaper,topic,wikidata
 United States,united-states,English,SharpPost,https://ruibao.news/rss/,feed,newspaper,topic,wikidata
 United States,united-states,English,Steam Deck HQ,https://steamdeckhq.com/feed/,feed,newspaper,topic,wikidata
-United States,united-states,French,The Athletic,https://www.nytimes.com/athletic/rss/news/,feed,newspaper,topic,wikidata
+United States,united-states,English,The Athletic,https://www.nytimes.com/athletic/rss/news/,feed,newspaper,topic,wikidata
 United States,united-states,English,The Daily Memphian,https://dailymemphian.com/feed,feed,newspaper,topic,wikidata
 United States,united-states,English,The Intercept,https://theintercept.com/feed/?rss,feed,newspaper,topic,wikidata
 United States,united-states,English,The Verge,https://www.theverge.com/rss/index.xml,feed,newspaper,topic,wikidata
@@ -445,7 +444,6 @@ United States,united-states,English,Unbiasable,https://unbiasable.com/rss.xml,fe
 United States,united-states,English,Unicorn Riot,https://unicornriot.ninja/feed/,feed,newspaper,topic,wikidata
 United States,united-states,English,US Top News and Analysis,https://www.cnbc.com/id/100003114/device/rss/rss.html,feed,newspaper,topic,awesome-rss-feeds
 United States,united-states,English,Washington Business Journal,"https://rss.bizjournals.com/feed/2c976b9e9ab38dbe5a468eeb848e17dc76188c19/2102?market=washington&selectortype=channel&selectorvalue=1,6,2,3,4,13,17,5,9,10,18,7,11,12,14,15,8,16",feed,newspaper,topic,wikidata
-United States,united-states,,World,https://feeds.washingtonpost.com/rss/world,feed,newspaper,topic,awesome-rss-feeds
 United States,united-states,English,World & Nation,https://www.latimes.com/world-nation/rss2.0.xml,feed,newspaper,topic,awesome-rss-feeds
 United States,united-states,English,"World News - Breaking News, Top Stories",https://chaski.huffpost.com/us/auto/vertical/world-news,feed,newspaper,topic,awesome-rss-feeds
 United States,united-states,English,Zeteo,https://zeteo.com/feed,feed,newspaper,topic,wikidata
@@ -479,12 +477,10 @@ United States,united-states,English,Zeteo,https://zeteo.com/feed,feed,newspaper,
 ,,Italian,Multiplayer.it,https://multiplayer.it/feed/rss/homepage/,feed,newspaper,topic,wikidata
 ,,English,Music Business Worldwide,https://www.musicbusinessworldwide.com/feed/,feed,newspaper,topic,wikidata
 ,,English,Natural News,https://www.naturalnews.com/rss.xml,feed,newspaper,topic,wikidata
-,,British english,New Light of Myanmar,https://www.gnlm.com.mm/feed/,feed,newspaper,topic,wikidata
 ,,Russian,News Channel 24,https://24tv.ua/rss/,feed,newspaper,topic,wikidata
 ,,English,Pocket Tactics,https://www.pockettactics.com/mainrss.xml,feed,newspaper,topic,wikidata
 ,,English,Pure Xbox,https://www.purexbox.com/feeds/latest,feed,newspaper,topic,wikidata
 ,,English,Push Square,https://www.pushsquare.com/feeds/latest,feed,newspaper,topic,wikidata
-,,English,Rog Reviews,https://www.rogreviews.com/feed/,feed,newspaper,topic,wikidata
 ,,English,Shelterforce,https://shelterforce.org/feed/,feed,newspaper,topic,wikidata
 ,,English,Siliconera,https://www.siliconera.com/feed/,feed,newspaper,topic,wikidata
 ,,English,Slashdot,https://rss.slashdot.org/Slashdot/slashdotMain,feed,newspaper,topic,wikidata
@@ -517,7 +513,7 @@ Czech Republic,,Czech,Radio Proglas,https://www.proglas.cz/?rss=1,feed,tv,topic,
 Czech Republic,,Czech,Radio Relax,https://radio-relax.cz/new/feed/,feed,tv,topic,wikidata
 Czech Republic,,Czech,Rádio 7,https://radio7.cz/?format=feed&type=rss,feed,tv,topic,wikidata
 Czech Republic,,Czech,Rádio DAB Praha,https://praha.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
-Czech Republic,,Czech,Óčko,https://ocko.tv/rss.aspx,feed,tv,topic,wikidata
+Czech Republic,,Czech,Óčko Star,https://ocko.tv/rss.aspx,feed,tv,topic,wikidata
 Czech Republic,,Czech,Český rozhlas Brno,https://brno.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
 Czech Republic,,Czech,Český rozhlas D-dur,https://d-dur.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
 Czech Republic,,Czech,Český rozhlas Dvojka,https://dvojka.rozhlas.cz/rss.xml,feed,tv,topic,wikidata
@@ -545,14 +541,14 @@ France,,French,Radio Calade,https://www.radio-calade.fr/category/podcast/feed/,f
 France,,French,Radio Pulsar,https://www.radio-pulsar.org/feed/,feed,tv,topic,wikidata
 France,,French,RT en français,https://rtenfrancais.tv/rss,feed,tv,topic,wikidata
 Germany,,German,Broadcasting Combine Saxony,https://www.rundfunkkombinat.de/feed/,feed,tv,topic,wikidata
+Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/film-serie-100.rss,feed,tv,topic,wikidata
 Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/umwelt-104.rss,feed,tv,topic,wikidata
 Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/buehne-100.rss,feed,tv,topic,wikidata
-Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/film-serie-100.rss,feed,tv,topic,wikidata
-Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/psychologie-100.rss,feed,tv,topic,wikidata
 Germany,,German,Deutschlandfunk,https://www.deutschlandfunk.de/politikportal-100.rss,feed,tv,topic,wikidata
-Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/meinung-debatte-100.rss,feed,tv,topic,wikidata
+Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/psychologie-100.rss,feed,tv,topic,wikidata
 Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/philosophie-104.rss,feed,tv,topic,wikidata
 Germany,,German,Deutschlandfunk,https://www.deutschlandfunk.de/wissen-106.rss,feed,tv,topic,wikidata
+Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/meinung-debatte-100.rss,feed,tv,topic,wikidata
 Germany,,German,Deutschlandfunk,https://www.deutschlandfunk.de/nachrichten-100.rss,feed,tv,topic,wikidata
 Germany,,German,Deutschlandfunk,https://www.deutschlandfunk.de/wirtschaft-106.rss,feed,tv,topic,wikidata
 Germany,,German,Deutschlandfunk,https://www.deutschlandfunkkultur.de/geschichte-136.rss,feed,tv,topic,wikidata
@@ -578,7 +574,6 @@ Russia,,,Zvezda,https://tvzvezda.ru/export/rss.xml,feed,tv,topic,wikidata
 Singapore,,English,CNA,https://www.channelnewsasia.com/api/v1/rss-outbound-feed?_format=xml,feed,tv,topic,wikidata
 Singapore,,English,CNA,https://www.channelnewsasia.com/api/v1/rss-outbound-feed?_format=xml&category=6511,feed,tv,topic,wikidata
 Turkey,,Turkish,Bursa TV,https://www.bursatv.com.tr/rss/,feed,tv,topic,wikidata
-Turkey,,Turkish,Halk TV,https://halktv.com.tr/export/rss,feed,tv,topic,wikidata
 Ukraine,,,Radio Maximum,https://maximum.fm/rssAll.xml,feed,tv,topic,wikidata
 United States,united-states,English,Crunchyroll,https://feeds.feedburner.com/crunchyroll/rss,feed,tv,topic,wikidata
 United States,united-states,American english,PBS News Hour,https://www.pbs.org/newshour/feeds/rss/economy,feed,tv,topic,wikidata
@@ -591,8 +586,6 @@ Vatican City,,English,Vatican News,https://www.vaticannews.va/en.rss.xml,feed,tv
 ,,French,28 minutes,https://www.arteradio.com/xml_sound_emission?emissionname=%2228%20Minutes%22,feed,tv,topic,wikidata
 ,,English,All In with Chris Hayes,https://feeds.simplecast.com/K5Wu8vub,feed,tv,topic,wikidata
 ,,Czech,At the Round Table,https://anchor.fm/s/af56ab8/podcast/rss,feed,tv,topic,wikidata
-,,French,BACKSEAT,https://anchor.fm/s/63c5f5cc/podcast/rss,feed,tv,topic,wikidata
-,,,China Uncensored,https://www.youtube.com/feeds/videos.xml?channel_id=UCgFP46yVT-GG4o1TgXn-04Q,feed,tv,topic,wikidata
 ,,Swedish,Dialogiskt,https://feeds.acast.com/public/shows/b6e3d2c3-c84d-490e-bf23-f4f5b1bc9175,feed,tv,topic,wikidata
 ,,English,Fakehub Originals,https://www.fakehub.com/feed,feed,tv,topic,wikidata
 ,,,heute-show,https://www.zdf.de/rss/zdf/comedy/heute-show,feed,tv,topic,wikidata
@@ -666,11 +659,11 @@ Czech Republic,,Czech,Březno,https://www.obecbrezno.cz/feed/,feed,government,to
 Czech Republic,,Czech,Březolupy,https://brezolupy.cz/feed/,feed,government,topic,wikidata
 Czech Republic,,Czech,Březí,https://www.brezi.eu/feed/,feed,government,topic,wikidata
 Czech Republic,,Czech,Břežany I,https://www.brezany1.cz/feed/,feed,government,topic,wikidata
+Czech Republic,,Czech,Bříšťany,http://bristany.cz/feed/,feed,government,topic,wikidata
 Czech Republic,,Czech,Centre for International Cooperation in Education,https://www.dzs.cz/rss.xml,feed,government,topic,wikidata
 Czech Republic,,Czech,Cerhenice,https://cerhenice.cz/feed/,feed,government,topic,wikidata
 Czech Republic,,Czech,Cerhovice,http://www.cerhovice.cz/www/mestyscerhovice/fs/wrs-rss/rss_vychozi.xml,feed,government,topic,wikidata
 Czech Republic,,Czech,Chleby,https://obec-chleby.cz/feed/,feed,government,topic,wikidata
-Czech Republic,,Czech,Chlum,https://www.chlum-blatna.cz/feed/,feed,government,topic,wikidata
 France,,French,Académie Française,https://www.academie-francaise.fr/rss.xml,feed,government,topic,wikidata
 France,,French,Public Sénat,https://www.publicsenat.fr/feed,feed,government,topic,wikidata
 Germany,,German,Altenholz,https://altenholz.de/?format=feed&type=rss,feed,government,topic,wikidata
@@ -683,12 +676,12 @@ Germany,,German,City administration of Mannheim,https://www.mannheim.de/de/rss/p
 Germany,,German,City administration of Mannheim,https://www.mannheim.de/de/rss/veranstaltungen,feed,government,topic,wikidata
 Germany,,German,Elmshorn,https://www.elmshorn.de/media/rss/BekanntmachungenStadtElmshorn.xml,feed,government,topic,wikidata
 Germany,,German,Eutin,https://www.vg-eutin-suesel.de/media/rss/presseeutin.xml,feed,government,topic,wikidata
-Germany,,German,"Federal Ministry for the Environment, Climate Protection, Nature Conservation and Nuclear Safety",https://www.bundesumweltministerium.de/index.php?type=708,feed,government,topic,wikidata
-Germany,,German,"Federal Ministry for the Environment, Climate Protection, Nature Conservation and Nuclear Safety",https://www.bundesumweltministerium.de/index.php?type=704,feed,government,topic,wikidata
 Germany,,German,"Federal Ministry for the Environment, Climate Protection, Nature Conservation and Nuclear Safety",https://www.bundesumweltministerium.de/index.php?type=705,feed,government,topic,wikidata
 Germany,,German,"Federal Ministry for the Environment, Climate Protection, Nature Conservation and Nuclear Safety",https://www.bundesumweltministerium.de/uvp.rss,feed,government,topic,wikidata
 Germany,,German,"Federal Ministry for the Environment, Climate Protection, Nature Conservation and Nuclear Safety",https://www.bundesumweltministerium.de/events.rss,feed,government,topic,wikidata
 Germany,,German,"Federal Ministry for the Environment, Climate Protection, Nature Conservation and Nuclear Safety",https://www.bundesumweltministerium.de/meldungen.rss,feed,government,topic,wikidata
+Germany,,German,"Federal Ministry for the Environment, Climate Protection, Nature Conservation and Nuclear Safety",https://www.bundesumweltministerium.de/index.php?type=708,feed,government,topic,wikidata
+Germany,,German,"Federal Ministry for the Environment, Climate Protection, Nature Conservation and Nuclear Safety",https://www.bundesumweltministerium.de/index.php?type=704,feed,government,topic,wikidata
 Germany,,German,Federal Ministry of Health of Germany,https://www.bundesgesundheitsministerium.de/meldungen.xml,feed,government,topic,wikidata
 Germany,,German,Federal Ministry of Health of Germany,https://www.bundesgesundheitsministerium.de/pressemitteilungen.xml,feed,government,topic,wikidata
 Germany,,German,Friesland,https://www.friesland.de/portal/rss.xml,feed,government,topic,wikidata
@@ -718,7 +711,6 @@ Japan,japan,Japanese,Cabinet Office,https://www.cao.go.jp/rss/news.rdf,feed,gove
 Japan,japan,,Consumer Affairs Agency,https://www.caa.go.jp/news.rss,feed,government,topic,wikidata
 Japan,japan,Japanese,Financial Services Agency,https://www.fsa.go.jp/fsaNewsListAll_rss2.xml,feed,government,topic,wikidata
 Japan,japan,,Hiroshima Prefectural Archives,https://www.pref.hiroshima.lg.jp/rss/10/site-209.xml,feed,government,topic,wikidata
-Japan,japan,Japanese,Japan Expressway Holding and Debt Repayment Agency,https://www.jehdra.go.jp/rss/news.rss,feed,government,topic,wikidata
 Japan,japan,Japanese,"Ministry of Agriculture, Forestry and Fisheries",https://www.maff.go.jp/rss.xml,feed,government,topic,wikidata
 Japan,japan,Japanese,"Ministry of Economy, Trade and Industry",https://www.meti.go.jp/ml_index_release_atom.xml,feed,government,topic,wikidata
 Japan,japan,Japanese,Ministry of Finance of Japan,https://www.mof.go.jp/news.rss,feed,government,topic,wikidata
@@ -744,7 +736,6 @@ Spain,,Catalan,Son Servera,https://www.sonservera.es/portal/RSS_Noticias.jsp?cod
 Sweden,,Swedish,Dals-Ed Municipality,https://www.dalsed.se/rss/,feed,government,topic,wikidata
 Sweden,,Swedish,Ljusdal Municipality,https://www.ljusdal.se/4.19618b314ae81f501e2c0e2/12.19618b314ae81f501e2c155.portlet?state=rss&sv.contenttype=text/xml;charset=UTF-8,feed,government,topic,wikidata
 Sweden,,Swedish,Swedish Agency for Non-Proliferation and Export Controls,https://isp.se/rss/nyheter-isp/,feed,government,topic,wikidata
-Sweden,,,Swedish-Korean Association,https://svenskkoreanska.se/dw/feed.php,feed,government,topic,wikidata
 Ukraine,,Ukrainian,Ukrainian Code,https://ukrainiancode.org/feed/,feed,government,topic,wikidata
 United States,united-states,English,American Civil Liberties Union,https://www.aclu.org/feed,feed,government,topic,wikidata
 United States,united-states,English,Electronic Frontier Foundation,https://www.eff.org/rss/updates.xml,feed,government,topic,wikidata
@@ -775,7 +766,6 @@ Argentina,argentina,Spanish,"Universidad Nacional de La Plata, Facultad de Cienc
 Armenia,,English,Agribusiness Teaching Center,https://icare.am/feed/,feed,university,topic,wikidata
 Armenia,,Amharic,Armenian National Agrarian University,https://anau.am/feed/,feed,university,topic,wikidata
 Austria,,German,Philosophisch-Theologische Hochschule Heiligenkreuz,https://www.hochschule-heiligenkreuz.at/feed/,feed,university,topic,wikidata
-Austria,,German,Seeburg Castle University,https://www.uni-seeburg.at/feed/,feed,university,topic,wikidata
 Austria,,,University of Innsbruck,https://www.uibk.ac.at/de/newsroom/video/video.atom,feed,university,topic,wikidata
 Austria,,,University of Innsbruck,https://www.uibk.ac.at/en/newsroom/news.atom,feed,university,topic,wikidata
 Austria,,,University of Innsbruck,https://www.uibk.ac.at/de/newsroom/unileben/unileben.atom,feed,university,topic,wikidata
@@ -805,9 +795,10 @@ Brazil,brazil,Portuguese,Catholic University of Petropolis,https://ucp.br/feed/,
 Brazil,brazil,Portuguese,Escola de Arquitetura da Universidade Federal de Minas Gerais,https://www.arq.ufmg.br/ea/feed/,feed,university,topic,wikidata
 Brazil,brazil,Portuguese,Faculdade de Arquitetura da Universidade Federal da Bahia,https://arquitetura.ufba.br/rss.xml,feed,university,topic,wikidata
 Brazil,brazil,Portuguese,Fluminense Federal University,https://www.uff.br/feed/,feed,university,topic,wikidata
-Brazil,brazil,Portuguese,"Institute of Astronomy, Geophysics and Atmospheric Sciences",https://iag.usp.br/rss.xml,feed,university,topic,wikidata
+Brazil,brazil,Portuguese,"Institute of Astronomy, Geophysics and Atmospheric Science of the University of São Paulo",https://iag.usp.br/rss.xml,feed,university,topic,wikidata
 Brazil,brazil,Portuguese,Jesuit School of Philosophy and Theology,https://faculdadejesuita.edu.br/feed/,feed,university,topic,wikidata
 Brazil,brazil,Portuguese,Ponta Grossa State University,https://www.uepg.br/feed/,feed,university,topic,wikidata
+Brazil,brazil,Portuguese,Technical High School of Limeira,https://www.cotil.unicamp.br/feed/,feed,university,topic,wikidata
 Brazil,brazil,Portuguese,Universidade de Santa Cruz do Sul,https://www.unisc.br/pt/?format=feed&type=rss,feed,university,topic,wikidata
 Brazil,brazil,Portuguese,Universidade Estadual do Vale do Acaraú,https://www.uva.ce.gov.br/feed/,feed,university,topic,wikidata
 Brazil,brazil,Portuguese,Universidade Federal de Mato Grosso do Sul,https://www.ufms.br/feed/,feed,university,topic,wikidata
@@ -888,6 +879,7 @@ Dominican Republic,,,Universidad APEC,https://unapec.edu.do/rss,feed,university,
 Dominican Republic,,Spanish,Universidad Experimental Félix Adam,https://unefa.edu.do/feed/,feed,university,topic,wikidata
 Ecuador,ecuador,Spanish,Universidad Católica de Cuenca,https://www.ucacue.edu.ec/feed/,feed,university,topic,wikidata
 Ecuador,ecuador,Spanish,Universidad Católica de Santiago de Guayaquil,https://www.ucsg.edu.ec/feed/,feed,university,topic,wikidata
+Ecuador,ecuador,Spanish,Universidad de Especialidades Espíritu Santo,https://uees.edu.ec/feed/,feed,university,topic,wikidata
 Ecuador,ecuador,Spanish,Universidad de las Fuerzas Armadas - ESPE,https://www.espe.edu.ec/feed/,feed,university,topic,wikidata
 Ecuador,ecuador,Spanish,UTE University,https://ute.edu.ec/feed/,feed,university,topic,wikidata
 Egypt,,English,Aswan University,https://aswu.edu.eg/feed/,feed,university,topic,wikidata
@@ -908,6 +900,7 @@ France,,French,La contemporaine,https://www.lacontemporaine.fr/fr/feed/,feed,uni
 France,,French,National Center for Scientific Research,https://lejournal.cnrs.fr/rss,feed,university,topic,wikidata
 France,,English,National Center for Scientific Research,https://news.cnrs.fr/rss,feed,university,topic,wikidata
 France,,,Paris 12 University,https://www.u-pec.fr/adminsite/webservices/export_rss.jsp,feed,university,topic,wikidata
+France,,French,Paris 8 University,https://www.univ-paris8.fr/?page=backend,feed,university,topic,wikidata
 France,,,Paris Institute of Political Studies,https://www.sciencespo.fr/fr/news-rss.xml,feed,university,topic,wikidata
 France,,French,Polytechnic University of Hauts-de-France,https://www.uphf.fr/rss.xml,feed,university,topic,wikidata
 France,,French,Société des Langues Néo-Latines,https://neolatines.com/slnl/?feed=rss2,feed,university,topic,wikidata
@@ -934,6 +927,7 @@ Greece,,Greek,Aristotle University of Thessaloniki,https://www.auth.gr/feed/,fee
 Greece,,Greek,Harokopio University of Athens,https://www.hua.gr/feed/,feed,university,topic,wikidata
 Greece,,Greek,Panteion University,https://www.panteion.gr/feed/,feed,university,topic,wikidata
 Greece,,English,Technical University of Crete,https://www.tuc.gr/el/index.php?id=2785&type=9818,feed,university,topic,wikidata
+Greece,,Greek,University of Patras,https://www.upatras.gr/feed/,feed,university,topic,wikidata
 Greece,,English,University of the Aegean,https://www.aegean.edu/feed/,feed,university,topic,wikidata
 Greece,,Greek,University of the Aegean,https://www.aegean.gr/rss.xml,feed,university,topic,wikidata
 Greece,,Greek,University of Western Macedonia,https://www.uowm.gr/feed/,feed,university,topic,wikidata
@@ -950,7 +944,6 @@ India,india,English,Adarsh College,https://agieducation.org/feed/,feed,universit
 India,india,English,Centre for Development Studies,https://cds.edu/feed/,feed,university,topic,wikidata
 India,india,English,Dr. Panjabrao Deshmukh Krishi Vidyapeeth,https://www.pdkv.ac.in/?feed=rss2,feed,university,topic,wikidata
 India,india,Indonesian,Dumkal College,https://dumkalcollege.org/feed/,feed,university,topic,wikidata
-India,india,English,I. K. Gujral Punjab Technical University,https://ptu.ac.in/feed/,feed,university,topic,wikidata
 India,india,English,Institute of Public Enterprise,https://www.ipeindia.org/feed/,feed,university,topic,wikidata
 India,india,Vietnamese,Krishna Chandra College,https://www.theawp.org/feed,feed,university,topic,wikidata
 India,india,English,Martin Luther Christian University,https://www.mlcuniv.in/feed/,feed,university,topic,wikidata
@@ -963,7 +956,6 @@ India,india,English,Shri Mata Vaishno Devi University,https://smvdu.ac.in/feed/,
 India,india,English,Sri Chandrasekharendra Saraswathi Viswa Mahavidyalaya,https://kanchiuniv.ac.in/feed/,feed,university,topic,wikidata
 India,india,English,Sri Sri University,https://srisriuniversity.edu.in/feed/,feed,university,topic,wikidata
 India,india,English,SRM Nightingale School,https://srmnightingaleschool.edu.in/feed/,feed,university,topic,wikidata
-India,india,English,Tumkur University,https://tumkuruniversity.ac.in/feed/,feed,university,topic,wikidata
 India,india,Kannada,"University of Agricultural Sciences, Dharwad",https://uasd.edu/feed/,feed,university,topic,wikidata
 Indonesia,indonesia,English,Ambon State Polytechnic,https://polnam.ac.id/feed/,feed,university,topic,wikidata
 Indonesia,indonesia,English,Bandung Institute of Indonesian Arts and Culture,https://isbi.ac.id/feed/,feed,university,topic,wikidata
@@ -995,7 +987,6 @@ Indonesia,indonesia,English,Universitas Islam Negeri Raden Fatah Palembang,https
 Indonesia,indonesia,English,Universitas Pasundan,https://www.unpas.ac.id/feed/,feed,university,topic,wikidata
 Indonesia,indonesia,English,University of Bengkulu,https://www.unib.ac.id/feed/,feed,university,topic,wikidata
 Indonesia,indonesia,Indonesian,University of Bunda Mulia,https://www.ubm.ac.id/feed/,feed,university,topic,wikidata
-Indonesia,indonesia,Indonesian,University Primagraha,https://unsera.ac.id/feed/,feed,university,topic,wikidata
 Iran,,Persian,International University of Chabahar,https://iuc.ac.ir/feed/,feed,university,topic,wikidata
 Iran,,Persian,Iran University of Science and Technology,https://idea.iust.ac.ir/rss.php?sid=1&slc_lang=1,feed,university,topic,wikidata
 Iran,,Persian,Kharazmi University,https://khu.ac.ir/rss.php?sid=1&slc_lang=1,feed,university,topic,wikidata
@@ -1010,7 +1001,6 @@ Ireland,,English,"American College, Dublin",https://acd.iamu.edu/feed/,feed,univ
 Ireland,,English,Church of Ireland Theological Institute,https://www.theologicalinstitute.ie/rss/news,feed,university,topic,wikidata
 Ireland,,English,Leinster School of Music & Drama,https://www.griffith.ie/feed.xml,feed,university,topic,wikidata
 Ireland,,English,University of Limerick,https://www.ul.ie/rss.xml,feed,university,topic,wikidata
-Israel,,,Institute for National Security Studies,https://feeds.captivate.fm/ed6841ce-17ac-4139-adaa/,feed,university,topic,wikidata
 Israel,,Hebrew,Rena Costa Center for Yiddish Studies,https://hebrew-literature.biu.ac.il/taxonomy/term/2279/feed,feed,university,topic,wikidata
 Italy,,English,Alta Scuola Politecnica,https://www.asp-poli.it/feed/,feed,university,topic,wikidata
 Italy,,Italian,Consorzio ICoN,https://www.italicon.education/it/rss.xml,feed,university,topic,wikidata
@@ -1080,6 +1070,7 @@ Latvia,,,Latvia University of Life Sciences and Technologies,https://www.lbtu.lv
 Lebanon,,English,American University of Technology,https://www.aut.edu/feed/,feed,university,topic,wikidata
 Libya,,English,Libyan International University,https://limu.edu.ly/feed/,feed,university,topic,wikidata
 Libya,,Arabic,Omar Al-Mukhtar University,https://omu.edu.ly/feed,feed,university,topic,wikidata
+Libya,,Arabic,Sebha University,https://sebhau.edu.ly/feed/,feed,university,topic,wikidata
 Lithuania,,,Kaunas University of Technology,https://ktu.edu/feed/,feed,university,topic,wikidata
 Lithuania,,,Lithuanian Sports University,https://www.lsu.lt/feed/,feed,university,topic,wikidata
 Malawi,malawi,English,University of Malawi,https://unima.ecampus.ac.mw/feed/,feed,university,topic,wikidata
@@ -1162,7 +1153,6 @@ Philippines,philippines,English,Bataan Peninsula State University,https://www.bp
 Philippines,philippines,English,Bohol Island State University,https://bisu.edu.ph/feed/,feed,university,topic,wikidata
 Philippines,philippines,English,Cebu Institute of Technology – University,https://cit.edu/feed/,feed,university,topic,wikidata
 Philippines,philippines,English,Cebu Normal University,https://cnu.edu.ph/feed/,feed,university,topic,wikidata
-Philippines,philippines,English,Central Mindanao University,http://www.cmu.edu.ph/feed/,feed,university,topic,wikidata
 Philippines,philippines,,Colegio de San Pascual Baylon,https://www.cspb.edu.ph/blog-feed.xml,feed,university,topic,wikidata
 Philippines,philippines,English,De La Salle University College of Liberal Arts,https://www.dlsu.edu.ph/feed/,feed,university,topic,wikidata
 Philippines,philippines,English,Eastern Visayas State University,https://www.evsu.edu.ph/feed/,feed,university,topic,wikidata
@@ -1203,6 +1193,7 @@ Romania,,Romanian,Politehnica University of Bucharest,https://upb.ro/feed/,feed,
 Romania,,Romanian,Romanian-American University,https://www.rau.ro/feed/,feed,university,topic,wikidata
 Romania,,Romanian,Stefan cel Mare University of Suceava,https://usv.ro/feed/,feed,university,topic,wikidata
 Romania,,Romanian,Tibiscus University of Timișoara,https://tibiscus.ro/feed/,feed,university,topic,wikidata
+Romania,,Romanian,University of Galați,https://www.ugal.ro/?format=feed&type=rss,feed,university,topic,wikidata
 Romania,,Romanian,Victor Babeș University of Medicine and Pharmacy,https://www.umft.ro/ro/feed/,feed,university,topic,wikidata
 Russia,,Russian,Astrakhan State Medical University,https://astgmu.ru/feed/,feed,university,topic,wikidata
 Russia,,Russian,Baltic State Technical University,https://voenmeh.ru/feed/,feed,university,topic,wikidata
@@ -1213,8 +1204,10 @@ Russia,,Russian,Ivanovo State Power Engineering University,http://www.ispu.ru/rs
 Russia,,Russian,K.G. Razumovsky Moscow State University of Technology and Management,https://mgutm.ru/feed/,feed,university,topic,wikidata
 Russia,,Russian,Kalashnikov Izhevsk State Technical University,https://istu.ru/rss,feed,university,topic,wikidata
 Russia,,Russian,Komsomolsk-on-Amur state university,https://knastu.ru/news/rss,feed,university,topic,wikidata
+Russia,,Russian,Kuban State Medical University,https://www.ksma.ru/feed/,feed,university,topic,wikidata
 Russia,,Russian,"Lesgaft National State University of Physical Education, Sport and Health",https://lesgaft.spb.ru/ru/rss.xml,feed,university,topic,wikidata
 Russia,,Russian,Pacific State Medical University,https://tgmu.ru/feed/,feed,university,topic,wikidata
+Russia,,Russian,Petrozavodsk State University,https://petrsu.ru/rss,feed,university,topic,wikidata
 Russia,,Russian,Russian State Hydrometeorological University,https://www.rshu.ru/rss.xml,feed,university,topic,wikidata
 Russia,,Russian,Siberian Law University,https://siblu.ru/rss.xml,feed,university,topic,wikidata
 Russia,,,Udmurt State University,https://udsu.ru/news.xml,feed,university,topic,wikidata
@@ -1238,6 +1231,7 @@ South Africa,south-africa,,Nelson Mandela University,https://news.mandela.ac.za/
 South Africa,south-africa,English,Stenden University South Africa,https://stenden.ac.za/feed/,feed,university,topic,wikidata
 South Africa,south-africa,English,Vaal University of Technology,https://vut.ac.za/feed/,feed,university,topic,wikidata
 Spain,,Catalan,CERCA Institute,https://cerca.cat/feed/,feed,university,topic,wikidata
+Spain,,Catalan,Miquel Crusafont Catalan Institute of Paleontology,https://www.icp.cat/index.php/ca/?option=com_obrss&task=feed&id=1:icp-rss&format=feed,feed,university,topic,wikidata
 Sri Lanka,sri-lanka,English,"Advanced Technological Institute, Sri Lanka",http://www.sliate.ac.lk/?format=feed&type=rss,feed,university,topic,wikidata
 Sri Lanka,sri-lanka,English,Open University of Sri Lanka,https://ou.ac.lk/feed/,feed,university,topic,wikidata
 Sri Lanka,sri-lanka,English,Rajarata University of Sri Lanka,https://www.rjt.ac.lk/feed/,feed,university,topic,wikidata
@@ -1252,12 +1246,10 @@ Sweden,,English,Umeå University,https://www.umu.se/nyheter/alla-nyheter/rssnews
 Switzerland,,English,Geneva Graduate Institute,https://www.graduateinstitute.ch/rss.xml,feed,university,topic,wikidata
 Switzerland,,English,Les Roches International School of Hotel Management,https://lesroches.edu/feed/,feed,university,topic,wikidata
 Switzerland,,German,State-independent Theological University of Basel,https://sthbasel.ch/feed/,feed,university,topic,wikidata
-Switzerland,,Italian,Università della Svizzera italiana,https://www.usi.ch/rss.xml,feed,university,topic,wikidata
 Syria,,Arabic,Homs University,https://homs-univ.edu.sy/feed/,feed,university,topic,wikidata
 Taiwan,taiwan,Chinese,"College of Music, National Taiwan Normal University",https://www.musicollege.ntnu.edu.tw/index.php/feed/,feed,university,topic,wikidata
 Taiwan,taiwan,Chinese,National Pingtung University of Science and Technology,https://wp.npust.edu.tw/feed/,feed,university,topic,wikidata
 Tajikistan,,,Agricultural University of Tajikistan,http://www.tajagroun.tj/?format=feed&type=rss,feed,university,topic,wikidata
-Tajikistan,,English,"Tajikistan State University of Law, Business, & Politics",http://tsulbp.tj/en/feed,feed,university,topic,wikidata
 Tanzania,tanzania,English,COSECSA,https://www.cosecsa.org/feed/,feed,university,topic,wikidata
 Tanzania,tanzania,English,Muhimbili University of Health and Allied Sciences,https://muhas.ac.tz/feed/,feed,university,topic,wikidata
 Thailand,thailand,Thai,Kasem Bundit University,https://kbu.ac.th/feed/,feed,university,topic,wikidata
@@ -1271,7 +1263,6 @@ Thailand,thailand,Thai,Sripatum University,https://www.spu.ac.th/feed/,feed,univ
 Thailand,thailand,English,Stamford International University,https://www.stamford.edu/feed/,feed,university,topic,wikidata
 Thailand,thailand,Thai,University of the Thai Chamber of Commerce,https://www.utcc.ac.th/feed/,feed,university,topic,wikidata
 Trinidad and Tobago,,English,"College of Science, Technology and Applied Arts of Trinidad and Tobago",https://costaatt.edu.tt/feed/,feed,university,topic,wikidata
-Trinidad and Tobago,,English,University of the Southern Caribbean,https://usc.edu.tt/feed/,feed,university,topic,wikidata
 Turkey,,English,Bilkent Laboratory and International School,https://blis.k12.tr/feed/,feed,university,topic,wikidata
 Turkey,,Turkish,Sinop University,https://www.sinop.edu.tr/feed/,feed,university,topic,wikidata
 Uganda,uganda,English,Bishop Stuart University,https://www.bsu.ac.ug/feed/,feed,university,topic,wikidata
@@ -1283,7 +1274,6 @@ Ukraine,,English,Bogdan Khmelnitsky Melitopol State Pedagogical University,https
 Ukraine,,Ukrainian,Danylo Halytsky Lviv National Medical University,https://new.meduniv.lviv.ua/feed/,feed,university,topic,wikidata
 Ukraine,,Ukrainian,Dnipro Institute of Infrastructure and Transport,https://ust.edu.ua/feed/,feed,university,topic,wikidata
 Ukraine,,Ukrainian,Dnipro State University of Internal Affairs,https://dduvs.edu.ua/feed/,feed,university,topic,wikidata
-Ukraine,,Russian,Donetsk Railway Transport Institute,http://drti.donbass.com/feed/,feed,university,topic,wikidata
 Ukraine,,Ukrainian,Kamianets-Podilskyi Ivan Ohiienko National University,https://kpnu.edu.ua/feed/,feed,university,topic,wikidata
 Ukraine,,Ukrainian,Kharkiv Polytechnic Institute,https://www.kpi.kharkov.ua/ukr/feed/,feed,university,topic,wikidata
 Ukraine,,English,Kyiv Aviation University,https://nau.edu.ua/en/feed.rss,feed,university,topic,wikidata
@@ -1291,17 +1281,13 @@ Ukraine,,Russian,Kyiv Aviation University,https://nau.edu.ua/feed.rss,feed,unive
 Ukraine,,Ukrainian,Kyiv University of Law,https://kup.edu.ua/feed/,feed,university,topic,wikidata
 Ukraine,,Russian,Lugansk National Agrarian University,http://lgau.ru/feed/,feed,university,topic,wikidata
 Ukraine,,Ukrainian,Lviv Polytechnic,https://lpnu.ua/rss.xml,feed,university,topic,wikidata
-Ukraine,,Ukrainian,Mykolayiv State Agrarian University,https://www.mnau.edu.ua/feed/,feed,university,topic,wikidata
 Ukraine,,Ukrainian,National Academy of Legal Sciences of Ukraine,https://nals.com.ua/feed,feed,university,topic,wikidata
 Ukraine,,Ukrainian,O.M.Beketov National University of Urban Economy in Kharkiv,https://www.kname.edu.ua/?format=feed&type=rss,feed,university,topic,wikidata
-Ukraine,,Ukrainian,Odesa University,https://onu.edu.ua/uk/?format=feed&type=rss,feed,university,topic,wikidata
-Ukraine,,Ukrainian,Prydniprovska State Academy of Civil Engineering and Architecture,https://pgasa.dp.ua/feed/,feed,university,topic,wikidata
 Ukraine,,,Ternopil Ivan Puluj National Technical University,https://tntu.edu.ua/rss.php?t=news&l=uk,feed,university,topic,wikidata
 Ukraine,,Ukrainian,Ukrainian State University of Railway Transport,https://kart.edu.ua/feed,feed,university,topic,wikidata
 Ukraine,,,"University of Kyiv Faculty of Radio Physics, Electronics and Computer Systems",https://rex.knu.ua/feed/,feed,university,topic,wikidata
 Ukraine,,Ukrainian,West Ukrainian National University,https://www.wunu.edu.ua/rss.xml?mod=rss,feed,university,topic,wikidata
 United Arab Emirates,,English,American University of Sharjah,https://www.aus.edu/rss.xml,feed,university,topic,wikidata
-United Arab Emirates,,English,Khalifa University,https://www.ku.ac.ae/feed/,feed,university,topic,wikidata
 United Kingdom,,Polish,Polish University Abroad,https://puno.ac.uk/feed/,feed,university,topic,wikidata
 United Kingdom,,English,University of Chichester,https://www.chi.ac.uk/feed/,feed,university,topic,wikidata
 United Kingdom,,English,University of Manchester,https://www.manchester.ac.uk/about/news/tagfeed/en/tags/headlines,feed,university,topic,wikidata
@@ -1322,32 +1308,33 @@ United States,united-states,English,CSU–Global Campus,https://csuglobal.edu/fe
 United States,united-states,English,Davenport University,https://www.davenport.edu/rss.xml,feed,university,topic,wikidata
 United States,united-states,English,Dominican University,https://www.dom.edu/rss.xml,feed,university,topic,wikidata
 United States,united-states,English,Drury University,https://www.drury.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,Emerging Pathogens Institute,https://epi.ufl.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,Fairleigh Dickinson University,https://www.fdu.edu/feed/,feed,university,topic,wikidata
 United States,united-states,English,Fielding Graduate University,https://www.fielding.edu/feed/,feed,university,topic,wikidata
 United States,united-states,English,Friends University,https://www.friends.edu/feed/,feed,university,topic,wikidata
 United States,united-states,English,Georgia College & State University,https://www.gcsu.edu/rss.xml,feed,university,topic,wikidata
 United States,united-states,English,Georgia Southern University-Armstrong Campus,https://www.georgiasouthern.edu/feed,feed,university,topic,wikidata
 United States,united-states,English,Graham School of Continuing Liberal and Professional Studies,https://graham.uchicago.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Hampton University,https://home.hamptonu.edu/feed/,feed,university,topic,wikidata
 United States,united-states,,Illinois College of Optometry,https://www.ico.edu/blog-feed.xml,feed,university,topic,wikidata
 United States,united-states,English,Institute for the Psychological Sciences,https://divinemercy.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,Iowa State University College of Business,https://www.ivybusiness.iastate.edu/feed/,feed,university,topic,wikidata
 United States,united-states,English,Jackson State University,https://www.jsums.edu/feed/,feed,university,topic,wikidata
 United States,united-states,English,Lawton Chiles Legal Information Center,https://law.ufl.edu/feed/,feed,university,topic,wikidata
 United States,united-states,English,Lincoln University,https://lincolnuca.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,Marshall University,https://www.marshall.edu/feed/,feed,university,topic,wikidata
 United States,united-states,,Martin University,https://www.martin.edu/blog-feed.xml,feed,university,topic,wikidata
 United States,united-states,English,Midland University,https://www.midlandu.edu/feed/,feed,university,topic,wikidata
 United States,united-states,English,Mildred Elley,https://www.mildred-elley.edu/feed/,feed,university,topic,wikidata
 United States,united-states,English,Milwaukee Career College,https://mkecc.edu/feed/,feed,university,topic,wikidata
 United States,united-states,English,Missouri Baptist University,https://www.mobap.edu/feed/,feed,university,topic,wikidata
-United States,united-states,English,MIT Media Lab,https://www.media.mit.edu/feed.rss,feed,university,topic,wikidata
 United States,united-states,English,Mount Madonna Institute,https://mountmadonna.org/feed/,feed,university,topic,wikidata
 United States,united-states,English,Mount Vernon Nazarene University,https://mvnu.edu/feed/,feed,university,topic,wikidata
 United States,united-states,English,National Agricultural Law Center,https://nationalaglawcenter.org/feed/,feed,university,topic,wikidata
+United States,united-states,,National Institute of Mental Health,https://www.nimh.nih.gov/site-info/index-rss.atom,feed,university,topic,wikidata
+United States,united-states,English,Newcomb–Tulane College,https://college.tulane.edu/rss.xml,feed,university,topic,wikidata
+United States,united-states,English,North American University,https://www.na.edu/feed/,feed,university,topic,wikidata
+United States,united-states,English,Northeast Ohio Medical University,https://www.neomed.edu/feed/,feed,university,topic,wikidata
 Uruguay,uruguay,Spanish,University Latin American Center for Human Economy,https://universidad.claeh.edu.uy/feed/,feed,university,topic,wikidata
 Venezuela,venezuela,Spanish,Universidad Bicentenaria de Aragua,https://uba.edu.ve/feed/,feed,university,topic,wikidata
 Venezuela,venezuela,Spanish,Universidad Gran Mariscal de Ayacucho,https://ugma.terna.net/Noticias.php?type=rss,feed,university,topic,wikidata
+Venezuela,venezuela,Spanish,Universidad Nacional Experimental del Táchira,https://www.unet.edu.ve/?format=feed&type=rss,feed,university,topic,wikidata
 Venezuela,venezuela,Spanish,Universidad Nacional Experimental Rafael María Baralt,https://unermb.web.ve/feed/,feed,university,topic,wikidata
 Venezuela,venezuela,Spanish,Universidad Pedagógica Experimental Libertador,https://upel.edu.ve/feed/,feed,university,topic,wikidata
 Venezuela,venezuela,Spanish,Universidad Tecnológica del Centro,http://portal.unitec.edu.ve/rss.xml,feed,university,topic,wikidata
