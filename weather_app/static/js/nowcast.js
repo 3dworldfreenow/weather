@@ -160,6 +160,22 @@
     return out;
   }
 
+  // 3×3 mean (softens the blocky look of extrapolated images).
+  function blur(g) {
+    const out = grid(g.w, g.h);
+    for (let y = 0; y < g.h; y++) {
+      for (let x = 0; x < g.w; x++) {
+        let s = 0, n = 0;
+        for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) {
+          const xx = x + i, yy = y + j;
+          if (xx >= 0 && yy >= 0 && xx < g.w && yy < g.h) { s += g.data[yy * g.w + xx]; n++; }
+        }
+        out.data[y * g.w + x] = s / n;
+      }
+    }
+    return out;
+  }
+
   /* Rain at one point over the coming steps: trace back along the motion and read the
    * latest image, taking the strongest value in a small neighbourhood (radius px) so a
    * near miss still counts. Returns intensities for t = 0, 1, …, maxSteps (in steps). */
@@ -209,6 +225,40 @@
     return best ? { distance: Math.sqrt(best.d2), x: best.x, y: best.y } : null;
   }
 
+  /* Rain grid → RGBA pixels with a colour ramp [[value, [r, g, b, a]], …] (a 0..1); the
+   * rain's edge fades in between `from` and `from + 0.07` so there is no hard outline. */
+  function colorize(g, ramp, from = 0.03) {
+    const out = new Uint8ClampedArray(g.w * g.h * 4);
+    for (let i = 0; i < g.w * g.h; i++) {
+      const v = g.data[i];
+      if (v < from) continue;
+      let k = 1;
+      while (k < ramp.length - 1 && v > ramp[k][0]) k++;
+      const [v0, c0] = ramp[k - 1], [v1, c1] = ramp[k];
+      const f = Math.max(0, Math.min(1, (v - v0) / (v1 - v0 || 1)));
+      const edge = Math.min(1, (v - from) / 0.07);
+      for (let c = 0; c < 3; c++) out[i * 4 + c] = c0[c] + (c1[c] - c0[c]) * f;
+      out[i * 4 + 3] = (c0[3] + (c1[3] - c0[3]) * f) * edge * 255;
+    }
+    return out;
+  }
+
+  /* The whole prediction for an area from three radar images 30 minutes apart (oldest
+   * first): motion averaged over the hour (pixels per `stepMin`, measured on images
+   * downsampled by `f`), and coloured predicted images (half resolution, smoothed) for
+   * each of `frameMins`. Runs in a Web Worker (nowcast-worker.js) or directly. */
+  function predict(gFirst, gMid, gNow, o) {
+    const f = o.f || 3, base = o.baseSteps || 3;
+    const opts = { block: 16, search: 14, fallback: o.fallback || null };
+    const d = (g) => downsample(g, f);
+    const raw = averageFields([motionField(d(gFirst), d(gMid), opts), motionField(d(gMid), d(gNow), opts)]);
+    const field = { ...raw, u: raw.u.map((x) => x / base), v: raw.v.map((x) => x / base) }; // per step
+    const half = downsample(gNow, 2);
+    const frames = o.frameMins.map((m) => ({ minutes: m, w: half.w, h: half.h,
+      rgba: colorize(blur(advect(half, field, m / o.stepMin, f / 2)), o.ramp) }));
+    return { field, frames };
+  }
+
   /* RainViewer radar colours ("Universal Blue", the only scheme its free API serves)
    * back to radar reflectivity. Rows: dBZ, r, g, b (5…74 dBZ; weaker echoes are mostly
    * drizzle or noise and are drawn nearly transparent). */
@@ -241,5 +291,5 @@
   // Rain intensity 0..1 from reflectivity: 15 dBZ (light rain) 0.2, 35 dBZ 0.6, 55+ dBZ 1.
   const intensity = (dbz) => (dbz == null ? 0 : Math.max(0, Math.min(1, (dbz - 5) / 50)));
 
-  return { grid, downsample, averageFields, decodeColor, intensity, sample: at, motionField, motionAt, advect, timelineAt, summarize, nearestRain };
+  return { grid, downsample, blur, averageFields, colorize, predict, decodeColor, intensity, sample: at, motionField, motionAt, advect, timelineAt, summarize, nearestRain };
 });

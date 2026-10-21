@@ -11,8 +11,10 @@ A live El Niño tracker on a 3D globe and map, in the style of [zoom.earth](http
   - **Forecast maps** for the next 48 hours in 3-hour steps: precipitation, wind, temperature, humidity and pressure (drawn in the browser from a global [Open-Meteo](https://open-meteo.com/) grid), plus the El Niño sea temperature anomaly
   - **Overlays:** wind animation, city temperatures, labels, border lines, night boundary, coordinate grid, Niño regions
   - **zoom to village level** (street level) and **search any village or city** ([OpenStreetMap Nominatim](https://nominatim.org/))
-  - **rain prediction engine** (`static/js/nowcast.js`): click any place and it reads the radar around it for the past hour, measures how the rain moved (block matching with sub-pixel accuracy, 60→30 min ago and 30 min ago→now, averaged), uses the wind 3 km up (700 hPa, Open-Meteo) where there is too little rain to track, and extrapolates: when rain will arrive, how heavy, how long it lasts (or when current rain stops), the nearest rain and its speed and direction, plus **predicted radar images for the next hour** to play on the time bar. The card also shows temperature, humidity, pressure trend and a warning when the air is unstable (CAPE) and new storms can form. Like all extrapolation nowcasts it is a guide for the next 1–2 hours
-  - infrared satellite **clouds under the radar** (Clouds switch), at the same time as the radar image
+  - **smooth radar like zoom.earth**: RainViewer tiles are decoded back to rain intensity and redrawn in a blue → purple → red → yellow scale with soft edges (in a Web Worker), over **bright white infrared clouds** on a dimmed map. Every radar image of the loop is its own preloaded layer, so playing only cross-fades between layers and never waits for tiles
+  - **rain prediction engine** (`static/js/nowcast.js`, run in `static/js/nowcast-worker.js`): it reads the radar around a place for the past hour, measures how the rain moved (block matching with sub-pixel accuracy, two half-hour steps averaged), uses the wind 3 km up (700 hPa, Open-Meteo) where there is too little rain to track, and extrapolates: predicted radar images every 5 minutes for the next hour. Because radar images arrive 10–30 minutes late, **Live shows the estimate for now** for the area in view. Clicking a place tells when rain arrives, how heavy, how long it lasts (or when it stops), the nearest rain and its speed and direction; it also shows temperature, humidity, pressure trend and warns when unstable air (CAPE) can form new storms. A guide for the next 1–2 hours
+  - **ground check with weather stations**: reports from ~5,000 airport stations (METAR) near the place, whether they report rain right now and how much the temperature changed in the last hour (a sudden drop means cool air from rain or a storm). The card says when stations confirm the radar or report rain the radar does not show
+  - **5-day forecast** for the place (min/max, weather, rain chance) in its own time zone
   - a time bar with play, a click-anywhere place card, and links that keep your choice (`#map=wind&ov=windanim,temps`)
 - 🌊 **El Niño tracker** (`/el-nino/`): the El Niño status, impacts, news, history and learn panels below
 
@@ -36,6 +38,7 @@ All data sources are free and need **no API keys**:
 | Oceanic Niño Index (official, 3-month) | [NOAA CPC ONI](https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt) |
 | Sea surface temperature anomaly map | [GHRSST MUR](https://podaac.jpl.nasa.gov/MEaSUREs-MUR) via [NASA GIBS](https://earthdata.nasa.gov/gibs) |
 | Forecast maps and city temperatures | [Open-Meteo](https://open-meteo.com/) forecast API (CC BY 4.0), a 6° global grid refreshed every 6 hours |
+| Weather stations (METAR) | [NOAA Aviation Weather Center](https://aviationweather.gov/) (public domain), saved every 30 minutes by the build |
 | Rain radar | [RainViewer](https://www.rainviewer.com/api.html) public API |
 | Place search and names | [OpenStreetMap](https://www.openstreetmap.org/copyright) via [Nominatim](https://nominatim.org/) (one request per search or click) |
 | Live satellites | GOES & Himawari via NASA GIBS, Meteosat via [EUMETView](https://view.eumetsat.int/) |
@@ -138,6 +141,8 @@ weather_app/
   static/css/style.css     # UI styles
   static/js/globe.js       # weather globe: maps, overlays, wind animation, time bar, place card
   static/js/nowcast.js     # radar prediction engine (motion field, extrapolation, arrival times)
+  static/js/nowcast-worker.js  # runs predictions and radar tile recolouring off the main thread
+  stations.py              # weather station reports (METAR) with a 3-hour history
   static/css/globe.css     # weather globe styles
   static/js/app.js         # map, globe, El Niño panel and overlays, live satellites
   static/js/news.js        # News page: filters, video player, source list

@@ -6,7 +6,7 @@ import json
 
 from flask import Blueprint, Response, abort, current_app, jsonify, render_template, request
 
-from . import crops, enso, forecast, impacts, news, satellites, seo, services
+from . import crops, enso, forecast, impacts, news, satellites, seo, services, stations
 
 bp = Blueprint("main", __name__)
 
@@ -143,6 +143,18 @@ def news_page():
 @bp.get("/api/forecast")
 def forecast_data():
     return jsonify(services.cache.get_or_set("forecast", 3 * 3600, forecast.get_forecast))
+
+
+_stations: dict = {}
+
+
+@bp.get("/api/stations")
+def stations_data():
+    """Station reports; the previous copy is kept so the temperature history builds up."""
+    def build():
+        _stations["last"] = stations.get_stations(_stations.get("last"))
+        return _stations["last"]
+    return jsonify(services.cache.get_or_set("stations", 10 * 60, build))
 
 
 @bp.get("/api/crops")
