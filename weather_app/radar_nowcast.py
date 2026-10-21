@@ -19,6 +19,7 @@ import io
 import json
 import logging
 import math
+import time
 from pathlib import Path
 from typing import Any
 
@@ -35,7 +36,7 @@ STEP_MIN = 10            # minutes between predicted images
 FRAMES = 6               # 1 hour ahead
 BASE_STEPS = 3           # motion measured over 30 minutes, twice (the past hour)
 THRESHOLD = 0.05         # intensity counted as rain
-WORKERS = 16
+WORKERS = 8              # parallel downloads (RainViewer limits busy clients)
 
 # Rain colours, intensity = (dBZ − 5) / 50 (also sent to the browser in nowcast.json).
 RAMP = [[0.05, [30, 60, 200, 0.5]], [0.25, [40, 100, 255, 0.85]], [0.4, [90, 80, 245, 0.95]],
@@ -94,18 +95,31 @@ def decode(rgba) -> Any:
     return out
 
 
+STATS: dict[str, int] = {}
+
+
 def _fetch_tile(session: requests.Session, url: str):
+    """A decoded radar tile, or None. Waits and retries when rate-limited."""
     np = _np()
     from PIL import Image
-    for _ in range(3):
+    for attempt in range(5):
         try:
             resp = session.get(url, timeout=30)
-            if resp.status_code == 200:
+        except requests.RequestException as exc:
+            STATS[type(exc).__name__] = STATS.get(type(exc).__name__, 0) + 1
+            time.sleep(1 + attempt)
+            continue
+        STATS[str(resp.status_code)] = STATS.get(str(resp.status_code), 0) + 1
+        if resp.status_code == 200:
+            try:
                 return decode(np.asarray(Image.open(io.BytesIO(resp.content)).convert("RGBA")))
-            if resp.status_code == 404:
+            except OSError:
                 return None
-        except (requests.RequestException, OSError):
-            pass
+        if resp.status_code in (429, 500, 502, 503, 504):
+            wait = resp.headers.get("Retry-After", "")
+            time.sleep(min(30, float(wait)) if wait.replace(".", "", 1).isdigit() else 2 * (attempt + 1))
+            continue
+        return None
     return None
 
 
@@ -252,9 +266,15 @@ def build(out: Path, url_base: str = "nowcast", now: dt.datetime | None = None) 
     if len(past) < 2 * BASE_STEPS + 1:
         raise services.UpstreamError("Not enough radar images")
     latest, mid, first = past[-1], past[-1 - BASE_STEPS], past[-1 - 2 * BASE_STEPS]
+    STATS.clear()
     tiles = rainy_tiles(session, host, latest["path"])
     log.info("Nowcast: %d tiles with rain", len(tiles))
+    log.info("Nowcast overview downloads: %s", STATS)
+    STATS.clear()
     worlds = [mosaic(session, host, f["path"], tiles) for f in (first, mid, latest)]
+    log.info("Nowcast downloads: %s", STATS)
+    if not tiles or not (worlds[2] > THRESHOLD * 255).any():
+        raise services.UpstreamError(f"No radar data downloaded ({STATS})")
     flow = motion(*worlds)
     world = worlds[2]
     del worlds
