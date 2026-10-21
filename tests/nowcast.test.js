@@ -51,4 +51,20 @@ assert(Math.abs(mf.u / 3 - 2.5) < 0.25 && Math.abs(mf.v / 3 + 0.75) < 0.25, `fra
 // No rain anywhere: no motion found, nothing arrives.
 const dry = N.grid(50, 50);
 assert.strictEqual(N.motionField(dry, dry).blocksWithRain, 0);
+
+// Without rain to track, the fallback motion (steering wind) is used everywhere.
+const fb = N.motionField(dry, dry, { fallback: { u: 2, v: -1 } });
+assert.ok(Math.abs(fb.u[0] - 2) < 1e-6 && Math.abs(fb.v[0] + 1) < 1e-6);
+
+// Two half-hour fields averaged.
+const avg = N.averageFields([{ ...fb, u: fb.u.map(() => 1), global: { u: 1, v: -1 } }, fb]);
+assert.ok(Math.abs(avg.u[0] - 1.5) < 1e-6);
+
+// RainViewer "Universal Blue" colours back to dBZ and intensity.
+assert.strictEqual(N.decodeColor(0, 163, 224, 255), 20);
+assert.strictEqual(N.decodeColor(255, 170, 0, 255), 40);
+assert.strictEqual(N.decodeColor(1, 160, 220, 255), 20); // nearest colour
+assert.strictEqual(N.decodeColor(0, 163, 224, 40), null); // faint: no rain
+assert.strictEqual(N.intensity(55), 1);
+assert.strictEqual(N.intensity(null), 0);
 console.log("nowcast engine: all checks passed");

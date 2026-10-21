@@ -95,7 +95,10 @@
       const s = found.map((f) => f[k]).sort((a, b) => a - b);
       return s[Math.floor(s.length / 2)];
     };
-    const gu = median(0), gv = median(1);
+    // Too little rain to measure a general motion: use the given fallback (e.g. the
+    // steering wind from a weather model), else the median of the measured blocks.
+    const fb = opts.fallback && found.length < (opts.minBlocks || 3) ? opts.fallback : null;
+    const gu = fb ? fb.u : median(0), gv = fb ? fb.v : median(1);
     for (let i = 0; i < u.length; i++) if (!ok[i]) { u[i] = gu; v[i] = gv; }
     // Smooth (3×3 mean, twice) so neighbouring blocks move together.
     const smooth = (a) => {
@@ -115,6 +118,17 @@
     let su = u, sv = v;
     for (let k = 0; k < 2; k++) { su = smooth(su); sv = smooth(sv); }
     return { block, bw, bh, u: su, v: sv, global: { u: gu, v: gv }, blocksWithRain: found.length };
+  }
+
+  // Average of several motion fields of the same size (e.g. measured over consecutive
+  // half hours); fields without rain only count if none has rain.
+  function averageFields(fields) {
+    const use = fields.filter((f) => f.blocksWithRain > 0);
+    const list = use.length ? use : fields;
+    const mean = (k) => list[0][k].map((_, i) => list.reduce((s, f) => s + f[k][i], 0) / list.length);
+    const g = (k) => list.reduce((s, f) => s + f.global[k], 0) / list.length;
+    return { ...list[0], u: mean("u"), v: mean("v"), global: { u: g("u"), v: g("v") },
+      blocksWithRain: fields.reduce((s, f) => s + f.blocksWithRain, 0) };
   }
 
   // Motion (pixels per step) at a pixel, interpolated between block centres.
@@ -195,5 +209,37 @@
     return best ? { distance: Math.sqrt(best.d2), x: best.x, y: best.y } : null;
   }
 
-  return { grid, downsample, sample: at, motionField, motionAt, advect, timelineAt, summarize, nearestRain };
+  /* RainViewer radar colours ("Universal Blue", the only scheme its free API serves)
+   * back to radar reflectivity. Rows: dBZ, r, g, b (5…74 dBZ; weaker echoes are mostly
+   * drizzle or noise and are drawn nearly transparent). */
+  const UB = [
+    [5,146,136,113],[6,158,147,117],[7,170,158,121],[8,182,169,126],[9,194,180,130],[10,206,192,135],[11,210,196,139],[12,214,200,143],
+    [13,218,204,147],[14,222,208,151],[15,136,221,238],[16,108,209,235],[17,81,197,232],[18,54,186,229],[19,27,174,226],[20,0,163,224],
+    [21,0,154,213],[22,0,145,202],[23,0,136,191],[24,0,127,180],[25,0,119,170],[26,0,112,163],[27,0,105,156],[28,0,98,149],
+    [29,0,91,142],[30,0,85,136],[31,0,81,128],[32,0,78,120],[33,0,74,112],[34,0,71,104],[35,255,238,0],[36,255,224,0],
+    [37,255,210,0],[38,255,197,0],[39,255,183,0],[40,255,170,0],[41,255,159,0],[42,255,149,0],[43,255,139,0],[44,255,129,0],
+    [45,255,68,0],[46,242,54,0],[47,230,40,0],[48,217,27,0],[49,205,13,0],[50,193,0,0],[51,168,0,0],[52,143,0,0],
+    [53,118,0,0],[54,93,0,0],[55,255,170,255],[56,255,159,255],[57,255,149,255],[58,255,139,255],[59,255,129,255],[60,255,119,255],
+    [61,255,108,255],[62,255,98,255],[63,255,88,255],[64,255,78,255],[65,255,255,255],[66,255,255,255],[67,255,255,255],[68,255,255,255],
+    [69,255,255,255],[70,255,255,255],[71,255,255,255],[72,255,255,255],[73,255,255,255],[74,255,255,255],
+  ];
+  const ubCache = new Map();
+  function decodeColor(r, g, b, a) {
+    if (a < 96) return null;
+    const key = (r << 16) | (g << 8) | b;
+    let d = ubCache.get(key);
+    if (d === undefined) {
+      let best = Infinity;
+      for (const [dbz, rr, gg, bb] of UB) {
+        const e = (r - rr) ** 2 + (g - gg) ** 2 + (b - bb) ** 2;
+        if (e < best) { best = e; d = dbz; }
+      }
+      ubCache.set(key, d);
+    }
+    return d;
+  }
+  // Rain intensity 0..1 from reflectivity: 15 dBZ (light rain) 0.2, 35 dBZ 0.6, 55+ dBZ 1.
+  const intensity = (dbz) => (dbz == null ? 0 : Math.max(0, Math.min(1, (dbz - 5) / 50)));
+
+  return { grid, downsample, averageFields, decodeColor, intensity, sample: at, motionField, motionAt, advect, timelineAt, summarize, nearestRain };
 });

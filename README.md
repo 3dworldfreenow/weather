@@ -11,8 +11,8 @@ A live El Niño tracker on a 3D globe and map, in the style of [zoom.earth](http
   - **Forecast maps** for the next 48 hours in 3-hour steps: precipitation, wind, temperature, humidity and pressure (drawn in the browser from a global [Open-Meteo](https://open-meteo.com/) grid), plus the El Niño sea temperature anomaly
   - **Overlays:** wind animation, city temperatures, labels, border lines, night boundary, coordinate grid, Niño regions
   - **zoom to village level** (street level) and **search any village or city** ([OpenStreetMap Nominatim](https://nominatim.org/))
-  - **rain prediction engine** (`static/js/nowcast.js`): click any place and it reads the latest radar around it, measures how the rain is moving (block matching with sub-pixel accuracy, 30-minute baseline), and extrapolates it: when rain will arrive, how heavy, how long it lasts (or when current rain stops), the nearest rain and its speed and direction, plus **predicted radar images for the next 90 minutes** to play on the time bar. Like all extrapolation nowcasts it is a guide for the next 1–2 hours; it cannot foresee storms forming or dying
-  - RainViewer's infrared **clouds under the radar**, moving in step with it
+  - **rain prediction engine** (`static/js/nowcast.js`): click any place and it reads the radar around it for the past hour, measures how the rain moved (block matching with sub-pixel accuracy, 60→30 min ago and 30 min ago→now, averaged), uses the wind 3 km up (700 hPa, Open-Meteo) where there is too little rain to track, and extrapolates: when rain will arrive, how heavy, how long it lasts (or when current rain stops), the nearest rain and its speed and direction, plus **predicted radar images for the next hour** to play on the time bar. The card also shows temperature, humidity, pressure trend and a warning when the air is unstable (CAPE) and new storms can form. Like all extrapolation nowcasts it is a guide for the next 1–2 hours
+  - infrared satellite **clouds under the radar** (Clouds switch), at the same time as the radar image
   - a time bar with play, a click-anywhere place card, and links that keep your choice (`#map=wind&ov=windanim,temps`)
 - 🌊 **El Niño tracker** (`/el-nino/`): the El Niño status, impacts, news, history and learn panels below
 
@@ -36,7 +36,7 @@ All data sources are free and need **no API keys**:
 | Oceanic Niño Index (official, 3-month) | [NOAA CPC ONI](https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt) |
 | Sea surface temperature anomaly map | [GHRSST MUR](https://podaac.jpl.nasa.gov/MEaSUREs-MUR) via [NASA GIBS](https://earthdata.nasa.gov/gibs) |
 | Forecast maps and city temperatures | [Open-Meteo](https://open-meteo.com/) forecast API (CC BY 4.0), a 6° global grid refreshed every 6 hours |
-| Rain radar, radar coverage and infrared clouds | [RainViewer](https://www.rainviewer.com/api.html) public API |
+| Rain radar | [RainViewer](https://www.rainviewer.com/api.html) public API |
 | Place search and names | [OpenStreetMap](https://www.openstreetmap.org/copyright) via [Nominatim](https://nominatim.org/) (one request per search or click) |
 | Live satellites | GOES & Himawari via NASA GIBS, Meteosat via [EUMETView](https://view.eumetsat.int/) |
 | World news | [GDELT](https://www.gdeltproject.org/) DOC API, [Google News](https://news.google.com/) RSS (35 editions + theme and crop searches), [Bing News](https://www.bing.com/news) RSS (12 markets) |

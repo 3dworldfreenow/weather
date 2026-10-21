@@ -419,14 +419,14 @@
     return [sat.url.replace("{time}", t)];
   }
 
-  // RainViewer infrared satellite frame closest to (and not after) a time.
-  function cloudTiles(time) {
-    const ir = (data.radar && data.radar.satellite && data.radar.satellite.infrared) || [];
-    if (!ir.length) return null;
-    const t = time.getTime() / 1000;
-    const f = ir.filter((x) => x.time <= t + 300).pop() || ir[0];
-    return [`${data.radar.host}${f.path}/256/{z}/{x}/{y}/0/0_0.png`];
+  // Infrared satellite slot for a radar time (satellite images arrive later than radar,
+  // so newer and predicted radar frames get the newest satellite image).
+  function cloudTime(time) {
+    const d = new Date(Math.min(time.getTime(), latestSatTime().getTime()));
+    d.setUTCMinutes(d.getUTCMinutes() - (d.getUTCMinutes() % 10), 0, 0);
+    return d;
   }
+  function eachBand(sats, fn) { sats.forEach((sat) => splitBand(sat.band).forEach((band, i) => fn(sat, band, i))); }
 
   function radarTiles(i) {
     let f = radarFrames()[i] || radarFrames()[radarLiveIndex()];
@@ -456,16 +456,24 @@
         }
       } else if (m === "radar") {
         if (!data.radar) await loadRadar();
-        const clouds = state.rvClouds ? cloudTiles(time) : null;
-        if (rebuild || !gm.getSource("radar") || Boolean(clouds) !== Boolean(gm.getSource("rv-clouds"))) {
+        // Infrared satellite clouds underneath the radar, at the same time.
+        const clouds = state.rvClouds ? await loadSatellites("infrared") : null;
+        const ct = cloudTime(time);
+        const hasCloudLayers = mapLayerIds.some((id) => id.startsWith("cl-"));
+        if (rebuild || !gm.getSource("radar") || Boolean(clouds) !== hasCloudLayers) {
           clearMapLayers();
-          // Infrared clouds from RainViewer underneath the radar, at the same time.
-          if (clouds) addRaster("rv-clouds", { type: "raster", tiles: clouds, tileSize: 256, maxzoom: 6 }, 0.65);
+          if (clouds) eachBand(clouds, (sat, [w, e], i) => addRaster(`cl-${sat.id}-${i}`, {
+            type: "raster", tiles: satTiles(sat, ct), tileSize: 256, maxzoom: sat.max_native_zoom,
+            bounds: [w, -SAT_LAT_LIMIT, e, SAT_LAT_LIMIT], attribution: sat.attribution,
+          }, 0.55));
           addRaster("radar", { type: "raster", tiles: radarTiles(state.frame), tileSize: 256, maxzoom: 7,
             attribution: '<a href="https://www.rainviewer.com/">RainViewer</a>' }, 0.85);
         } else {
           gm.getSource("radar").setTiles(radarTiles(state.frame));
-          if (clouds) gm.getSource("rv-clouds").setTiles(clouds);
+          if (clouds) eachBand(clouds, (sat, _, i) => {
+            const src = gm.getSource(`cl-${sat.id}-${i}`);
+            if (src && src.setTiles) src.setTiles(satTiles(sat, ct));
+          });
         }
         showPrediction(radarFrames()[state.frame]);
       } else if (m === "sst") {
@@ -733,7 +741,7 @@
   // ------------------------------------------------------------------
   // Radar prediction engine (nowcast.js) for a clicked place
   // ------------------------------------------------------------------
-  const NC = { zoom: 6, tiles: 3, stepMin: 10, predictSteps: 9, timelineSteps: 18, threshold: 0.05 };
+  const NC = { zoom: 6, tiles: 3, stepMin: 10, predictSteps: 6, timelineSteps: 12, threshold: 0.05 };
   const tileXY = (lon, lat, z) => {
     const n = 2 ** z, r = (lat * Math.PI) / 180;
     return { x: ((lon + 180) / 360) * n, y: ((1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2) * n };
@@ -741,7 +749,8 @@
   const tileLat = (y, z) => (Math.atan(Math.sinh(Math.PI * (1 - (2 * y) / 2 ** z))) * 180) / Math.PI;
 
   // Radar intensity grid (0..1) for a block of tiles, from RainViewer's black-and-white (dBZ) images.
-  async function radarGrid(path, x0, y0, options = "0/0_0") {
+  // Rain (0..1) on the 3×3 radar tiles around a place.
+  async function radarGrid(path, x0, y0) {
     const size = 256 * NC.tiles;
     const canvas = document.createElement("canvas");
     canvas.width = size; canvas.height = size;
@@ -753,20 +762,22 @@
       img.crossOrigin = "anonymous";
       img.onload = () => { ctx.drawImage(img, i * 256, j * 256); resolve(); };
       img.onerror = resolve; // missing tile = no data
-      img.src = `${data.radar.host}${path}/256/${NC.zoom}/${(x0 + i + n) % n}/${y0 + j}/${options}.png`;
+      // Colour scheme 2 (the only one served now), no smoothing, snow drawn as rain.
+      img.src = `${data.radar.host}${path}/256/${NC.zoom}/${(x0 + i + n) % n}/${y0 + j}/2/0_0.png`;
     })));
     const px = ctx.getImageData(0, 0, size, size).data;
     const g = Nowcast.grid(size, size);
     for (let i = 0; i < size * size; i++) {
       const a = px[i * 4 + 3];
-      g.data[i] = a > 0 ? Math.max(0.06, (px[i * 4] + px[i * 4 + 1] + px[i * 4 + 2]) / 765) : 0;
+      g.data[i] = Nowcast.intensity(Nowcast.decodeColor(px[i * 4], px[i * 4 + 1], px[i * 4 + 2], a));
     }
     return g;
   }
 
   // Colours for predicted images (light → heavy rain), close to the radar legend.
-  const RAIN_RAMP = [[0.05, [136, 221, 238, 0.55]], [0.2, [0, 153, 204, 0.8]], [0.35, [0, 85, 136, 0.9]],
-    [0.5, [255, 238, 0, 0.95]], [0.65, [255, 170, 0, 1]], [0.8, [255, 68, 0, 1]], [1, [193, 0, 0, 1]]];
+  // Same colours as RainViewer's radar (intensity = (dBZ − 5) / 50).
+  const RAIN_RAMP = [[0.05, [206, 192, 135, 0.6]], [0.2, [136, 221, 238, 1]], [0.3, [0, 163, 224, 1]], [0.5, [0, 85, 136, 1]],
+    [0.6, [255, 238, 0, 1]], [0.7, [255, 170, 0, 1]], [0.8, [255, 68, 0, 1]], [0.9, [193, 0, 0, 1]], [1, [255, 170, 255, 1]]];
   function gridImage(g) {
     const canvas = document.createElement("canvas");
     canvas.width = g.w; canvas.height = g.h;
@@ -786,18 +797,25 @@
     if (!window.Nowcast) throw new Error("Prediction engine not loaded");
     if (!data.radar) await loadRadar();
     const past = data.radar.radar.past || [];
-    if (past.length < 4) throw new Error("Not enough recent radar images");
-    const BASE = 3; // compare with the image 30 minutes earlier (steadier speed than 10 minutes)
-    const latest = past[past.length - 1], earlier = past[past.length - 1 - BASE];
+    if (past.length < 7) throw new Error("Not enough recent radar images");
+    // Motion is measured over the past hour: 60→30 min ago and 30 min ago→now, averaged.
+    const BASE = 3;
+    const latest = past[past.length - 1], mid = past[past.length - 1 - BASE], first = past[past.length - 1 - 2 * BASE];
     const t = tileXY(lon, lat, NC.zoom);
+    const kmPerPx = (40075.016686 * Math.cos((lat * Math.PI) / 180)) / (256 * 2 ** NC.zoom);
+    const air = await airAt(lat, lon);
     const x0 = Math.floor(t.x) - 1, y0 = Math.max(0, Math.min(2 ** NC.zoom - NC.tiles, Math.floor(t.y) - 1));
     const key = `${latest.time}:${x0}:${y0}`;
     let nc = data.nowcastCache && data.nowcastCache.key === key ? data.nowcastCache : null;
     if (!nc) {
-      const [gPrev, gNow, cover] = await Promise.all([
-        radarGrid(earlier.path, x0, y0), radarGrid(latest.path, x0, y0), radarGrid("/v2/coverage/0", x0, y0, "0/0_0")]);
+      const [gFirst, gMid, gNow] = await Promise.all([radarGrid(first.path, x0, y0), radarGrid(mid.path, x0, y0),
+        radarGrid(latest.path, x0, y0)]);
       const f = 3; // measure motion on a 256×256 version of the 768×768 image
-      const raw = Nowcast.motionField(Nowcast.downsample(gPrev, f), Nowcast.downsample(gNow, f), { block: 16, search: 14 });
+      // Where there is too little rain to measure, rain moves with the wind at ~3 km up (700 hPa).
+      const fallback = air && air.steer ? { u: (air.steer.u * BASE) / (kmPerPx * f), v: (air.steer.v * BASE) / (kmPerPx * f) } : null;
+      const opts = { block: 16, search: 14, fallback };
+      const d = (g) => Nowcast.downsample(g, f);
+      const raw = Nowcast.averageFields([Nowcast.motionField(d(gFirst), d(gMid), opts), Nowcast.motionField(d(gMid), d(gNow), opts)]);
       const field = { ...raw, u: raw.u.map((x) => x / BASE), v: raw.v.map((x) => x / BASE) }; // per 10 minutes
       // Predicted images at half resolution (fast), stretched over the same area.
       const half = Nowcast.downsample(gNow, 2);
@@ -808,30 +826,55 @@
       const lonOf = (x) => (x / 2 ** NC.zoom) * 360 - 180;
       const corners = [[lonOf(x0), tileLat(y0, NC.zoom)], [lonOf(x0 + NC.tiles), tileLat(y0, NC.zoom)],
         [lonOf(x0 + NC.tiles), tileLat(y0 + NC.tiles, NC.zoom)], [lonOf(x0), tileLat(y0 + NC.tiles, NC.zoom)]];
-      nc = { key, latest: latest.time, x0, y0, gNow, cover, field, scale: f, frames, corners };
+      nc = { key, latest: latest.time, x0, y0, gNow, field, scale: f, frames, corners };
       data.nowcastCache = nc;
     }
     data.nowcast = nc; // adds the predicted frames to the radar time bar
     // This place.
     const px = (t.x - x0) * 256, py = (t.y - y0) * 256;
-    const covered = Nowcast.nearestRain(nc.cover, px, py, 0.001, 6) !== null;
     const timeline = Nowcast.timelineAt(nc.gNow, nc.field, px, py, NC.timelineSteps, { scale: nc.scale, radius: 2 });
     const summary = Nowcast.summarize(timeline, NC.threshold);
     const near = Nowcast.nearestRain(nc.gNow, px, py, NC.threshold, 380);
-    const kmPerPx = (40075.016686 * Math.cos((lat * Math.PI) / 180)) / (256 * 2 ** NC.zoom);
     let motion = null;
     const at = near ? Nowcast.motionAt(nc.field, near.x, near.y, nc.scale) : Nowcast.motionAt(nc.field, px, py, nc.scale);
     const kmh = Math.hypot(at.u, at.v) * kmPerPx * (60 / NC.stepMin);
     if (kmh >= 3) motion = { kmh, towards: compass(Math.atan2(at.u, -at.v) * (180 / Math.PI)) };
     return {
-      covered, timeline, summary, motion, latest: new Date(latest.time * 1000),
+      timeline, summary, motion, air, measured: nc.field.blocksWithRain > 0, latest: new Date(latest.time * 1000),
       near: near ? { km: near.distance * kmPerPx, from: compass(Math.atan2(near.x - px, -(near.y - py)) * (180 / Math.PI)) } : null,
     };
   }
 
+  /* Weather around a place from Open-Meteo: the steering wind at 700 hPa (km per 10 min,
+   * x east, y south), instability (CAPE), rain chance, temperature and pressure trend. */
+  async function airAt(lat, lon) {
+    try {
+      const q = new URLSearchParams({ latitude: lat.toFixed(3), longitude: lon.toFixed(3), timezone: "GMT", wind_speed_unit: "kmh",
+        current: "temperature_2m,relative_humidity_2m,pressure_msl",
+        hourly: "wind_speed_700hPa,wind_direction_700hPa,cape,precipitation_probability,pressure_msl",
+        past_hours: "3", forecast_hours: "3" });
+      const res = await fetch(`https://api.open-meteo.com/v1/forecast?${q}`);
+      if (!res.ok) return null;
+      const d = await res.json();
+      const h = d.hourly, now = d.current;
+      const i = Math.max(0, h.time.findIndex((x) => x >= now.time.slice(0, 13)));
+      const pick = (k) => h[k][Math.min(i, h[k].length - 1)];
+      const sp = pick("wind_speed_700hPa"), dir = pick("wind_direction_700hPa");
+      const rad = (dir * Math.PI) / 180; // direction the wind comes from
+      return {
+        temp: now.temperature_2m, humidity: now.relative_humidity_2m, pressure: now.pressure_msl,
+        pressureTrend: h.pressure_msl[h.pressure_msl.length - 1] - h.pressure_msl[0], // over 6 hours
+        cape: Math.max(...h.cape.slice(i, i + 3).filter((x) => x != null), 0),
+        rainChance: Math.max(...h.precipitation_probability.slice(i, i + 3).filter((x) => x != null), 0),
+        steer: sp == null || dir == null ? null : { kmh: sp, towards: compass(dir + 180),
+          u: (-Math.sin(rad) * sp) / 6, v: (Math.cos(rad) * sp) / 6 },
+      };
+    } catch (e) { return null; }
+  }
+
   const COMPASS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
   const compass = (deg) => COMPASS[Math.round((((deg % 360) + 360) % 360) / 45) % 8];
-  const strength = (v) => (v < 0.3 ? "light" : v < 0.55 ? "moderate" : "heavy");
+  const strength = (v) => (v < 0.3 ? "light" : v < 0.6 ? "moderate" : "heavy");
 
   // Show a predicted frame (image over the analysed area) on top of the dimmed latest radar.
   function showPrediction(frame) {
@@ -852,9 +895,6 @@
   }
 
   function nowcastHtml(r) {
-    if (!r.covered) {
-      return `<p>📡 No weather radar covers this place, so there is no rain prediction here. Satellite and forecast maps still work.</p>`;
-    }
     const nowMs = Date.now();
     const at = (steps) => new Date(r.latest.getTime() + steps * NC.stepMin * 60e3);
     const inMin = (steps) => Math.max(0, Math.round((at(steps) - nowMs) / 60e3));
@@ -863,13 +903,14 @@
     let head;
     if (s.rainingNow) {
       head = s.stopsInSteps == null
-        ? `🌧️ <b>Raining now</b> (${strength(r.timeline[0])}), likely for <b>more than 3 hours</b>.`
+        ? `🌧️ <b>Raining now</b> (${strength(r.timeline[0])}), likely for <b>more than 2 hours</b>.`
         : `🌧️ <b>Raining now</b> (${strength(r.timeline[0])}). Should stop in <b>about ${inMin(s.stopsInSteps)} min</b> (≈${clock(at(s.stopsInSteps))}).`;
     } else if (s.arrivesInSteps != null) {
       const lasts = s.lastsSteps == null ? "for over an hour" : `for about ${s.lastsSteps * NC.stepMin} min`;
       head = `🌧️ <b>Rain expected in about ${inMin(s.arrivesInSteps)} min</b> (≈${clock(at(s.arrivesInSteps))}), ${strength(s.peak)}, ${lasts}.`;
     } else {
-      head = `☀️ <b>No rain heading here</b> in the next 3 hours.`;
+      head = r.near ? `☀️ <b>No rain heading here</b> in the next 2 hours.`
+        : `☀️ <b>No rain on radar</b> within about 400 km. <span class="muted">(Some regions have no weather radar; there, use the weather model below.)</span>`;
     }
     const cells = r.timeline.map((v, i) => {
       const c = v < NC.threshold ? "transparent" : `rgb(${color({ stops: RAIN_RAMP }, v).slice(0, 3).map(Math.round).join(",")})`;
@@ -878,11 +919,27 @@
     const age = Math.round((nowMs - r.latest) / 60e3);
     return `<p class="wx-nc-head">${head}</p>
       ${r.near && !s.rainingNow ? `<p>Nearest rain: <b>${Math.round(r.near.km)} km</b> to the ${r.near.from}.</p>` : ""}
-      ${r.motion ? `<p>Rain is moving towards the <b>${r.motion.towards}</b> at about <b>${Math.round(r.motion.kmh)} km/h</b>.</p>` : ""}
-      <div class="wx-nc-bar" aria-label="Predicted rain for the next 3 hours">${cells}</div>
-      <div class="wx-nc-axis"><span>${clock(r.latest)}</span><span>+1 h</span><span>+2 h</span><span>+3 h</span></div>
-      <button class="wx-nc-play" type="button">▶ Play predicted radar</button>
-      <small>Prediction from the movement of rain on radar (images ${age} min old). Storms can grow, weaken or form, so treat it as a guide for the next 1–2 hours.</small>`;
+      ${r.motion ? `<p>Rain is moving towards the <b>${r.motion.towards}</b> at about <b>${Math.round(r.motion.kmh)} km/h</b>${r.measured ? " (measured on radar over the past hour)" : " (from the wind 3 km up)"}.</p>` : ""}
+      ${airHtml(r.air)}
+      <div class="wx-nc-bar" aria-label="Predicted rain for the next 2 hours">${cells}</div>
+      <div class="wx-nc-axis"><span>${clock(r.latest)}</span><span>+30 min</span><span>+1 h</span><span>+1 h 30</span><span>+2 h</span></div>
+      <button class="wx-nc-play" type="button">▶ Play predicted radar (next hour)</button>
+      <small>Prediction from how rain moved on radar over the past hour (newest image ${age} min old), with the wind 3 km up where there is little rain to track. Storms can grow, weaken or form, so treat it as a guide for the next 1–2 hours.</small>`;
+  }
+
+  function airHtml(a) {
+    if (!a) return "";
+    const bits = [];
+    if (a.temp != null) bits.push(`${Math.round(a.temp)}°C`);
+    if (a.humidity != null) bits.push(`humidity ${Math.round(a.humidity)}%`);
+    if (a.pressure != null) {
+      const tr = a.pressureTrend <= -2 ? ", falling" : a.pressureTrend >= 2 ? ", rising" : "";
+      bits.push(`pressure ${Math.round(a.pressure)} hPa${tr}`);
+    }
+    let note = "";
+    if (a.cape >= 1000 && a.rainChance >= 30) note = " ⚡ The air is unstable: new showers or thunderstorms can form that radar cannot see yet.";
+    else if (a.rainChance >= 50) note = ` The weather model gives a ${Math.round(a.rainChance)}% chance of rain in the next hours.`;
+    return `<p class="wx-nc-air">${bits.join(" · ")}.${note}</p>`;
   }
 
   // Village / town name for a point (OpenStreetMap Nominatim; one request per click).
@@ -1128,8 +1185,7 @@
     document.querySelectorAll("[data-map]").forEach((b) => b.classList.toggle("on", b.dataset.map === state.map));
     document.querySelectorAll("[data-style]").forEach((b) => b.classList.toggle("on", b.dataset.style === state.style));
     $("wx-sat-styles").hidden = state.map !== "satellite";
-    const hasClouds = Boolean(data.radar && data.radar.satellite && (data.radar.satellite.infrared || []).length);
-    $("wx-radar-opts").hidden = state.map !== "radar" || !hasClouds;
+    $("wx-radar-opts").hidden = state.map !== "radar";
     $("wx-rv-clouds").classList.toggle("on", state.rvClouds);
     document.querySelectorAll("[data-overlay]").forEach((b) => {
       b.classList.toggle("on", state.overlays.has(b.dataset.overlay));
