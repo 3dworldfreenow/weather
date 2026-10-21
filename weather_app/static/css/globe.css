@@ -82,16 +82,16 @@
   .wx-brand { padding: 6px 10px; gap: 8px; }
   .wx-logo { font-size: 14px; }
   .wx-site a { font-size: 12px; padding: 4px 6px; }
-  .wx-panel { display: none; top: auto; bottom: calc(150px + var(--safe-bottom)); max-height: 60vh; width: min(280px, calc(100vw - 20px)); }
+  .wx-panel { display: none; top: auto; bottom: calc(168px + var(--safe-bottom)); max-height: 60vh; width: min(280px, calc(100vw - 20px)); }
   .wx-panel.open { display: block; }
   .wx-panel.open .wx-panel-body { display: block; }
   .wx-panel-head span { display: none; }
-  .wx-mobile-bar { display: flex; justify-content: space-between; position: fixed; z-index: 10; left: 10px; right: 10px; bottom: calc(102px + var(--safe-bottom)); pointer-events: none; }
+  .wx-mobile-bar { display: flex; justify-content: space-between; position: fixed; z-index: 10; left: 10px; right: 10px; bottom: calc(120px + var(--safe-bottom)); pointer-events: none; }
   .wx-fab { pointer-events: auto; border: 0; border-radius: 22px; min-height: 40px; padding: 0 14px; background: var(--glass); color: #fff;
     font: 600 14px var(--font); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 4px 16px rgba(0, 0, 0, .35); }
   .wx-time { bottom: calc(10px + var(--safe-bottom)); padding: 6px 8px; }
   .wx-legend { left: 50%; transform: translateX(-50%); bottom: auto; top: calc(56px + var(--safe-top)); width: min(300px, calc(100vw - 20px)); padding: 6px 10px 16px; }
-  .globe-page .maplibregl-ctrl-bottom-right { bottom: calc(150px + var(--safe-bottom)); }
+  .globe-page .maplibregl-ctrl-bottom-right { bottom: calc(168px + var(--safe-bottom)); }
   .globe-page .maplibregl-ctrl-group { display: none; }
   .wx-city-name { font-size: 10.5px; }
 }
@@ -99,3 +99,14 @@
   .wx-site a:nth-child(3) { display: none; }
 }
 .wx-wind { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+
+/* Loop length under the slider: start time · what it covers · end time */
+.wx-range { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
+  font-size: 11px; color: var(--g-muted); font-variant-numeric: tabular-nums; }
+.wx-range b { font-weight: 500; color: #d7dde5; text-align: center; flex: 1; }
+.wx-range span { white-space: nowrap; }
+.wx-live.on::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 5px; border-radius: 50%;
+  background: #fff; vertical-align: 1px; animation: wx-pulse 1.6s ease-in-out infinite; }
+@keyframes wx-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+@media (prefers-reduced-motion: reduce) { .wx-live.on::before { animation: none; } }
+@media (max-width: 599px) { .wx-range { font-size: 10px; } }

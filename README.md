@@ -7,7 +7,7 @@ A live El Niño tracker on a 3D globe and map, in the style of [zoom.earth](http
 ## Features
 
 - 🌍 **Weather globe (home page)**, in the style of zoom.earth: a full-screen 3D globe with
-  - **Live maps:** satellite (true colour or infrared, stitched from five geostationary satellites, refreshed every 5 minutes, with a **24-hour replay in 30-minute steps**) and rain radar ([RainViewer](https://www.rainviewer.com/), last 2 hours)
+  - **Live maps:** satellite (true colour or infrared, stitched from five geostationary satellites, refreshed every 5 minutes, with a **24-hour replay in 30-minute steps**) and live rain radar ([RainViewer](https://www.rainviewer.com/): checked for new images every 2 minutes, a loop of the last 2 hours in 10-minute steps plus RainViewer's short-term radar forecast when available); the time bar shows how long each loop is
   - **Forecast maps** for the next 48 hours in 3-hour steps: precipitation, wind, temperature, humidity and pressure (drawn in the browser from a global [Open-Meteo](https://open-meteo.com/) grid), plus the El Niño sea temperature anomaly
   - **Overlays:** wind animation, city temperatures, labels, border lines, night boundary, coordinate grid, Niño regions
   - a time bar with play, a click-anywhere forecast popup, and links that keep your choice (`#map=wind&ov=windanim,temps`)

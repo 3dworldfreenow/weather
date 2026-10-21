@@ -23,7 +23,9 @@
   const SAT_LATENCY_MIN = 40;        // images appear about 40 minutes after they are taken
   const REPLAY_HOURS = 24;
   const REPLAY_STEP_MIN = 30;
-  const REFRESH_MS = 5 * 60e3;       // check for new images every 5 minutes
+  const REFRESH_MS = 5 * 60e3;       // check for new satellite images every 5 minutes
+  // Radar: RainViewer adds an image every 10 minutes, so look every 2 (tests may shorten it).
+  const RADAR_REFRESH_MS = (window.WX_TEST && window.WX_TEST.radarRefreshMs) || 2 * 60e3;
   const MERC_LAT = 85.0511;
   const MERC_CORNERS = [[-180, MERC_LAT], [180, MERC_LAT], [180, -MERC_LAT], [-180, -MERC_LAT]];
   const FORECAST_MAPS = ["rain", "wind", "temp", "humidity", "pressure"];
@@ -98,11 +100,32 @@
   const loadForecast = async () => { data.forecast = await getJson("forecast.json", "/api/forecast"); return data.forecast; };
   const loadEnso = async () => { data.enso = await getJson("enso.json", "/api/enso"); return data.enso; };
   async function loadRadar() {
-    const res = await fetch(RAINVIEWER);
+    const res = await fetch(`${RAINVIEWER}?t=${Math.floor(Date.now() / 60e3)}`, { cache: "no-store" });
     if (!res.ok) throw new Error(`Radar not available (${res.status})`);
     data.radar = await res.json();
+    data.radarCheckedAt = new Date();
     return data.radar;
   }
+
+  // Live radar: look for a new image every 2 minutes while the radar is shown.
+  async function refreshRadar() {
+    if (!ready || state.map !== "radar") return;
+    const before = frames();
+    const shownTime = before[state.frame];
+    const lastBefore = before[radarLiveIndex()];
+    try { await loadRadar(); } catch (e) { renderTimeBar(); return; }
+    const after = frames();
+    const lastAfter = after[radarLiveIndex()];
+    if (state.live || state.playing) state.frame = state.live ? radarLiveIndex() : Math.min(state.frame, after.length - 1);
+    else {
+      // Replaying: stay on the same moment (the list shifts when a new image arrives).
+      const i = after.findIndex((t) => +t === +shownTime);
+      state.frame = i >= 0 ? i : 0;
+    }
+    if (lastAfter && lastBefore && +lastAfter > +lastBefore) status(`New radar image ${fmtClock(lastAfter)}`, 2500);
+    drawFrame();
+  }
+  setInterval(refreshRadar, RADAR_REFRESH_MS);
 
   // ------------------------------------------------------------------
   // Time frames for the current map
@@ -119,16 +142,21 @@
       const n = (REPLAY_HOURS * 60) / REPLAY_STEP_MIN;
       return Array.from({ length: n + 1 }, (_, i) => new Date(latest.getTime() - (n - i) * REPLAY_STEP_MIN * 60e3));
     }
-    if (state.map === "radar") {
-      const past = (data.radar && data.radar.radar && data.radar.radar.past) || [];
-      return past.map((f) => new Date(f.time * 1000));
-    }
+    if (state.map === "radar") return radarFrames().map((f) => new Date(f.time * 1000));
     if (state.map === "sst") return data.enso ? [new Date(`${data.enso.sst_layer.date}T12:00:00Z`)] : [];
     return data.forecast ? data.forecast.times.map((t) => new Date(t)) : [];
   }
 
+  // Radar images: the past ~2 hours, plus RainViewer's short "nowcast" when it offers one.
+  function radarFrames() {
+    const r = (data.radar && data.radar.radar) || {};
+    return [...(r.past || []), ...(r.nowcast || []).map((f) => ({ ...f, nowcast: true }))];
+  }
+  const radarLiveIndex = () => Math.max(0, ((data.radar && data.radar.radar && data.radar.radar.past) || []).length - 1);
+  const liveIndex = (list) => (state.map === "radar" ? radarLiveIndex() : Math.max(0, list.length - 1));
+
   function defaultFrame(list) {
-    if (!FORECAST_MAPS.includes(state.map)) return Math.max(0, list.length - 1);
+    if (!FORECAST_MAPS.includes(state.map)) return liveIndex(list);
     const now = Date.now() - 90 * 60e3;
     const i = list.findIndex((t) => t.getTime() >= now);
     return i < 0 ? 0 : i;
@@ -386,7 +414,7 @@
   }
 
   function radarTiles(i) {
-    const f = data.radar.radar.past[i];
+    const f = radarFrames()[i] || radarFrames()[radarLiveIndex()];
     return [`${data.radar.host}${f.path}/256/{z}/{x}/{y}/2/1_1.png`];
   }
 
@@ -738,6 +766,7 @@
   function relTime(t) {
     const mins = Math.round((t - Date.now()) / 60e3);
     const a = Math.abs(mins);
+    if (a === 0) return "just now";
     const text = a < 60 ? `${a} min` : a < 600 && a % 60 ? `${Math.floor(a / 60)} h ${a % 60} min` : `${Math.round(a / 60)} h`;
     return mins <= 0 ? `${text} ago` : `in ${text}`;
   }
@@ -752,7 +781,7 @@
     $("wx-play").disabled = list.length < 2;
     $("wx-prev").disabled = state.frame <= 0;
     $("wx-next").disabled = state.frame >= list.length - 1;
-    const isLive = !FORECAST_MAPS.includes(state.map) && state.frame === list.length - 1;
+    const isLive = !FORECAST_MAPS.includes(state.map) && state.map !== "sst" && state.frame === liveIndex(list);
     $("wx-live").classList.toggle("on", isLive);
     $("wx-live").textContent = FORECAST_MAPS.includes(state.map) ? "Now" : "Live";
     $("wx-live").hidden = state.map === "sst";
@@ -760,14 +789,47 @@
     $("wx-when").textContent = state.map === "sst"
       ? t.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })
       : `${t.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" })} ${pad(t.getHours())}:${pad(t.getMinutes())}`;
-    const what = FORECAST_MAPS.includes(state.map) ? "Forecast" : state.map === "sst" ? "Daily map" : isLive ? "Latest image" : "Replay";
+    const nowcast = state.map === "radar" && (radarFrames()[state.frame] || {}).nowcast;
+    const what = FORECAST_MAPS.includes(state.map) ? "Forecast" : state.map === "sst" ? "Daily map"
+      : nowcast ? "Radar forecast" : isLive ? (state.map === "radar" ? "Live radar" : "Latest image") : "Replay";
     $("wx-when-sub").textContent = state.map === "sst" ? what : `${what} · ${relTime(t)}`;
+    renderRange(list);
+  }
+
+  // How much time the loop covers, e.g. "Radar loop: 2 h · every 10 min · 13 images".
+  const fmtClock = (d) => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  function span(mins) {
+    if (mins < 60) return `${mins} min`;
+    const h = Math.floor(mins / 60), m = mins % 60;
+    return m ? `${h} h ${m} min` : `${h} h`;
+  }
+  function renderRange(list) {
+    const el = $("wx-range");
+    if (list.length < 2) { el.innerHTML = ""; return; }
+    const first = list[0], lastT = list[list.length - 1];
+    const step = Math.round((list[1] - list[0]) / 60e3);
+    const sameDay = first.toDateString() === lastT.toDateString();
+    const day = (d) => (sameDay ? "" : `${d.toLocaleDateString(undefined, { weekday: "short" })} `);
+    let label;
+    if (state.map === "radar") {
+      const live = radarLiveIndex();
+      const pastMins = Math.round((list[live] - first) / 60e3);
+      const ahead = list.length - 1 - live;
+      const checked = data.radarCheckedAt ? ` · checked ${relTime(data.radarCheckedAt)}` : "";
+      label = `Radar loop: ${span(pastMins)} · every ${step} min · ${live + 1} images`
+        + (ahead ? ` + ${span(Math.round((lastT - list[live]) / 60e3))} forecast` : "") + checked;
+    } else if (state.map === "satellite") {
+      label = `Satellite loop: ${span(Math.round((lastT - first) / 60e3))} · every ${span(step)} · ${list.length} images · updates every 10 min`;
+    } else {
+      label = `Forecast: ${span(Math.round((lastT - first) / 60e3))} ahead · every ${span(step)}`;
+    }
+    el.innerHTML = `<span>${day(first)}${fmtClock(first)}</span><b>${label}</b><span>${day(lastT)}${fmtClock(lastT)}</span>`;
   }
 
   function goTo(i) {
     const list = frames();
     state.frame = Math.max(0, Math.min(list.length - 1, i));
-    state.live = !FORECAST_MAPS.includes(state.map) && state.frame === list.length - 1;
+    state.live = !FORECAST_MAPS.includes(state.map) && state.frame === liveIndex(list);
     drawFrame();
   }
 
@@ -877,13 +939,13 @@
   setInterval(async () => {
     if (!ready || state.playing) return;
     try {
-      if (state.map === "radar") await loadRadar();
       if (data.forecast && Date.now() - new Date(data.forecast.built_at) > 3 * 3600e3) {
         await loadForecast();
         imageCache.clear();
       }
     } catch (e) { /* keep showing what we have */ }
-    if (state.live) state.frame = Math.max(0, frames().length - 1);
+    if (state.map === "radar") return; // handled by refreshRadar()
+    if (state.live) state.frame = liveIndex(frames());
     drawFrame();
   }, REFRESH_MS);
 
