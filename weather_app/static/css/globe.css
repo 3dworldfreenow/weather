@@ -66,7 +66,9 @@
 
 /* Popup, status, map controls */
 .globe-page .maplibregl-popup-content { color: #202124; border-radius: 12px; padding: 12px 14px; }
-.wx-pop b { display: block; font-size: 13px; color: #202124; }
+.wx-pop b { font-size: 13px; color: #202124; }
+.wx-pop .wx-place { display: block; }
+.globe-page .maplibregl-popup-content { max-height: min(70vh, 520px); overflow-y: auto; }
 .wx-pop small { display: block; color: #5f6368; font-size: 11.5px; }
 .wx-pop ul { list-style: none; padding: 0; margin: 6px 0; font-size: 13.5px; color: #202124; }
 .wx-pop li { padding: 2px 0; }
@@ -90,7 +92,7 @@
   .wx-fab { pointer-events: auto; border: 0; border-radius: 22px; min-height: 40px; padding: 0 14px; background: var(--glass); color: #fff;
     font: 600 14px var(--font); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 4px 16px rgba(0, 0, 0, .35); }
   .wx-time { bottom: calc(10px + var(--safe-bottom)); padding: 6px 8px; }
-  .wx-legend { left: 50%; transform: translateX(-50%); bottom: auto; top: calc(56px + var(--safe-top)); width: min(300px, calc(100vw - 20px)); padding: 6px 10px 16px; }
+  .wx-legend { left: 50%; transform: translateX(-50%); bottom: auto; top: calc(104px + var(--safe-top)); width: min(300px, calc(100vw - 20px)); padding: 6px 10px 16px; }
   .globe-page .maplibregl-ctrl-bottom-right { bottom: calc(168px + var(--safe-bottom)); }
   .globe-page .maplibregl-ctrl-group { display: none; }
   .wx-city-name { font-size: 10.5px; }
@@ -110,3 +112,45 @@
 @keyframes wx-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
 @media (prefers-reduced-motion: reduce) { .wx-live.on::before { animation: none; } }
 @media (max-width: 599px) { .wx-range { font-size: 10px; } }
+
+/* Place search */
+.wx-searchbox { position: relative; }
+.wx-searchbox input { width: 210px; height: 32px; border: 0; border-radius: 16px; padding: 0 12px; background: rgba(255, 255, 255, 0.12);
+  color: #fff; font: 14px var(--font); outline: none; }
+.wx-searchbox input::placeholder { color: var(--g-muted); }
+.wx-searchbox input:focus { background: rgba(255, 255, 255, 0.2); }
+.wx-results { position: absolute; top: 38px; left: 0; width: min(360px, calc(100vw - 40px)); margin: 0; padding: 4px; list-style: none;
+  background: #fff; border-radius: 12px; box-shadow: 0 8px 28px rgba(0, 0, 0, .35); z-index: 30; }
+.wx-results li { font-size: 13px; color: #5f6368; padding: 6px 8px; }
+.wx-results button { display: block; width: 100%; text-align: left; border: 0; background: none; color: #202124; padding: 6px 8px;
+  border-radius: 8px; font: 13px/1.35 var(--font); cursor: pointer; }
+.wx-results button:hover { background: #f1f3f4; }
+
+/* Popup: place name, radar prediction, model forecast */
+.wx-place { font-size: 15px !important; }
+.wx-place-area { margin-bottom: 6px; }
+.wx-nc p { margin: 6px 0; font-size: 13px; line-height: 1.4; color: #202124; }
+.wx-nc .muted { color: #5f6368; }
+.wx-nc-head { font-size: 14px !important; }
+.wx-nc-bar { display: grid; grid-template-columns: repeat(19, 1fr); gap: 1px; height: 14px; margin-top: 8px; background: #e8eaed;
+  border-radius: 4px; overflow: hidden; }
+.wx-nc-bar i { display: block; }
+.wx-nc-axis { display: flex; justify-content: space-between; font-size: 10.5px; color: #5f6368; margin: 2px 0 6px; }
+.wx-nc-play { width: 100%; min-height: 34px; border: 0; border-radius: 8px; background: #1a73e8; color: #fff; font: 600 13px var(--font);
+  cursor: pointer; margin: 4px 0 6px; }
+.wx-nc small, .wx-fc small { display: block; color: #5f6368; font-size: 11px; line-height: 1.35; }
+.wx-fc { border-top: 1px solid #e8eaed; margin-top: 6px; padding-top: 6px; }
+@media (max-width: 899px) {
+  .wx-brand { flex-wrap: wrap; right: 10px; }
+  .wx-searchbox { order: 3; width: 100%; }
+  .wx-searchbox input { width: 100%; }
+}
+
+/* Place details: a card at the lower right (desktop) or above the time bar (phones) */
+.wx-info { position: fixed; z-index: 15; right: 60px; bottom: calc(110px + var(--safe-bottom)); width: 320px; max-height: calc(100vh - 520px);
+  min-height: 120px; overflow-y: auto;
+  background: #fff; color: #202124; border-radius: 14px; padding: 12px 14px; box-shadow: 0 8px 28px rgba(0, 0, 0, .4); }
+.wx-info-close { position: absolute; top: 6px; right: 6px; width: 34px; height: 34px; border: 0; background: none; font-size: 18px; color: #5f6368; }
+.wx-pin { width: 16px; height: 16px; border-radius: 50%; background: #1a73e8; border: 3px solid #fff; box-shadow: 0 1px 6px rgba(0, 0, 0, .5); }
+@media (min-width: 600px) { .wx-info { max-height: max(260px, calc(100vh - 470px)); } }
+@media (max-width: 599px) { .wx-info { left: 10px; right: 10px; width: auto; bottom: calc(120px + var(--safe-bottom)); max-height: 46vh; } }

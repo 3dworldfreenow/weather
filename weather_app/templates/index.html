@@ -59,6 +59,10 @@
   <!-- Brand + site menu -->
   <header class="wx-brand panel">
     <a href="./" class="wx-logo" aria-label="El Niño Tracker home">🌊 <b>El Niño</b> Tracker</a>
+    <form class="wx-searchbox" id="wx-search-form" role="search">
+      <input type="search" id="wx-search" placeholder="Search a village or city" aria-label="Search a place" autocomplete="off">
+      <ul class="wx-results" id="wx-results" hidden></ul>
+    </form>
     <nav class="wx-site" aria-label="Site">
       <a href="el-nino/">El Niño</a><a href="news/">News</a><a href="crops/">Crops</a>
     </nav>
@@ -74,6 +78,9 @@
         <button class="wx-subitem" data-style="infrared">Infrared</button>
       </div>
       <button class="wx-item" data-map="radar"><span>📡</span>Radar</button>
+      <div class="wx-sub" id="wx-radar-opts" hidden>
+        <button class="wx-subitem" id="wx-rv-clouds" type="button">☁️ Clouds</button>
+      </div>
       <p class="wx-group">Forecast maps</p>
       <button class="wx-item" data-map="rain"><span>🌧️</span>Precipitation</button>
       <button class="wx-item" data-map="wind"><span>💨</span>Wind</button>
@@ -119,6 +126,7 @@
   <div class="wx-status" id="wx-status" hidden></div>
 
   <script>window.APP_CONFIG = {{ app_config | tojson }};</script>
+  <script src="{{ url_for('static', filename='js/nowcast.js') }}"></script>
   <script src="{{ url_for('static', filename='js/globe.js') }}"></script>
 </body>
 </html>

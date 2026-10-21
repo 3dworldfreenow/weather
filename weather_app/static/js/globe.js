@@ -48,7 +48,7 @@
       [1013, [245, 245, 245, 1]], [1022, [255, 204, 128, 1]], [1035, [230, 81, 0, 1]], [1050, [150, 30, 0, 1]]] },
   };
 
-  const state = { map: "satellite", style: "truecolor", overlays: new Set(["temps", "labels", "borders", "night"]),
+  const state = { map: "satellite", style: "truecolor", rvClouds: true, overlays: new Set(["temps", "labels", "borders", "night"]),
     frame: 0, playing: false, live: true };
   const data = { sats: {}, forecast: null, radar: null, enso: null };
   let gm = null;
@@ -150,7 +150,13 @@
   // Radar images: the past ~2 hours, plus RainViewer's short "nowcast" when it offers one.
   function radarFrames() {
     const r = (data.radar && data.radar.radar) || {};
-    return [...(r.past || []), ...(r.nowcast || []).map((f) => ({ ...f, nowcast: true }))];
+    const past = r.past || [];
+    const latest = past[past.length - 1];
+    // Our own prediction (for the area last clicked) replaces RainViewer's short nowcast.
+    const ours = data.nowcast && latest && data.nowcast.latest === latest.time && data.nowcast.frames;
+    const extra = ours ? ours.map((f) => ({ ...f, predicted: true }))
+      : (r.nowcast || []).map((f) => ({ ...f, nowcast: true }));
+    return [...past, ...extra];
   }
   const radarLiveIndex = () => Math.max(0, ((data.radar && data.radar.radar && data.radar.radar.past) || []).length - 1);
   const liveIndex = (list) => (state.map === "radar" ? radarLiveIndex() : Math.max(0, list.length - 1));
@@ -337,7 +343,7 @@
       container: "wx-globe",
       center: startCenter ? startCenter.center : [78, 20],
       zoom: startCenter ? startCenter.zoom : (window.innerWidth < 600 ? 1.4 : 2.2),
-      maxZoom: 10,
+      maxZoom: 17, // close enough to see villages and streets
       attributionControl: false,
       style: {
         version: 8,
@@ -374,7 +380,7 @@
     window.wxGlobe = gm; // handy for debugging in the browser console
     gm.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "bottom-right");
     gm.addControl(new maplibregl.AttributionControl({ compact: true,
-      customAttribution: "Satellites: NASA GIBS, EUMETSAT · Radar: RainViewer · Forecast: Open-Meteo" }), "bottom-right");
+      customAttribution: "Satellites: NASA GIBS, EUMETSAT · Radar: RainViewer · Forecast: Open-Meteo · Places: © OpenStreetMap (Nominatim)" }), "bottom-right");
     gm.on("load", () => {
       ready = true;
       const attrib = gm.getContainer().querySelector(".maplibregl-ctrl-attrib");
@@ -413,8 +419,18 @@
     return [sat.url.replace("{time}", t)];
   }
 
+  // RainViewer infrared satellite frame closest to (and not after) a time.
+  function cloudTiles(time) {
+    const ir = (data.radar && data.radar.satellite && data.radar.satellite.infrared) || [];
+    if (!ir.length) return null;
+    const t = time.getTime() / 1000;
+    const f = ir.filter((x) => x.time <= t + 300).pop() || ir[0];
+    return [`${data.radar.host}${f.path}/256/{z}/{x}/{y}/0/0_0.png`];
+  }
+
   function radarTiles(i) {
-    const f = radarFrames()[i] || radarFrames()[radarLiveIndex()];
+    let f = radarFrames()[i] || radarFrames()[radarLiveIndex()];
+    if (f.predicted) f = radarFrames()[radarLiveIndex()]; // under the prediction: the latest real image
     return [`${data.radar.host}${f.path}/256/{z}/{x}/{y}/2/1_1.png`];
   }
 
@@ -440,11 +456,18 @@
         }
       } else if (m === "radar") {
         if (!data.radar) await loadRadar();
-        if (rebuild || !gm.getSource("radar")) {
+        const clouds = state.rvClouds ? cloudTiles(time) : null;
+        if (rebuild || !gm.getSource("radar") || Boolean(clouds) !== Boolean(gm.getSource("rv-clouds"))) {
           clearMapLayers();
+          // Infrared clouds from RainViewer underneath the radar, at the same time.
+          if (clouds) addRaster("rv-clouds", { type: "raster", tiles: clouds, tileSize: 256, maxzoom: 6 }, 0.65);
           addRaster("radar", { type: "raster", tiles: radarTiles(state.frame), tileSize: 256, maxzoom: 7,
             attribution: '<a href="https://www.rainviewer.com/">RainViewer</a>' }, 0.85);
-        } else gm.getSource("radar").setTiles(radarTiles(state.frame));
+        } else {
+          gm.getSource("radar").setTiles(radarTiles(state.frame));
+          if (clouds) gm.getSource("rv-clouds").setTiles(clouds);
+        }
+        showPrediction(radarFrames()[state.frame]);
       } else if (m === "sst") {
         if (rebuild || !gm.getSource("sst")) {
           clearMapLayers();
@@ -707,32 +730,276 @@
   // ------------------------------------------------------------------
   // Click: the forecast at that point
   // ------------------------------------------------------------------
-  let popup = null;
+  // ------------------------------------------------------------------
+  // Radar prediction engine (nowcast.js) for a clicked place
+  // ------------------------------------------------------------------
+  const NC = { zoom: 6, tiles: 3, stepMin: 10, predictSteps: 9, timelineSteps: 18, threshold: 0.05 };
+  const tileXY = (lon, lat, z) => {
+    const n = 2 ** z, r = (lat * Math.PI) / 180;
+    return { x: ((lon + 180) / 360) * n, y: ((1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2) * n };
+  };
+  const tileLat = (y, z) => (Math.atan(Math.sinh(Math.PI * (1 - (2 * y) / 2 ** z))) * 180) / Math.PI;
+
+  // Radar intensity grid (0..1) for a block of tiles, from RainViewer's black-and-white (dBZ) images.
+  async function radarGrid(path, x0, y0, options = "0/0_0") {
+    const size = 256 * NC.tiles;
+    const canvas = document.createElement("canvas");
+    canvas.width = size; canvas.height = size;
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    const n = 2 ** NC.zoom;
+    await Promise.all(Array.from({ length: NC.tiles * NC.tiles }, (_, k) => new Promise((resolve) => {
+      const i = k % NC.tiles, j = Math.floor(k / NC.tiles);
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => { ctx.drawImage(img, i * 256, j * 256); resolve(); };
+      img.onerror = resolve; // missing tile = no data
+      img.src = `${data.radar.host}${path}/256/${NC.zoom}/${(x0 + i + n) % n}/${y0 + j}/${options}.png`;
+    })));
+    const px = ctx.getImageData(0, 0, size, size).data;
+    const g = Nowcast.grid(size, size);
+    for (let i = 0; i < size * size; i++) {
+      const a = px[i * 4 + 3];
+      g.data[i] = a > 0 ? Math.max(0.06, (px[i * 4] + px[i * 4 + 1] + px[i * 4 + 2]) / 765) : 0;
+    }
+    return g;
+  }
+
+  // Colours for predicted images (light → heavy rain), close to the radar legend.
+  const RAIN_RAMP = [[0.05, [136, 221, 238, 0.55]], [0.2, [0, 153, 204, 0.8]], [0.35, [0, 85, 136, 0.9]],
+    [0.5, [255, 238, 0, 0.95]], [0.65, [255, 170, 0, 1]], [0.8, [255, 68, 0, 1]], [1, [193, 0, 0, 1]]];
+  function gridImage(g) {
+    const canvas = document.createElement("canvas");
+    canvas.width = g.w; canvas.height = g.h;
+    const ctx = canvas.getContext("2d");
+    const img = ctx.createImageData(g.w, g.h);
+    for (let i = 0; i < g.w * g.h; i++) {
+      const v = g.data[i];
+      if (v < NC.threshold) continue;
+      const [r, gg, b, a] = color({ stops: RAIN_RAMP }, v);
+      img.data[i * 4] = r; img.data[i * 4 + 1] = gg; img.data[i * 4 + 2] = b; img.data[i * 4 + 3] = a * 255;
+    }
+    ctx.putImageData(img, 0, 0);
+    return canvas.toDataURL("image/png");
+  }
+
+  async function runNowcast(lon, lat) {
+    if (!window.Nowcast) throw new Error("Prediction engine not loaded");
+    if (!data.radar) await loadRadar();
+    const past = data.radar.radar.past || [];
+    if (past.length < 4) throw new Error("Not enough recent radar images");
+    const BASE = 3; // compare with the image 30 minutes earlier (steadier speed than 10 minutes)
+    const latest = past[past.length - 1], earlier = past[past.length - 1 - BASE];
+    const t = tileXY(lon, lat, NC.zoom);
+    const x0 = Math.floor(t.x) - 1, y0 = Math.max(0, Math.min(2 ** NC.zoom - NC.tiles, Math.floor(t.y) - 1));
+    const key = `${latest.time}:${x0}:${y0}`;
+    let nc = data.nowcastCache && data.nowcastCache.key === key ? data.nowcastCache : null;
+    if (!nc) {
+      const [gPrev, gNow, cover] = await Promise.all([
+        radarGrid(earlier.path, x0, y0), radarGrid(latest.path, x0, y0), radarGrid("/v2/coverage/0", x0, y0, "0/0_0")]);
+      const f = 3; // measure motion on a 256×256 version of the 768×768 image
+      const raw = Nowcast.motionField(Nowcast.downsample(gPrev, f), Nowcast.downsample(gNow, f), { block: 16, search: 14 });
+      const field = { ...raw, u: raw.u.map((x) => x / BASE), v: raw.v.map((x) => x / BASE) }; // per 10 minutes
+      // Predicted images at half resolution (fast), stretched over the same area.
+      const half = Nowcast.downsample(gNow, 2);
+      const frames = [];
+      for (let k = 1; k <= NC.predictSteps; k++) {
+        frames.push({ time: latest.time + k * NC.stepMin * 60, url: gridImage(Nowcast.advect(half, field, k, f / 2)) });
+      }
+      const lonOf = (x) => (x / 2 ** NC.zoom) * 360 - 180;
+      const corners = [[lonOf(x0), tileLat(y0, NC.zoom)], [lonOf(x0 + NC.tiles), tileLat(y0, NC.zoom)],
+        [lonOf(x0 + NC.tiles), tileLat(y0 + NC.tiles, NC.zoom)], [lonOf(x0), tileLat(y0 + NC.tiles, NC.zoom)]];
+      nc = { key, latest: latest.time, x0, y0, gNow, cover, field, scale: f, frames, corners };
+      data.nowcastCache = nc;
+    }
+    data.nowcast = nc; // adds the predicted frames to the radar time bar
+    // This place.
+    const px = (t.x - x0) * 256, py = (t.y - y0) * 256;
+    const covered = Nowcast.nearestRain(nc.cover, px, py, 0.001, 6) !== null;
+    const timeline = Nowcast.timelineAt(nc.gNow, nc.field, px, py, NC.timelineSteps, { scale: nc.scale, radius: 2 });
+    const summary = Nowcast.summarize(timeline, NC.threshold);
+    const near = Nowcast.nearestRain(nc.gNow, px, py, NC.threshold, 380);
+    const kmPerPx = (40075.016686 * Math.cos((lat * Math.PI) / 180)) / (256 * 2 ** NC.zoom);
+    let motion = null;
+    const at = near ? Nowcast.motionAt(nc.field, near.x, near.y, nc.scale) : Nowcast.motionAt(nc.field, px, py, nc.scale);
+    const kmh = Math.hypot(at.u, at.v) * kmPerPx * (60 / NC.stepMin);
+    if (kmh >= 3) motion = { kmh, towards: compass(Math.atan2(at.u, -at.v) * (180 / Math.PI)) };
+    return {
+      covered, timeline, summary, motion, latest: new Date(latest.time * 1000),
+      near: near ? { km: near.distance * kmPerPx, from: compass(Math.atan2(near.x - px, -(near.y - py)) * (180 / Math.PI)) } : null,
+    };
+  }
+
+  const COMPASS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+  const compass = (deg) => COMPASS[Math.round((((deg % 360) + 360) % 360) / 45) % 8];
+  const strength = (v) => (v < 0.3 ? "light" : v < 0.55 ? "moderate" : "heavy");
+
+  // Show a predicted frame (image over the analysed area) on top of the dimmed latest radar.
+  function showPrediction(frame) {
+    const nc = data.nowcast;
+    if (frame && frame.predicted && nc) {
+      if (!gm.getSource("nowcast")) {
+        gm.addSource("nowcast", { type: "image", url: frame.url, coordinates: nc.corners });
+        gm.addLayer({ id: "nowcast", type: "raster", source: "nowcast", paint: { "raster-fade-duration": 0, "raster-opacity": 0.9 } }, "anchor-map");
+        mapLayerIds.push("nowcast");
+      } else gm.getSource("nowcast").updateImage({ url: frame.url, coordinates: nc.corners });
+      if (gm.getLayer("radar")) gm.setPaintProperty("radar", "raster-opacity", 0.25);
+    } else {
+      if (gm.getLayer("nowcast")) gm.removeLayer("nowcast");
+      if (gm.getSource("nowcast")) gm.removeSource("nowcast");
+      mapLayerIds = mapLayerIds.filter((id) => id !== "nowcast");
+      if (gm.getLayer("radar")) gm.setPaintProperty("radar", "raster-opacity", 0.85);
+    }
+  }
+
+  function nowcastHtml(r) {
+    if (!r.covered) {
+      return `<p>📡 No weather radar covers this place, so there is no rain prediction here. Satellite and forecast maps still work.</p>`;
+    }
+    const nowMs = Date.now();
+    const at = (steps) => new Date(r.latest.getTime() + steps * NC.stepMin * 60e3);
+    const inMin = (steps) => Math.max(0, Math.round((at(steps) - nowMs) / 60e3));
+    const clock = (d) => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    const s = r.summary;
+    let head;
+    if (s.rainingNow) {
+      head = s.stopsInSteps == null
+        ? `🌧️ <b>Raining now</b> (${strength(r.timeline[0])}), likely for <b>more than 3 hours</b>.`
+        : `🌧️ <b>Raining now</b> (${strength(r.timeline[0])}). Should stop in <b>about ${inMin(s.stopsInSteps)} min</b> (≈${clock(at(s.stopsInSteps))}).`;
+    } else if (s.arrivesInSteps != null) {
+      const lasts = s.lastsSteps == null ? "for over an hour" : `for about ${s.lastsSteps * NC.stepMin} min`;
+      head = `🌧️ <b>Rain expected in about ${inMin(s.arrivesInSteps)} min</b> (≈${clock(at(s.arrivesInSteps))}), ${strength(s.peak)}, ${lasts}.`;
+    } else {
+      head = `☀️ <b>No rain heading here</b> in the next 3 hours.`;
+    }
+    const cells = r.timeline.map((v, i) => {
+      const c = v < NC.threshold ? "transparent" : `rgb(${color({ stops: RAIN_RAMP }, v).slice(0, 3).map(Math.round).join(",")})`;
+      return `<i style="background:${c}" title="${clock(at(i))}"></i>`;
+    }).join("");
+    const age = Math.round((nowMs - r.latest) / 60e3);
+    return `<p class="wx-nc-head">${head}</p>
+      ${r.near && !s.rainingNow ? `<p>Nearest rain: <b>${Math.round(r.near.km)} km</b> to the ${r.near.from}.</p>` : ""}
+      ${r.motion ? `<p>Rain is moving towards the <b>${r.motion.towards}</b> at about <b>${Math.round(r.motion.kmh)} km/h</b>.</p>` : ""}
+      <div class="wx-nc-bar" aria-label="Predicted rain for the next 3 hours">${cells}</div>
+      <div class="wx-nc-axis"><span>${clock(r.latest)}</span><span>+1 h</span><span>+2 h</span><span>+3 h</span></div>
+      <button class="wx-nc-play" type="button">▶ Play predicted radar</button>
+      <small>Prediction from the movement of rain on radar (images ${age} min old). Storms can grow, weaken or form, so treat it as a guide for the next 1–2 hours.</small>`;
+  }
+
+  // Village / town name for a point (OpenStreetMap Nominatim; one request per click).
+  async function placeName(lat, lon) {
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=14&lat=${lat.toFixed(5)}&lon=${lon.toFixed(5)}`);
+      if (!res.ok) return null;
+      const d = await res.json();
+      const a = d.address || {};
+      const name = a.village || a.hamlet || a.town || a.city || a.suburb || a.municipality || a.county || d.name;
+      const area = [a.state_district || a.county, a.state, a.country].filter((x) => x && x !== name);
+      return name ? { name, area: area.slice(0, 2).join(", ") } : null;
+    } catch (e) { return null; }
+  }
+
+  let popup = null, pin = null;
+  let clickSeq = 0;
+  function closeInfo() {
+    if (popup) { popup.remove(); popup = null; }
+    if (pin) { pin.remove(); pin = null; }
+    const panel = document.querySelector(".wx-info");
+    if (panel) panel.remove();
+  }
   function showPointInfo(lngLat) {
-    if (!data.forecast) { loadForecast().then(() => showPointInfo(lngLat)).catch(() => {}); return; }
-    const f = forecastFrame();
+    const seq = ++clickSeq;
     const { lat } = lngLat;
     const lon = ((lngLat.lng + 540) % 360) - 180;
-    const F = data.forecast.fields;
-    const v = (k) => sample(F[k][f], lat, lon);
-    const w = windAt(f, lat, lon);
-    const dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
-    const fmt = (x, d = 0) => (x == null ? "–" : x.toFixed(d));
-    const time = new Date(data.forecast.times[f]);
-    const html = `<div class="wx-pop">
-      <b>${lat.toFixed(2)}°, ${lon.toFixed(2)}°</b>
-      <small>Forecast for ${time.toLocaleString(undefined, { weekday: "short", hour: "2-digit", minute: "2-digit" })}</small>
-      <ul>
-        <li>🌡️ ${fmt(v("temp"))} °C</li>
-        <li>🌧️ ${fmt(v("rain"), 1)} mm / 3 h</li>
-        <li>💨 ${w ? `${Math.round(w.speed)} km/h from ${dirs[Math.round(w.dir / 45) % 8]}` : "–"}</li>
-        <li>💧 ${fmt(v("humidity"))} %</li>
-        <li>🧭 ${fmt(v("pressure"))} hPa</li>
-      </ul>
-      <small class="muted">Coarse global model grid (Open-Meteo)</small></div>`;
-    if (popup) popup.remove();
-    popup = new maplibregl.Popup({ closeButton: true, maxWidth: "240px" }).setLngLat(lngLat).setHTML(html).addTo(gm);
+    closeInfo();
+    const body = `<div class="wx-pop">
+        <b class="wx-place">${lat.toFixed(3)}°, ${lon.toFixed(3)}°</b><small class="wx-place-area"></small>
+        <div class="wx-nc"><p class="muted">📡 Checking the radar for rain heading here…</p></div>
+        <div class="wx-fc"></div></div>`;
+    let el;
+    {
+      // A card (lower right; above the time bar on phones) and a pin on the map.
+      el = document.createElement("div");
+      el.className = "wx-info";
+      el.innerHTML = `<button class="wx-info-close" aria-label="Close">✕</button>${body}`;
+      document.body.appendChild(el);
+      el.querySelector(".wx-info-close").addEventListener("click", closeInfo);
+      const dot = document.createElement("div");
+      dot.className = "wx-pin";
+      pin = new maplibregl.Marker({ element: dot }).setLngLat(lngLat).addTo(gm);
+    }
+    const live = () => seq === clickSeq && el.isConnected;
+
+    placeName(lat, lon).then((p) => {
+      if (!p || !live()) return;
+      el.querySelector(".wx-place").textContent = p.name;
+      el.querySelector(".wx-place-area").textContent = p.area;
+    });
+
+    runNowcast(lon, lat).then((r) => {
+      if (!live()) return;
+      el.querySelector(".wx-nc").innerHTML = nowcastHtml(r);
+      const btn = el.querySelector(".wx-nc-play");
+      if (btn) btn.addEventListener("click", async () => {
+        if (state.map !== "radar") { state.map = "radar"; writeHash(); syncMenu(); renderLegend(); await drawFrame(true); }
+        renderTimeBar();
+        goTo(radarLiveIndex());
+        setPlaying(true);
+      });
+      if (state.map === "radar") renderTimeBar();
+    }).catch((err) => {
+      if (live()) el.querySelector(".wx-nc").innerHTML = `<p class="muted">📡 Radar prediction not available: ${err.message}</p>`;
+    });
+
+    (data.forecast ? Promise.resolve() : loadForecast()).then(() => {
+      if (!live()) return;
+      const f = forecastFrame();
+      const F = data.forecast.fields;
+      const v = (k) => sample(F[k][f], lat, lon);
+      const w = windAt(f, lat, lon);
+      const fmt = (x, d = 0) => (x == null ? "–" : x.toFixed(d));
+      const time = new Date(data.forecast.times[f]);
+      el.querySelector(".wx-fc").innerHTML = `<small>Model forecast for ${time.toLocaleString(undefined, { weekday: "short", hour: "2-digit", minute: "2-digit" })}</small>
+        <ul>
+          <li>🌡️ ${fmt(v("temp"))} °C</li><li>🌧️ ${fmt(v("rain"), 1)} mm / 3 h</li>
+          <li>💨 ${w ? `${Math.round(w.speed)} km/h from ${compass(w.dir)}` : "–"}</li>
+          <li>💧 ${fmt(v("humidity"))} %</li><li>🧭 ${fmt(v("pressure"))} hPa</li>
+        </ul>`;
+    }).catch(() => {});
   }
+
+  // ------------------------------------------------------------------
+  // Place search (OpenStreetMap Nominatim)
+  // ------------------------------------------------------------------
+  const searchBox = $("wx-search");
+  const results = $("wx-results");
+  async function searchPlaces(q) {
+    results.innerHTML = '<li class="muted">Searching…</li>';
+    results.hidden = false;
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&q=${encodeURIComponent(q)}`);
+      const list = res.ok ? await res.json() : [];
+      if (!list.length) { results.innerHTML = '<li class="muted">No places found</li>'; return; }
+      results.innerHTML = list.map((p, i) => `<li><button type="button" data-i="${i}">${
+        String(p.display_name).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`)}</button></li>`).join("");
+      results.querySelectorAll("button").forEach((b) => b.addEventListener("click", () => {
+        const p = list[Number(b.dataset.i)];
+        results.hidden = true;
+        searchBox.blur();
+        const center = [Number(p.lon), Number(p.lat)];
+        gm.flyTo({ center, zoom: Math.max(gm.getZoom(), 11), speed: 1.6 });
+        gm.once("moveend", () => showPointInfo({ lng: center[0], lat: center[1] }));
+      }));
+    } catch (e) {
+      results.innerHTML = '<li class="muted">Search is not available right now</li>';
+    }
+  }
+  $("wx-search-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const q = searchBox.value.trim();
+    if (q.length >= 2) searchPlaces(q);
+  });
+  searchBox.addEventListener("input", () => { if (!searchBox.value) results.hidden = true; });
+  document.addEventListener("click", (e) => { if (!e.target.closest(".wx-searchbox")) results.hidden = true; });
 
   // ------------------------------------------------------------------
   // Legend and time bar
@@ -789,9 +1056,9 @@
     $("wx-when").textContent = state.map === "sst"
       ? t.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })
       : `${t.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" })} ${pad(t.getHours())}:${pad(t.getMinutes())}`;
-    const nowcast = state.map === "radar" && (radarFrames()[state.frame] || {}).nowcast;
+    const rf = state.map === "radar" ? radarFrames()[state.frame] || {} : {};
     const what = FORECAST_MAPS.includes(state.map) ? "Forecast" : state.map === "sst" ? "Daily map"
-      : nowcast ? "Radar forecast" : isLive ? (state.map === "radar" ? "Live radar" : "Latest image") : "Replay";
+      : rf.predicted ? "Predicted radar" : rf.nowcast ? "Radar forecast" : isLive ? (state.map === "radar" ? "Live radar" : "Latest image") : "Replay";
     $("wx-when-sub").textContent = state.map === "sst" ? what : `${what} · ${relTime(t)}`;
     renderRange(list);
   }
@@ -817,7 +1084,7 @@
       const ahead = list.length - 1 - live;
       const checked = data.radarCheckedAt ? ` · checked ${relTime(data.radarCheckedAt)}` : "";
       label = `Radar loop: ${span(pastMins)} · every ${step} min · ${live + 1} images`
-        + (ahead ? ` + ${span(Math.round((lastT - list[live]) / 60e3))} forecast` : "") + checked;
+        + (ahead ? ` + ${span(Math.round((lastT - list[live]) / 60e3))} ${radarFrames()[live + 1].predicted ? "predicted" : "forecast"}` : "") + checked;
     } else if (state.map === "satellite") {
       label = `Satellite loop: ${span(Math.round((lastT - first) / 60e3))} · every ${span(step)} · ${list.length} images · updates every 10 min`;
     } else {
@@ -861,6 +1128,9 @@
     document.querySelectorAll("[data-map]").forEach((b) => b.classList.toggle("on", b.dataset.map === state.map));
     document.querySelectorAll("[data-style]").forEach((b) => b.classList.toggle("on", b.dataset.style === state.style));
     $("wx-sat-styles").hidden = state.map !== "satellite";
+    const hasClouds = Boolean(data.radar && data.radar.satellite && (data.radar.satellite.infrared || []).length);
+    $("wx-radar-opts").hidden = state.map !== "radar" || !hasClouds;
+    $("wx-rv-clouds").classList.toggle("on", state.rvClouds);
     document.querySelectorAll("[data-overlay]").forEach((b) => {
       b.classList.toggle("on", state.overlays.has(b.dataset.overlay));
       b.setAttribute("aria-pressed", String(state.overlays.has(b.dataset.overlay)));
@@ -871,6 +1141,7 @@
   function writeHash() {
     const p = new URLSearchParams({ map: state.map, ov: [...state.overlays].join(",") });
     if (state.map === "satellite") p.set("style", state.style);
+    if (state.map === "radar" && !state.rvClouds) p.set("clouds", "0");
     history.replaceState(null, "", `#${p}`);
   }
 
@@ -878,6 +1149,7 @@
     const p = new URLSearchParams(window.location.hash.slice(1));
     if (MAP_NAMES[p.get("map")]) state.map = p.get("map");
     if (["truecolor", "infrared"].includes(p.get("style"))) state.style = p.get("style");
+    if (p.get("clouds") === "0") state.rvClouds = false;
     if (p.has("ov")) state.overlays = new Set(p.get("ov").split(",").filter(Boolean));
   }
 
@@ -889,6 +1161,12 @@
     showMap();
     if (window.innerWidth < 900) closePanels();
   }));
+  $("wx-rv-clouds").addEventListener("click", () => {
+    state.rvClouds = !state.rvClouds;
+    writeHash();
+    syncMenu();
+    drawFrame(true);
+  });
   document.querySelectorAll("[data-style]").forEach((b) => b.addEventListener("click", () => {
     state.style = b.dataset.style;
     writeHash();
@@ -918,7 +1196,7 @@
     if (window.innerWidth < 900 && !e.target.closest(".wx-panel")) closePanels();
   });
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closePanels();
+    if (e.key === "Escape") { closePanels(); closeInfo(); }
     if (e.target.tagName === "INPUT") return;
     if (e.key === "ArrowLeft") goTo(state.frame - 1);
     if (e.key === "ArrowRight") goTo(state.frame + 1);

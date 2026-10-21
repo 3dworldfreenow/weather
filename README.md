@@ -10,7 +10,10 @@ A live El Niño tracker on a 3D globe and map, in the style of [zoom.earth](http
   - **Live maps:** satellite (true colour or infrared, stitched from five geostationary satellites, refreshed every 5 minutes, with a **24-hour replay in 30-minute steps**) and live rain radar ([RainViewer](https://www.rainviewer.com/): checked for new images every 2 minutes, a loop of the last 2 hours in 10-minute steps plus RainViewer's short-term radar forecast when available); the time bar shows how long each loop is
   - **Forecast maps** for the next 48 hours in 3-hour steps: precipitation, wind, temperature, humidity and pressure (drawn in the browser from a global [Open-Meteo](https://open-meteo.com/) grid), plus the El Niño sea temperature anomaly
   - **Overlays:** wind animation, city temperatures, labels, border lines, night boundary, coordinate grid, Niño regions
-  - a time bar with play, a click-anywhere forecast popup, and links that keep your choice (`#map=wind&ov=windanim,temps`)
+  - **zoom to village level** (street level) and **search any village or city** ([OpenStreetMap Nominatim](https://nominatim.org/))
+  - **rain prediction engine** (`static/js/nowcast.js`): click any place and it reads the latest radar around it, measures how the rain is moving (block matching with sub-pixel accuracy, 30-minute baseline), and extrapolates it: when rain will arrive, how heavy, how long it lasts (or when current rain stops), the nearest rain and its speed and direction, plus **predicted radar images for the next 90 minutes** to play on the time bar. Like all extrapolation nowcasts it is a guide for the next 1–2 hours; it cannot foresee storms forming or dying
+  - RainViewer's infrared **clouds under the radar**, moving in step with it
+  - a time bar with play, a click-anywhere place card, and links that keep your choice (`#map=wind&ov=windanim,temps`)
 - 🌊 **El Niño tracker** (`/el-nino/`): the El Niño status, impacts, news, history and learn panels below
 
 - 📱 **Built for phones first:** the map or 3D globe fills the screen and everything else lives in a bottom sheet (drag or tap the handle: peek, half, full) with five tabs. Wide screens get a side panel; phones in landscape get a side sheet
@@ -33,7 +36,8 @@ All data sources are free and need **no API keys**:
 | Oceanic Niño Index (official, 3-month) | [NOAA CPC ONI](https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt) |
 | Sea surface temperature anomaly map | [GHRSST MUR](https://podaac.jpl.nasa.gov/MEaSUREs-MUR) via [NASA GIBS](https://earthdata.nasa.gov/gibs) |
 | Forecast maps and city temperatures | [Open-Meteo](https://open-meteo.com/) forecast API (CC BY 4.0), a 6° global grid refreshed every 6 hours |
-| Rain radar | [RainViewer](https://www.rainviewer.com/api.html) public API |
+| Rain radar, radar coverage and infrared clouds | [RainViewer](https://www.rainviewer.com/api.html) public API |
+| Place search and names | [OpenStreetMap](https://www.openstreetmap.org/copyright) via [Nominatim](https://nominatim.org/) (one request per search or click) |
 | Live satellites | GOES & Himawari via NASA GIBS, Meteosat via [EUMETView](https://view.eumetsat.int/) |
 | World news | [GDELT](https://www.gdeltproject.org/) DOC API, [Google News](https://news.google.com/) RSS (35 editions + theme and crop searches), [Bing News](https://www.bing.com/news) RSS (12 markets) |
 | Newspapers by country | RSS feeds of 100+ newspapers in `weather_app/data/news_feeds.csv` (El Niño stories only; headline, source and link) |
@@ -132,7 +136,8 @@ weather_app/
   templates/crops.html     # El Niño and crops page
   static/data/countries.geojson  # country shapes (scripts/make_countries.py)
   static/css/style.css     # UI styles
-  static/js/globe.js       # weather globe: maps, overlays, wind animation, time bar
+  static/js/globe.js       # weather globe: maps, overlays, wind animation, time bar, place card
+  static/js/nowcast.js     # radar prediction engine (motion field, extrapolation, arrival times)
   static/css/globe.css     # weather globe styles
   static/js/app.js         # map, globe, El Niño panel and overlays, live satellites
   static/js/news.js        # News page: filters, video player, source list
