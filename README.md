@@ -12,7 +12,7 @@ A live El Niño tracker on a 3D globe and map, in the style of [zoom.earth](http
   - **Overlays:** wind animation, city temperatures, labels, border lines, night boundary, coordinate grid, Niño regions
   - **zoom to village level** (street level) and **search any village or city** ([OpenStreetMap Nominatim](https://nominatim.org/))
   - **smooth radar like zoom.earth**: RainViewer tiles are decoded back to rain intensity and redrawn in a blue → purple → red → yellow scale with soft edges (in a Web Worker), over **bright white infrared clouds** on a dimmed map. Every radar image of the loop is its own preloaded layer, so playing only cross-fades between layers and never waits for tiles
-  - **rain prediction engine** (`static/js/nowcast.js`, run in `static/js/nowcast-worker.js`): it reads the radar around a place for the past hour, measures how the rain moved (block matching with sub-pixel accuracy, two half-hour steps averaged), uses the wind 3 km up (700 hPa, Open-Meteo) where there is too little rain to track, and extrapolates: predicted radar images every 5 minutes for the next hour. Because radar images arrive 10–30 minutes late, **Live shows the estimate for now** for the area in view. Clicking a place tells when rain arrives, how heavy, how long it lasts (or when it stops), the nearest rain and its speed and direction; it also shows temperature, humidity, pressure trend and warns when unstable air (CAPE) can form new storms. A guide for the next 1–2 hours
+  - **rain prediction made on the server** (`weather_app/radar_nowcast.py`, run by the build every 10 minutes): it reads RainViewer's newest radar for every area of the world with rain, measures how the rain moved over the past hour with optical flow (OpenCV DIS, as in radar nowcasting tools), moves the newest image along that motion and publishes **predicted radar images every 10 minutes for the next hour** as map tiles (`nowcast/`, described by `data/nowcast.json`). The browser only shows these images: they play after the real radar on the time bar, and because radar images arrive 10–30 minutes late, **Live shows the estimate for now**. Clicking a place reads its pixels: when rain arrives, how heavy, how long it lasts (or when it stops), the nearest rain and its speed and direction, plus temperature, humidity, pressure trend and a warning when unstable air (CAPE) can form new storms. A guide for the next hour
   - **ground check with weather stations**: reports from ~5,000 airport stations (METAR) near the place, whether they report rain right now and how much the temperature changed in the last hour (a sudden drop means cool air from rain or a storm). The card says when stations confirm the radar or report rain the radar does not show
   - **5-day forecast** for the place (min/max, weather, rain chance) in its own time zone
   - a time bar with play, a click-anywhere place card, and links that keep your choice (`#map=wind&ov=windanim,temps`)
@@ -141,7 +141,8 @@ weather_app/
   static/css/style.css     # UI styles
   static/js/globe.js       # weather globe: maps, overlays, wind animation, time bar, place card
   static/js/nowcast.js     # radar prediction engine (motion field, extrapolation, arrival times)
-  static/js/nowcast-worker.js  # runs predictions and radar tile recolouring off the main thread
+  static/js/nowcast-worker.js  # redraws radar tiles in our colours off the main thread
+  radar_nowcast.py         # server-side radar prediction: optical flow + predicted tiles
   stations.py              # weather station reports (METAR) with a 3-hour history
   static/css/globe.css     # weather globe styles
   static/js/app.js         # map, globe, El Niño panel and overlays, live satellites

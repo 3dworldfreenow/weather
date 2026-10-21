@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import json
+import tempfile
+from pathlib import Path
 
-from flask import Blueprint, Response, abort, current_app, jsonify, render_template, request
+from flask import Blueprint, Response, abort, current_app, jsonify, render_template, request, send_from_directory
 
-from . import crops, enso, forecast, impacts, news, satellites, seo, services, stations
+from . import crops, enso, forecast, impacts, news, radar_nowcast, satellites, seo, services, stations
 
 bp = Blueprint("main", __name__)
 
@@ -143,6 +145,20 @@ def news_page():
 @bp.get("/api/forecast")
 def forecast_data():
     return jsonify(services.cache.get_or_set("forecast", 3 * 3600, forecast.get_forecast))
+
+
+NOWCAST_DIR = Path(tempfile.gettempdir()) / "wx-nowcast"
+
+
+@bp.get("/api/nowcast")
+def nowcast_data():
+    """Predicted radar for the next hour; the tiles are served from /nowcast/."""
+    return jsonify(services.cache.get_or_set("nowcast", 8 * 60, lambda: radar_nowcast.build(NOWCAST_DIR)))
+
+
+@bp.get("/nowcast/<path:path>")
+def nowcast_tile(path):
+    return send_from_directory(NOWCAST_DIR / "nowcast", path, max_age=3600)
 
 
 _stations: dict = {}

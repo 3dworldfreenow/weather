@@ -1,4 +1,8 @@
 Flask>=3.0,<4
 requests>=2.31,<3
 gunicorn>=22.0
+# Radar prediction (weather_app/radar_nowcast.py)
+numpy>=1.26
+opencv-python-headless>=4.9,<5
+Pillow>=10
 pytest>=8.0

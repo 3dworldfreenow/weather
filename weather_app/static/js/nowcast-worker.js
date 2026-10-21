@@ -1,7 +1,6 @@
-/* Heavy radar work off the main thread, so the map and animations stay smooth.
+/* Radar tile redrawing off the main thread, so the map and animations stay smooth.
+ * (The prediction itself is made on the server: weather_app/radar_nowcast.py.)
  *
- * { kind: "predict", id, w, h, first, mid, now (Float32Array), options }
- *   → { id, field, frames: [{ minutes, url | rgba, w, h }] }   (nowcast.js predict)
  * { kind: "tile", id, url, ramp, threshold, blur }
  *   → { id, bitmap }   a RainViewer tile redrawn in our colours with soft edges
  * Errors come back as { id, error }.
@@ -51,31 +50,12 @@ async function tile({ url, ramp, threshold, blur }) {
   return out.transferToImageBitmap();
 }
 
-async function predict({ w, h, first, mid, now, options }) {
-  const g = (a) => Nowcast.grid(w, h, a);
-  const { field, frames } = Nowcast.predict(g(first), g(mid), g(now), options);
-  // Encode the images here too when the browser allows it (OffscreenCanvas).
-  if (typeof OffscreenCanvas !== "undefined") {
-    for (const fr of frames) {
-      const canvas = new OffscreenCanvas(fr.w, fr.h);
-      canvas.getContext("2d").putImageData(new ImageData(fr.rgba, fr.w, fr.h), 0, 0);
-      fr.url = URL.createObjectURL(await canvas.convertToBlob({ type: "image/png" }));
-      delete fr.rgba;
-    }
-  }
-  return { field, frames };
-}
-
 self.onmessage = async (e) => {
   const { id, kind } = e.data;
   try {
-    if (kind === "tile") {
-      const bitmap = await tile(e.data);
-      self.postMessage({ id, bitmap }, [bitmap]);
-    } else {
-      const { field, frames } = await predict(e.data);
-      self.postMessage({ id, field, frames }, frames.filter((f) => f.rgba).map((f) => f.rgba.buffer));
-    }
+    if (kind !== "tile") throw new Error(`Unknown job ${kind}`);
+    const bitmap = await tile(e.data);
+    self.postMessage({ id, bitmap }, [bitmap]);
   } catch (err) {
     self.postMessage({ id, error: String((err && err.message) || err) });
   }

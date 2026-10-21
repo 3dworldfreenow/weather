@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import build_static  # noqa: E402
-from weather_app import crops, enso, forecast, news, satellites, services  # noqa: E402
+from weather_app import crops, enso, forecast, news, radar_nowcast, satellites, services, stations  # noqa: E402
 
 from test_enso import ONI, WEEKLY  # noqa: E402
 
@@ -24,6 +24,8 @@ def offline(monkeypatch):
     monkeypatch.setattr(build_static, "previous_data", lambda site_url, name: None)
     monkeypatch.setattr(forecast, "get_forecast", lambda previous=None: {"built_at": "2026-10-14T00:00:00+00:00", "times": [],
                                                                          "grid": {}, "fields": {}, "cities": []})
+    monkeypatch.setattr(stations, "get_stations", lambda previous=None: {"stations": []})
+    monkeypatch.setattr(radar_nowcast, "build", lambda out: {"frames": [], "motion": {}})
     monkeypatch.setattr(crops, "get_crops", lambda previous=None: {
         "built_at": "2026-10-01T00:00:00+00:00", "rain": {},
         "prices": {"sugar": {"series": [["2026-08", 400.0]], "latest": 400.0}}})

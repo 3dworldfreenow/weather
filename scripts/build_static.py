@@ -24,7 +24,7 @@ import requests
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from weather_app import create_app, crops, enso, forecast, impacts, news, satellites, seo, stations  # noqa: E402
+from weather_app import create_app, crops, enso, forecast, impacts, news, radar_nowcast, satellites, seo, stations  # noqa: E402
 
 log = logging.getLogger("build_static")
 
@@ -82,6 +82,8 @@ def build(out: Path, site_url: str | None = None) -> None:
         "forecast.json": lambda: forecast.get_forecast(previous_data(site_url, "forecast.json")),
         # Station reports: newest from NOAA plus the last 3 hours from the published copy.
         "stations.json": lambda: stations.get_stations(previous_data(site_url, "stations.json")),
+        # Predicted radar for the next hour (tiles under nowcast/, computed here every run).
+        "nowcast.json": lambda: radar_nowcast.build(out),
         # Rainfall and monthly prices change slowly: reuse the published copy if recent.
         "crops.json": lambda: crops.get_crops(previous_data(site_url, "crops.json")),
     }

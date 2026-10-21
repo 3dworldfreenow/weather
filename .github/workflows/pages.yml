@@ -4,8 +4,9 @@ on:
   push:
     branches: ["**"]
   schedule:
-    # Refresh El Niño data and the satellite catalogue every 30 minutes.
-    - cron: "*/30 * * * *"
+    # Every 10 minutes: new radar prediction (RainViewer images come every 10 minutes);
+    # the other data files are reused from the published copy while still fresh.
+    - cron: "*/10 * * * *"
   workflow_dispatch:
 
 permissions:

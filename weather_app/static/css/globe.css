@@ -132,7 +132,7 @@
 .wx-nc p { margin: 6px 0; font-size: 13px; line-height: 1.4; color: #202124; }
 .wx-nc .muted { color: #5f6368; }
 .wx-nc-head { font-size: 14px !important; }
-.wx-nc-bar { display: grid; grid-template-columns: repeat(13, 1fr); gap: 1px; height: 14px; margin-top: 8px; background: #e8eaed;
+.wx-nc-bar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; height: 14px; margin-top: 8px; background: #e8eaed;
   border-radius: 4px; overflow: hidden; }
 .wx-nc-bar i { display: block; }
 .wx-nc-axis { display: flex; justify-content: space-between; font-size: 10.5px; color: #5f6368; margin: 2px 0 6px; }

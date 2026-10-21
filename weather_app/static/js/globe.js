@@ -107,13 +107,26 @@
     return data.radar;
   }
 
+  // Predicted radar for the next hour, made on our server every 10 minutes
+  // (weather_app/radar_nowcast.py): frames of map tiles plus motion per area.
+  async function loadNowcast() {
+    try {
+      const nc = await getJson("nowcast.json", "/api/nowcast");
+      if (nc && nc.frames) {
+        nc.frames.forEach((f) => { f.tileSet = new Set(f.tiles); });
+        data.nowcast = nc;
+      }
+    } catch (e) { /* keep the previous prediction */ }
+    return data.nowcast;
+  }
+
   // Live radar: look for a new image every 2 minutes while the radar is shown.
   async function refreshRadar() {
     if (!ready || state.map !== "radar") return;
     const before = frames();
     const shownTime = before[state.frame];
     const lastBefore = before[radarLiveIndex()];
-    try { await loadRadar(); } catch (e) { renderTimeBar(); return; }
+    try { await Promise.all([loadRadar(), loadNowcast()]); } catch (e) { renderTimeBar(); return; }
     const after = frames();
     const lastAfter = after[radarLiveIndex()];
     if (state.live || state.playing) state.frame = state.live ? radarNowIndex() : Math.min(state.frame, after.length - 1);
@@ -124,7 +137,6 @@
     }
     if (lastAfter && lastBefore && +lastAfter > +lastBefore) status(`New radar image ${fmtClock(lastAfter)}`, 2500);
     drawFrame();
-    nowcastView();
   }
   setInterval(refreshRadar, RADAR_REFRESH_MS);
 
@@ -148,14 +160,14 @@
     return data.forecast ? data.forecast.times.map((t) => new Date(t)) : [];
   }
 
-  // Radar images: the past ~2 hours, plus RainViewer's short "nowcast" when it offers one.
+  // Radar images: the past ~2 hours, then our server's predicted images after the
+  // newest real one (or RainViewer's short nowcast if it offers one).
   function radarFrames() {
     const r = (data.radar && data.radar.radar) || {};
     const past = r.past || [];
     const latest = past[past.length - 1];
-    // Our own prediction (for the area last clicked) replaces RainViewer's short nowcast.
-    const ours = data.nowcast && latest && data.nowcast.latest === latest.time && data.nowcast.frames;
-    const extra = ours ? ours.map((f) => ({ ...f, predicted: true }))
+    const ours = ((data.nowcast && data.nowcast.frames) || []).filter((f) => latest && f.time > latest.time);
+    const extra = ours.length ? ours.map((f) => ({ ...f, predicted: true }))
       : (r.nowcast || []).map((f) => ({ ...f, nowcast: true }));
     return [...past, ...extra];
   }
@@ -366,6 +378,7 @@
       try { return JSON.parse(localStorage.getItem("wx-view")) || null; } catch (e) { return null; }
     })();
     maplibregl.addProtocol("wxradar", radarProtocol);
+    maplibregl.addProtocol("wxnc", ncProtocol);
     if (maplibregl.setMaxParallelImageRequests) maplibregl.setMaxParallelImageRequests(32); // radar loops load many small tiles
     gm = new maplibregl.Map({
       container: "wx-globe",
@@ -418,7 +431,6 @@
     });
     gm.on("moveend", () => {
       try { localStorage.setItem("wx-view", JSON.stringify({ center: gm.getCenter().toArray(), zoom: gm.getZoom() })); } catch (e) { /* private mode */ }
-      nowcastView(); // radar: predict the area now in view
     });
     gm.on("click", (e) => showPointInfo(e.lngLat));
     gm.on("move", queueDeclutter);
@@ -484,6 +496,22 @@
    * only changes which layer is visible (with a short cross-fade), so playing is smooth
    * and never waits for tiles. Infrared clouds underneath work the same way, one layer
    * set per 30-minute satellite slot. */
+  // Predicted tiles exist only where it rains: others are answered with an empty image
+  // without asking the server.
+  let emptyTile = null;
+  const ncProtocol = async (params) => {
+    const rel = params.url.replace("wxnc://", "");
+    const m = rel.match(/^(.*)\/(\d+\/\d+\/\d+)\.png$/);
+    const f = m && ((data.nowcast && data.nowcast.frames) || []).find((x) => x.path === m[1]);
+    if (!f || !f.tileSet.has(m[2])) {
+      emptyTile = emptyTile || (await createImageBitmap(new ImageData(1, 1)));
+      return { data: emptyTile };
+    }
+    const res = await fetch(new URL(rel, document.baseURI));
+    if (!res.ok) throw new Error(`Predicted tile ${res.status}`);
+    return { data: await res.arrayBuffer() };
+  };
+
   const FADE = { duration: 250, delay: 0 };
   let radarKey = "";
   function setOpacity(id, v) {
@@ -499,19 +527,26 @@
   async function drawRadar(time, rebuild) {
     const past = data.radar.radar.past || [];
     const clouds = state.rvClouds ? await loadSatellites("infrared") : null;
-    const key = past.map((f) => f.path).join() + (clouds ? "|clouds" : "");
+    if (!data.nowcast && (await loadNowcast()) && state.live && !state.playing) {
+      state.frame = radarNowIndex(); // the prediction adds frames: Live = the estimate for now
+      renderTimeBar();
+    }
+    const preds = radarFrames().filter((f) => f.predicted);
+    const key = past.map((f) => f.path).join() + "|" + preds.map((f) => f.path).join() + (clouds ? "|clouds" : "");
     if (rebuild || key !== radarKey || !gm.getLayer("radar-0")) {
       clearMapLayers();
       radarKey = key;
       past.forEach((f, i) => addRaster(`radar-${i}`, { type: "raster", tiles: radarUrl(f), tileSize: 256, maxzoom: 7,
         attribution: '<a href="https://www.rainviewer.com/">RainViewer</a>' }, 0, FADE));
-      ncLayersKey = "";
+      // Predicted images (our server), preloaded the same way.
+      preds.forEach((f, k) => addRaster(`nc-${k}`, { type: "raster", tiles: [`wxnc://${f.path}/{z}/{x}/{y}.png`], tileSize: 256,
+        maxzoom: data.nowcast.zoom }, 0, FADE));
     }
     const frame = radarFrames()[state.frame] || {};
-    const predicted = Boolean(frame.predicted);
-    // Under a predicted image: the newest real radar image, dimmed.
-    const real = predicted ? past.length - 1 : Math.min(state.frame, past.length - 1);
-    past.forEach((_, i) => setOpacity(`radar-${i}`, i === real ? (predicted ? 0.25 : 0.85) : 0));
+    const k = frame.predicted ? preds.findIndex((f) => f.time === frame.time) : -1;
+    preds.forEach((_, i) => setOpacity(`nc-${i}`, i === k ? 0.9 : 0));
+    const real = frame.predicted ? -1 : Math.min(state.frame, past.length - 1);
+    past.forEach((_, i) => setOpacity(`radar-${i}`, i === real ? 0.85 : 0));
     if (clouds) {
       // Clouds of the 30-minute satellite slot shown, added when first needed and then
       // kept, so radar tiles load first and replaying again is smooth.
@@ -529,8 +564,6 @@
       }
       mapLayerIds.filter((id) => id.startsWith("cl-")).forEach((id) => setOpacity(id, id.startsWith(`cl-${slot}-`) ? 0.8 : 0));
     }
-    showPrediction(frame);
-    nowcastView();
   }
 
 
@@ -824,7 +857,7 @@
   // ------------------------------------------------------------------
   // Radar prediction engine (nowcast.js) for a clicked place
   // ------------------------------------------------------------------
-  const NC = { zoom: 6, tiles: 3, stepMin: 10, frameMin: 5, predictMin: 60, timelineSteps: 12, threshold: 0.05 };
+  const NC = { zoom: 6, tiles: 3, stepMin: 10, threshold: 0.05 };
   const tileXY = (lon, lat, z) => {
     const n = 2 ** z, r = (lat * Math.PI) / 180;
     return { x: ((lon + 180) / 360) * n, y: ((1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2) * n };
@@ -863,15 +896,8 @@
   const RAIN_RAMP = [[0.05, [30, 60, 200, 0.5]], [0.25, [40, 100, 255, 0.85]], [0.4, [90, 80, 245, 0.95]],
     [0.5, [150, 60, 220, 1]], [0.6, [215, 45, 150, 1]], [0.7, [245, 40, 50, 1]], [0.8, [255, 140, 20, 1]],
     [0.9, [255, 220, 0, 1]], [1, [255, 255, 190, 1]]];
-  function rgbaUrl(fr) {
-    const canvas = document.createElement("canvas");
-    canvas.width = fr.w; canvas.height = fr.h;
-    canvas.getContext("2d").putImageData(new ImageData(fr.rgba, fr.w, fr.h), 0, 0);
-    return canvas.toDataURL("image/png");
-  }
-
-  // Heavy work runs in Web Workers (nowcast-worker.js) so the map never stalls: one for
-  // predictions, two for redrawing radar tiles. null = workers unavailable.
+  // Redrawing radar tiles runs in two Web Workers (nowcast-worker.js) so the map never
+  // stalls. null = workers unavailable.
   const pools = {};
   let callSeq = 0;
   const calls = new Map();
@@ -896,101 +922,74 @@
     w.postMessage({ ...msg, id }, transfer);
     return new Promise((resolve, reject) => calls.set(id, { resolve, reject }));
   }
-  function predictOffThread(grids, options) {
-    const w = window.Worker && workerFor("predict");
-    if (!w) return Promise.resolve(Nowcast.predict(...grids, options)); // no workers: on this thread
-    const [first, mid, now] = grids.map((g) => g.data.slice());
-    return callWorker(w, { kind: "predict", w: grids[0].w, h: grids[0].h, first, mid, now, options }, [first.buffer, mid.buffer, now.buffer])
-      .catch(() => Nowcast.predict(...grids, options));
+  // Predicted rain (0..1) at a place in each of our predicted images: the pixels are
+  // read back from the tiles (same colours as RAIN_RAMP, so they can be inverted).
+  let rampLut = null;
+  function invertColor(r, g, b, a) {
+    if (a < 25) return 0;
+    rampLut = rampLut || Array.from({ length: 96 }, (_, i) => { const v = 0.05 + i / 100; return [v, color({ stops: RAIN_RAMP }, v)]; });
+    let best = 0, err = Infinity;
+    for (const [v, c] of rampLut) {
+      const e = (r - c[0]) ** 2 + (g - c[1]) ** 2 + (b - c[2]) ** 2;
+      if (e < err) { err = e; best = v; }
+    }
+    return best;
   }
-
-
-  /* Prediction for the radar area (3×3 tiles at zoom 6, ~1,500 km) around a place:
-   * the motion of rain over the past hour and predicted images every 5 minutes for the
-   * next hour. The first of them also fill the gap between the newest radar image
-   * (10–30 min old) and now. Cached per area and radar image. */
-  const ncPending = new Map();
-  function nowcastArea(lon, lat) {
-    if (!window.Nowcast) return Promise.reject(new Error("Prediction engine not loaded"));
-    const past = (data.radar && data.radar.radar.past) || [];
-    if (past.length < 7) return Promise.reject(new Error("Not enough recent radar images"));
-    const latest = past[past.length - 1];
-    const t = tileXY(lon, lat, NC.zoom);
-    const x0 = Math.floor(t.x) - 1, y0 = Math.max(0, Math.min(2 ** NC.zoom - NC.tiles, Math.floor(t.y) - 1));
-    const key = `${latest.time}:${x0}:${y0}`;
-    if (data.nowcastCache && data.nowcastCache.key === key) return Promise.resolve(data.nowcastCache);
-    if (!ncPending.has(key)) ncPending.set(key, buildNowcast(key, past, x0, y0).finally(() => ncPending.delete(key)));
-    return ncPending.get(key);
+  async function predictedAt(lon, lat, frames) {
+    const z = data.nowcast.zoom;
+    const t = tileXY(lon, lat, z);
+    const tx = Math.floor(t.x), ty = Math.floor(t.y), key = `${z}/${tx}/${ty}`;
+    const px = Math.floor((t.x - tx) * 256), py = Math.floor((t.y - ty) * 256);
+    return Promise.all(frames.map(async (f) => {
+      if (!f.tileSet.has(key)) return 0;
+      try {
+        const res = await fetch(new URL(`${f.path}/${key}.png`, document.baseURI));
+        const bmp = await createImageBitmap(await res.blob());
+        const c = document.createElement("canvas");
+        c.width = 5; c.height = 5;
+        const ctx = c.getContext("2d", { willReadFrequently: true });
+        ctx.drawImage(bmp, -(px - 2), -(py - 2));
+        const d = ctx.getImageData(0, 0, 5, 5).data;
+        let v = 0;
+        for (let i = 0; i < d.length; i += 4) v = Math.max(v, invertColor(d[i], d[i + 1], d[i + 2], d[i + 3]));
+        return v;
+      } catch (e) { return 0; }
+    }));
   }
-
-  async function buildNowcast(key, past, x0, y0) {
-    // Motion is measured over the past hour: 60→30 min ago and 30 min ago→now, averaged.
-    const BASE = 3;
-    const latest = past[past.length - 1], mid = past[past.length - 1 - BASE], first = past[past.length - 1 - 2 * BASE];
-    const n = 2 ** NC.zoom;
-    const lonOf = (x) => (x / n) * 360 - 180;
-    const cLat = tileLat(y0 + NC.tiles / 2, NC.zoom), cLon = lonOf(x0 + NC.tiles / 2);
-    const kmPerPx = (40075.016686 * Math.cos((cLat * Math.PI) / 180)) / (256 * n);
-    const [gFirst, gMid, gNow, air] = await Promise.all([radarGrid(first.path, x0, y0), radarGrid(mid.path, x0, y0),
-      radarGrid(latest.path, x0, y0), airAt(cLat, ((cLon + 540) % 360) - 180)]);
-    const f = 3; // motion is measured on a 256×256 version of the 768×768 image
-    // Where there is too little rain to measure, rain moves with the wind at ~3 km up (700 hPa).
-    const fallback = air && air.steer ? { u: (air.steer.u * BASE) / (kmPerPx * f), v: (air.steer.v * BASE) / (kmPerPx * f) } : null;
-    const frameMins = [];
-    for (let m = NC.frameMin; m <= NC.predictMin; m += NC.frameMin) frameMins.push(m);
-    // Predicted images every 5 minutes (half resolution, smoothed), stretched over the area.
-    const res = await predictOffThread([gFirst, gMid, gNow], { f, baseSteps: BASE, stepMin: NC.stepMin, fallback, frameMins, ramp: RAIN_RAMP });
-    const field = res.field;
-    const frames = res.frames.map((fr) => ({ time: latest.time + fr.minutes * 60, url: fr.url || rgbaUrl(fr) }));
-    const corners = [[lonOf(x0), tileLat(y0, NC.zoom)], [lonOf(x0 + NC.tiles), tileLat(y0, NC.zoom)],
-      [lonOf(x0 + NC.tiles), tileLat(y0 + NC.tiles, NC.zoom)], [lonOf(x0), tileLat(y0 + NC.tiles, NC.zoom)]];
-    const nc = { key, latest: latest.time, x0, y0, gNow, field, scale: f, frames, corners, kmPerPx };
-    const old = data.nowcastCache;
-    // Free the previous area's images (blob URLs) once nothing shows them.
-    if (old && old !== data.nowcast) old.frames.forEach((fr) => fr.url.startsWith("blob:") && URL.revokeObjectURL(fr.url));
-    data.nowcastCache = nc;
-    return nc;
-  }
-
-  // Use an area's prediction on the time bar; on Live, show the estimate for now.
-  function useNowcast(nc) {
-    const changed = data.nowcast !== nc;
-    data.nowcast = nc;
-    if (!changed || state.map !== "radar") return;
-    if (state.live && !state.playing) state.frame = radarNowIndex();
-    renderTimeBar();
-    drawFrame();
-  }
-
-  // The prediction for the area in view, so Live shows rain where it is now rather than
-  // where the (10–30 min old) radar image saw it.
-  let viewNcTimer = 0;
-  function nowcastView() {
-    clearTimeout(viewNcTimer);
-    viewNcTimer = setTimeout(() => {
-      if (!ready || state.map !== "radar" || !data.radar || gm.getZoom() < 4) return;
-      const c = gm.getCenter();
-      nowcastArea(((c.lng + 540) % 360) - 180, c.lat).then(useNowcast).catch(() => {});
-    }, 700);
+  // Motion of the rain near a place, measured on the server (per zoom-5 tile).
+  function motionNear(lon, lat) {
+    const nc = data.nowcast, z = nc.zoom, t = tileXY(lon, lat, z);
+    let best = null;
+    for (let r = 0; r <= 2 && !best; r++) {
+      for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) {
+        const m = nc.motion[`${Math.floor(t.x) + dx}/${Math.floor(t.y) + dy}`];
+        if (m && (!best || m[0] > best[0])) best = m;
+      }
+    }
+    return best && best[0] >= 3 ? { kmh: best[0], towards: compass(best[1]) } : null;
   }
 
   async function runNowcast(lon, lat) {
     if (!data.radar) await loadRadar();
-    const [nc, air] = await Promise.all([nowcastArea(lon, lat), airAt(lat, lon)]);
-    useNowcast(nc);
+    if (!data.nowcast) await loadNowcast();
+    if (!data.nowcast) throw new Error("the prediction is not ready yet");
+    const past = data.radar.radar.past || [];
+    const latest = past[past.length - 1];
+    const ahead = data.nowcast.frames.filter((f) => f.time > latest.time);
     const t = tileXY(lon, lat, NC.zoom);
-    const kmPerPx = (40075.016686 * Math.cos((lat * Math.PI) / 180)) / (256 * 2 ** NC.zoom);
-    // This place.
-    const px = (t.x - nc.x0) * 256, py = (t.y - nc.y0) * 256;
-    const timeline = Nowcast.timelineAt(nc.gNow, nc.field, px, py, NC.timelineSteps, { scale: nc.scale, radius: 2 });
+    const x0 = Math.floor(t.x) - 1, y0 = Math.max(0, Math.min(2 ** NC.zoom - NC.tiles, Math.floor(t.y) - 1));
+    const [gNow, air, future] = await Promise.all([radarGrid(latest.path, x0, y0), airAt(lat, lon), predictedAt(lon, lat, ahead)]);
+    const px = (t.x - x0) * 256, py = (t.y - y0) * 256;
+    let nowV = 0;
+    for (let j = -2; j <= 2; j++) for (let i = -2; i <= 2; i++) nowV = Math.max(nowV, Nowcast.sample(gNow, px + i, py + j));
+    const timeline = [nowV, ...future];
     const summary = Nowcast.summarize(timeline, NC.threshold);
-    const near = Nowcast.nearestRain(nc.gNow, px, py, NC.threshold, 380);
-    let motion = null;
-    const at = near ? Nowcast.motionAt(nc.field, near.x, near.y, nc.scale) : Nowcast.motionAt(nc.field, px, py, nc.scale);
-    const kmh = Math.hypot(at.u, at.v) * kmPerPx * (60 / NC.stepMin);
-    if (kmh >= 3) motion = { kmh, towards: compass(Math.atan2(at.u, -at.v) * (180 / Math.PI)) };
+    const near = Nowcast.nearestRain(gNow, px, py, NC.threshold, 380);
+    const kmPerPx = (40075.016686 * Math.cos((lat * Math.PI) / 180)) / (256 * 2 ** NC.zoom);
+    // Motion where the nearest rain is (or here).
+    const nearLonLat = near ? [((x0 + near.x / 256) / 2 ** NC.zoom) * 360 - 180, tileLat(y0 + near.y / 256, NC.zoom)] : [lon, lat];
     return {
-      timeline, summary, motion, air, measured: nc.field.blocksWithRain > 0, latest: new Date(nc.latest * 1000),
+      timeline, summary, motion: motionNear(...nearLonLat), air, measured: true, latest: new Date(latest.time * 1000),
       near: near ? { km: near.distance * kmPerPx, from: compass(Math.atan2(near.x - px, -(near.y - py)) * (180 / Math.PI)) } : null,
     };
   }
@@ -1026,25 +1025,6 @@
   const compass = (deg) => COMPASS[Math.round((((deg % 360) + 360) % 360) / 45) % 8];
   const strength = (v) => (v < 0.3 ? "light" : v < 0.6 ? "moderate" : "heavy");
 
-  // Predicted images: one image layer each (added once per area), shown one at a time.
-  let ncLayersKey = "";
-  function showPrediction(frame) {
-    const nc = data.nowcast;
-    if (nc && nc.key !== ncLayersKey && gm.getLayer("radar-0")) {
-      mapLayerIds.filter((id) => id.startsWith("nc-")).forEach((id) => { gm.removeLayer(id); gm.removeSource(id); });
-      mapLayerIds = mapLayerIds.filter((id) => !id.startsWith("nc-"));
-      nc.frames.forEach((fr, k) => {
-        gm.addSource(`nc-${k}`, { type: "image", url: fr.url, coordinates: nc.corners });
-        gm.addLayer({ id: `nc-${k}`, type: "raster", source: `nc-${k}`,
-          paint: { "raster-opacity": 0, "raster-fade-duration": 0, "raster-opacity-transition": FADE } }, "anchor-map");
-        mapLayerIds.push(`nc-${k}`);
-      });
-      ncLayersKey = nc.key;
-    }
-    const k = frame && frame.predicted && nc ? nc.frames.findIndex((fr) => fr.time === frame.time) : -1;
-    (nc ? nc.frames : []).forEach((_, i) => setOpacity(`nc-${i}`, i === k ? 0.9 : 0));
-  }
-
   function nowcastHtml(r) {
     const nowMs = Date.now();
     const at = (steps) => new Date(r.latest.getTime() + steps * NC.stepMin * 60e3);
@@ -1054,13 +1034,13 @@
     let head;
     if (s.rainingNow) {
       head = s.stopsInSteps == null
-        ? `🌧️ <b>Raining now</b> (${strength(r.timeline[0])}), likely for <b>more than 2 hours</b>.`
+        ? `🌧️ <b>Raining now</b> (${strength(r.timeline[0])}), likely for <b>at least the next hour</b>.`
         : `🌧️ <b>Raining now</b> (${strength(r.timeline[0])}). Should stop in <b>about ${inMin(s.stopsInSteps)} min</b> (≈${clock(at(s.stopsInSteps))}).`;
     } else if (s.arrivesInSteps != null) {
       const lasts = s.lastsSteps == null ? "for over an hour" : `for about ${s.lastsSteps * NC.stepMin} min`;
       head = `🌧️ <b>Rain expected in about ${inMin(s.arrivesInSteps)} min</b> (≈${clock(at(s.arrivesInSteps))}), ${strength(s.peak)}, ${lasts}.`;
     } else {
-      head = r.near ? `☀️ <b>No rain heading here</b> in the next 2 hours.`
+      head = r.near ? `☀️ <b>No rain heading here</b> in the next hour.`
         : `☀️ <b>No rain on radar</b> within about 400 km. <span class="muted">(Some regions have no weather radar; there, use the weather model below.)</span>`;
     }
     const cells = r.timeline.map((v, i) => {
@@ -1072,10 +1052,10 @@
       ${r.near && !s.rainingNow ? `<p>Nearest rain: <b>${Math.round(r.near.km)} km</b> to the ${r.near.from}.</p>` : ""}
       ${r.motion ? `<p>Rain is moving towards the <b>${r.motion.towards}</b> at about <b>${Math.round(r.motion.kmh)} km/h</b>${r.measured ? " (measured on radar over the past hour)" : " (from the wind 3 km up)"}.</p>` : ""}
       ${airHtml(r.air)}
-      <div class="wx-nc-bar" aria-label="Predicted rain for the next 2 hours">${cells}</div>
-      <div class="wx-nc-axis"><span>${clock(r.latest)}</span><span>+30 min</span><span>+1 h</span><span>+1 h 30</span><span>+2 h</span></div>
+      <div class="wx-nc-bar" aria-label="Predicted rain for the next hour">${cells}</div>
+      <div class="wx-nc-axis"><span>${clock(r.latest)}</span><span>+30 min</span><span>+1 h</span></div>
       <button class="wx-nc-play" type="button">▶ Play predicted radar (next hour)</button>
-      <small>Prediction from how rain moved on radar over the past hour (newest image ${age} min old), with the wind 3 km up where there is little rain to track. Storms can grow, weaken or form, so treat it as a guide for the next 1–2 hours.</small>`;
+      <small>Predicted on our server from how rain moved on radar over the past hour (newest radar image ${age} min old, prediction updated every 10 min). Storms can grow, weaken or form, so treat it as a guide for the next hour.</small>`;
   }
 
   function airHtml(a) {
