@@ -224,7 +224,6 @@ Japan,japan,Japanese,BRIDGE（ブリッジ）テクノロジー＆スタート�
 Japan,japan,,Japan Today,https://japantoday.com/feed,feed,newspaper,topic,awesome-rss-feeds
 Japan,japan,,News On Japan,http://www.newsonjapan.com/rss/top.xml,feed,newspaper,topic,awesome-rss-feeds
 Japan,japan,English,NYT > Japan,https://www.nytimes.com/svc/collections/v1/publish/http://www.nytimes.com/topic/destination/japan/rss.xml,feed,newspaper,topic,awesome-rss-feeds
-Japan,japan,Japanese,ライブドアニュース - 主要トピックス,https://news.livedoor.com/topics/rss/top.xml,feed,newspaper,topic,awesome-rss-feeds
 Japan,japan,Japanese,朝日新聞デジタル,http://rss.asahi.com/rss/asahi/newsheadlines.rdf,feed,newspaper,topic,awesome-rss-feeds
 Mexico,mexico,Spanish,24 Horas,https://24-horas.mx/feed/,feed,newspaper,topic,awesome-rss-feeds
 Mexico,mexico,Spanish,8 Columnas,https://8columnas.com.mx/feed/,feed,newspaper,topic,awesome-rss-feeds
@@ -240,8 +239,8 @@ Nigeria,,English,Daily Post Nigeria,https://dailypost.ng/feed/,feed,newspaper,to
 Nigeria,,English,Information Nigeria,https://www.informationng.com/feed,feed,newspaper,topic,awesome-rss-feeds
 Nigeria,,English,Legit.ng,https://www.legit.ng/rss/all.rss,feed,newspaper,topic,awesome-rss-feeds
 Nigeria,,,Nigerian News. Latest Nigeria News. Your online Nigerian Newspaper.,http://feeds.feedburner.com/Nigerianeye,feed,newspaper,topic,awesome-rss-feeds
+Nigeria,,English,Premium Times Nigeria,https://www.premiumtimesng.com/feed,feed,newspaper,topic,awesome-rss-feeds
 Nigeria,,English,Tribune Online,https://tribuneonlineng.com/feed/,feed,newspaper,topic,awesome-rss-feeds
-Pakistan,pakistan,English,News Blog,https://newsnblogs.com/feed/,feed,newspaper,topic,awesome-rss-feeds
 Pakistan,pakistan,English,The Nation - Top Stories,https://www.nation.com.pk/rss/top-stories,feed,newspaper,topic,awesome-rss-feeds
 Pakistan,pakistan,English,The News International - Pakistan,https://www.thenews.com.pk/rss/1/1,feed,newspaper,topic,awesome-rss-feeds
 Pakistan,pakistan,Urdu,UrduPoint.com All Urdu News,https://www.urdupoint.com/rss/urdupoint.rss,feed,newspaper,topic,awesome-rss-feeds
@@ -264,6 +263,7 @@ Poland,,Polish,Newsweek Polska,https://www.newsweek.pl/rss.xml,feed,newspaper,to
 Poland,,Polish,RMF24.pl,https://www.rmf24.pl/feed,feed,newspaper,topic,awesome-rss-feeds
 Poland,,Polish,www.wirtualnemedia.pl,https://www.wirtualnemedia.pl/rss/aktualnosci,feed,newspaper,topic,awesome-rss-feeds
 South Africa,south-africa,English,Axios,https://api.axios.com/feed/,feed,newspaper,topic,awesome-rss-feeds
+South Africa,south-africa,English,IOL section feed for News,https://iol.co.za/rss/iol/news/,feed,newspaper,topic,awesome-rss-feeds
 South Africa,south-africa,English,Moneyweb,https://www.moneyweb.co.za/feed/,feed,newspaper,topic,awesome-rss-feeds
 South Africa,south-africa,English,TechCentral,https://techcentral.co.za/feed/,feed,newspaper,topic,awesome-rss-feeds
 South Africa,south-africa,English,The Citizen,https://www.citizen.co.za/feed/,feed,newspaper,topic,awesome-rss-feeds
@@ -291,5 +291,6 @@ United States,united-states,English,FOX News,https://moxie.foxnews.com/google-pu
 United States,united-states,English,NYT > Top Stories,https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml,feed,newspaper,topic,awesome-rss-feeds
 United States,united-states,English,Playbook,https://rss.politico.com/playbook.xml,feed,newspaper,topic,awesome-rss-feeds
 United States,united-states,English,US Top News and Analysis,https://www.cnbc.com/id/100003114/device/rss/rss.html,feed,newspaper,topic,awesome-rss-feeds
+United States,united-states,,World,https://feeds.washingtonpost.com/rss/world,feed,newspaper,topic,awesome-rss-feeds
 United States,united-states,English,World & Nation,https://www.latimes.com/world-nation/rss2.0.xml,feed,newspaper,topic,awesome-rss-feeds
 United States,united-states,English,"World News - Breaking News, Top Stories",https://chaski.huffpost.com/us/auto/vertical/world-news,feed,newspaper,topic,awesome-rss-feeds
